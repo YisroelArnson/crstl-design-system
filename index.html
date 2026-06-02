@@ -1,0 +1,3735 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crstl — EDI &amp; supply-chain automation</title>
+
+  <!-- The one and only design-system stylesheet -->
+  <link rel="stylesheet" href="crstl-design-system.css" />
+  <script src="crstl-brand-toggle.js" defer></script>
+
+  <style>
+    /* ========================================================================
+       HOMEPAGE — visual-system layer.
+       Hexagons, squares/rectangles, edge-fade masks, sequenced box reveals.
+       Everything below references the design-system tokens — no raw values
+       except geometry the token set intentionally leaves to the page.
+       Geometry is functional only: no decorative background grids, corner
+       ticks, corner slash marks, ornamental line work, or standalone shape badges.
+       ===================================================================== */
+
+    :root {
+      --home-section-head-width: calc(var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20));
+      --home-brand-mark-width: calc(var(--size-control-sm) - var(--space-1));
+      --home-marquee-width: calc(var(--content-width) - var(--space-20) - var(--space-20) - var(--space-20) - var(--space-20) - var(--space-20));
+      --home-hero-art-width: calc(var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-10));
+      --home-hero-art-width-compact: calc(var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-5));
+      --home-hex-gap: calc(var(--space-2) - var(--borderwidth-md));
+      --home-hex-row-offset: calc(var(--size-control-sm) - var(--space-1));
+      --home-honeycomb-gap: var(--space-3);
+      --home-honeycomb-grid-width: calc(100% + var(--space-20) + var(--space-20));
+      --home-honeycomb-cell-width: clamp(calc(var(--space-20) + var(--space-8)), 18vw, calc(var(--space-20) + var(--space-16)));
+      --home-honeycomb-row-offset: calc(0px - var(--space-8));
+      --home-honeycomb-field-shift: calc(var(--space-5) - var(--home-honeycomb-cell-width) - var(--home-honeycomb-gap));
+      --home-hex-corner-radius: var(--radius-xs);
+      --home-comb-proximity-range: calc(var(--home-honeycomb-cell-width) + var(--space-20));
+      --home-stack-stage-height: clamp(
+        calc(var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20)),
+        34vw,
+        calc(var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-5))
+      );
+      --home-stack-row-offset: calc(var(--home-txn-height) + var(--space-4));
+      --home-txn-width: clamp(
+        calc(var(--space-20) + var(--space-20) + var(--space-8)),
+        30vw,
+        calc(var(--space-20) + var(--space-20) + var(--space-20) + var(--space-12))
+      );
+      --home-txn-height: var(--size-row);
+      --home-testimonial-logo-size: var(--size-avatar-lg);
+      --home-icon-mark-size: var(--size-control-lg);
+      --home-icon-mark-height: calc(var(--size-control-lg) + var(--space-1));
+      --home-card-hover-lift: calc(var(--space-1) * -1);
+      --home-motion-pulse-duration: 2400ms;
+      --home-motion-sonar-duration: 2000ms;
+      --home-motion-marquee-duration: 60000ms;
+      --home-motion-connector-fill: 500ms;
+      --home-motion-rotator-hold: 3300ms;
+      --home-motion-rotator-reset: 400ms;
+      --home-motion-pipeline-step: 3200ms;
+      --home-motion-pipeline-reset: 2200ms;
+      --home-motion-agent-row: 360ms;
+      --home-motion-agent-active: 1250ms;
+      --home-motion-agent-reset: 520ms;
+      --home-motion-agent-shimmer: 1900ms;
+      --home-motion-stack-arrange: 620ms;
+      --home-motion-stack-arrange-stagger: 90ms;
+      --home-motion-txn-icon-race: 1100ms;
+      --home-motion-txn-icon-complete: 720ms;
+      --home-motion-txn-icon-stagger: 120ms;
+      --home-motion-stack-follow: 80ms;
+      --home-motion-reveal-stagger: 90ms;
+      --edison-nav-width: calc(var(--space-20) + var(--space-20) + var(--space-16));
+    }
+
+    /* ---------- shared layout ---------- */
+    .wrap {
+      width: 100%;
+      max-width: var(--content-width);
+      margin-inline: auto;
+      padding-inline: var(--page-padding-inline);
+    }
+    .wrap--xl { max-width: var(--content-width-xl); }
+
+    section { position: relative; }
+    .section-anchor {
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 1px;
+      height: 1px;
+      pointer-events: none;
+    }
+
+    .section-head { max-width: var(--home-section-head-width); margin-bottom: var(--space-12); }
+    .section-head h2 {
+      font: var(--weight-bold) var(--title-3);
+      letter-spacing: var(--tracking-title-3);
+      color: hsl(var(--text-primary));
+      margin: var(--space-4) 0 var(--space-4);
+    }
+    .section-head p {
+      font: var(--text-lg);
+      letter-spacing: var(--tracking-lg);
+      color: hsl(var(--text-secondary));
+      margin: 0;
+    }
+    .transactions-split {
+      display: grid;
+      grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+      column-gap: var(--space-12);
+      row-gap: var(--space-10);
+      align-items: center;
+    }
+    .transactions-split .section-head {
+      grid-column: 1 / span 5;
+      margin-bottom: 0;
+    }
+    .transactions-split .stack-stage {
+      grid-column: 7 / span 6;
+    }
+
+    /* ---------- header / nav ---------- */
+    .site-header {
+      position: sticky; top: 0;
+      z-index: var(--layer-header);
+      height: var(--size-nav);
+      display: flex; align-items: center;
+      background: hsl(var(--bg-base) / 0.78);
+      backdrop-filter: blur(var(--blur-md)) saturate(160%);
+      -webkit-backdrop-filter: blur(var(--blur-md)) saturate(160%);
+      border-bottom: var(--borderwidth-sm) solid hsl(var(--border-muted));
+    }
+    .site-header .wrap {
+      display: flex; align-items: center; gap: var(--space-8);
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: var(--space-3);
+      font: var(--weight-bold) var(--title-1);
+      letter-spacing: var(--tracking-title-1);
+      color: hsl(var(--text-primary));
+    }
+    .brand:hover { color: hsl(var(--text-primary)); }
+    .brand-mark { width: var(--home-brand-mark-width); height: var(--size-control-sm); display: block; }
+    .nav-links {
+      --nav-highlight-x: 0px;
+      --nav-highlight-w: 0px;
+      --nav-menu-x: 0px;
+      --nav-menu-width: 680px;
+      --nav-menu-height: 320px;
+      position: relative;
+      display: flex; align-items: center; gap: var(--space-1);
+      margin-left: var(--space-4);
+      min-height: var(--size-nav);
+    }
+    .nav-menu__list {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+    .nav-menu__highlight {
+      position: absolute;
+      z-index: 0;
+      top: 50%;
+      left: 0;
+      width: var(--nav-highlight-w);
+      height: var(--size-control-sm);
+      border-radius: var(--radius-pill);
+      background: hsl(var(--bg-hover));
+      border: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      opacity: 0;
+      transform: translate3d(var(--nav-highlight-x), -50%, 0);
+      transition:
+        opacity var(--speed-feedback) var(--ease-standard),
+        transform var(--speed-transition) var(--ease-out),
+        width var(--speed-transition) var(--ease-out);
+    }
+    .nav-links.is-open .nav-menu__highlight { opacity: 1; }
+    .nav-link {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-1);
+      height: var(--size-control-sm);
+      padding: 0 var(--space-3);
+      border: 0;
+      border-radius: var(--radius-pill);
+      background: transparent;
+      font: var(--weight-medium) var(--text-sm);
+      letter-spacing: var(--tracking-sm);
+      color: hsl(var(--text-secondary));
+      cursor: pointer;
+      transition: color var(--speed-feedback) var(--ease-standard);
+    }
+    .nav-link:hover,
+    .nav-link.is-active { color: hsl(var(--text-primary)); }
+    .nav-link--accent { color: hsl(var(--accent)); }
+    .nav-link--accent:hover { color: hsl(var(--accent-hover)); }
+    .nav-menu__dropdown {
+      position: absolute;
+      z-index: var(--layer-dropdown);
+      top: calc(100% + var(--space-2));
+      left: 0;
+      width: var(--nav-menu-width);
+      height: var(--nav-menu-height);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translate3d(var(--nav-menu-x), calc(var(--space-2) * -1), 0);
+      transition:
+        opacity var(--speed-feedback) var(--ease-standard),
+        visibility 0s linear var(--speed-feedback),
+        transform var(--speed-transition) var(--ease-out),
+        width var(--speed-transition) var(--ease-out),
+        height var(--speed-transition) var(--ease-out);
+    }
+    .nav-links.is-open .nav-menu__dropdown {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate3d(var(--nav-menu-x), 0, 0);
+      transition:
+        opacity var(--speed-feedback) var(--ease-standard),
+        visibility 0s linear 0s,
+        transform var(--speed-transition) var(--ease-out),
+        width var(--speed-transition) var(--ease-out),
+        height var(--speed-transition) var(--ease-out);
+    }
+    .nav-menu__surface {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(180deg, hsl(var(--bg-overlay) / 0.96), hsl(var(--bg-overlay) / 0.92)),
+        hsl(var(--bg-overlay));
+      border: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      box-shadow: var(--shadow-float);
+      backdrop-filter: blur(var(--blur-lg)) saturate(180%);
+      -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(180%);
+    }
+    .nav-menu__surface::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      background: linear-gradient(135deg, hsl(var(--text-primary) / 0.09), transparent 38%);
+      opacity: 0.8;
+    }
+    .nav-menu-panel {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      min-width: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(var(--space-2));
+      transition:
+        opacity var(--speed-feedback) var(--ease-standard),
+        visibility 0s linear var(--speed-feedback),
+        transform var(--speed-transition) var(--ease-out);
+    }
+    .nav-menu-panel.is-active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition-delay: 40ms, 0s, 0s;
+    }
+    .nav-panel__body {
+      display: grid;
+      flex: 1 1 auto;
+      gap: 0;
+      padding: var(--space-5) var(--space-6);
+    }
+    .nav-panel__body--solutions { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); }
+    .nav-panel__body--resources { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .nav-panel__body--company { grid-template-columns: minmax(0, 1fr); }
+    .nav-panel__group {
+      min-width: 0;
+      padding-right: var(--space-5);
+    }
+    .nav-panel__group + .nav-panel__group {
+      padding-right: 0;
+      padding-left: var(--space-5);
+      border-left: var(--borderwidth-sm) solid hsl(var(--border-muted));
+    }
+    .nav-panel__eyebrow {
+      margin: 0 0 var(--space-3);
+      font: var(--weight-semibold) var(--text-xs);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: hsl(var(--text-tertiary));
+    }
+    .nav-panel__items {
+      display: grid;
+      gap: var(--space-1);
+    }
+    .nav-panel__items--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .nav-panel__item {
+      display: block;
+      min-width: 0;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      color: hsl(var(--text-secondary));
+      transition:
+        background-color var(--speed-feedback) var(--ease-standard),
+        color var(--speed-feedback) var(--ease-standard),
+        transform var(--speed-feedback) var(--ease-standard);
+    }
+    .nav-panel__item:hover {
+      background: hsl(var(--bg-hover));
+      color: hsl(var(--text-primary));
+      transform: translateY(-1px);
+    }
+    .nav-panel__title {
+      display: block;
+      font: var(--weight-semibold) var(--text-sm);
+      letter-spacing: var(--tracking-sm);
+      color: hsl(var(--text-primary));
+    }
+    .nav-panel__description {
+      display: block;
+      margin-top: 2px;
+      font: var(--text-xs);
+      letter-spacing: var(--tracking-xs);
+      line-height: 1.35;
+      color: hsl(var(--text-tertiary));
+    }
+    .nav-panel__footer {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      min-height: var(--size-header);
+      padding: var(--space-3) var(--space-6);
+      border-top: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      background: hsl(var(--bg-canvas) / 0.55);
+      font: var(--text-sm);
+      letter-spacing: var(--tracking-sm);
+      color: hsl(var(--text-tertiary));
+    }
+    .nav-panel__footer strong {
+      font-weight: var(--weight-semibold);
+      color: hsl(var(--text-primary));
+    }
+    .nav-panel__footer a {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      color: hsl(var(--accent));
+      font-weight: var(--weight-medium);
+      white-space: nowrap;
+    }
+    .nav-panel__footer a:hover { color: hsl(var(--accent-hover)); }
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: var(--space-3); }
+    .nav-ghost {
+      font: var(--weight-medium) var(--text-sm);
+      letter-spacing: var(--tracking-sm);
+      color: hsl(var(--text-secondary));
+    }
+    .nav-ghost:hover { color: hsl(var(--text-primary)); }
+
+    /* above-the-fold: hero + trust strip share the first screen */
+    .first-screen {
+      min-height: calc(100svh - var(--size-nav));
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      padding-block: var(--space-20) var(--space-8);
+      overflow: hidden;
+    }
+    .hero .wrap--xl {
+      width: 100%;
+      max-width: calc(var(--space-20) * 12);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .hero-edison-pill {
+      margin-bottom: var(--space-6);
+    }
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+    .hero h1 {
+      font: var(--weight-bold) var(--title-5);
+      letter-spacing: 0;
+      color: hsl(var(--text-primary));
+      margin: 0 0 var(--space-5);
+      max-width: 100%;
+    }
+    .hero h1 .accent { color: hsl(var(--accent)); }
+    .hero-title-line,
+    .hero-title-rotator {
+      display: block;
+    }
+    .hero-title-line {
+      white-space: nowrap;
+    }
+    .hero-title-rotator {
+      color: hsl(var(--accent));
+      text-align: center;
+    }
+    .hero-title-rotator .rotator > span {
+      color: inherit;
+    }
+    /* rotating segment sits on its own centered line */
+    .hero h1 .for {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: var(--weight-regular);
+      color: hsl(var(--text-primary));
+    }
+    .rotator {
+      display: inline-grid;          /* all words stacked in one cell */
+      vertical-align: bottom;
+      overflow: hidden;
+      height: 1.1em;
+      text-align: center;
+      justify-items: center;
+    }
+    .rotator > span {
+      grid-area: 1 / 1;              /* overlap every word */
+      color: hsl(var(--text-primary));
+      white-space: nowrap;
+      /* base = "waiting below"; fade + slide-up driven by the feedback token */
+      opacity: 0;
+      transform: translateY(0.6em);
+      transition: opacity var(--speed-transition) var(--ease-standard),
+                  transform var(--speed-transition) var(--ease-standard);
+    }
+    .rotator > span.is-current { opacity: 1; transform: translateY(0); }
+    .rotator > span.is-prev    { opacity: 0; transform: translateY(-0.6em); }
+    @media (prefers-reduced-motion: reduce) {
+      .rotator > span { transition: none; }
+    }
+    .hero-sub {
+      font: var(--text-lg);
+      letter-spacing: 0;
+      color: hsl(var(--text-secondary));
+      width: 100%;
+      max-width: 58ch;
+      margin: 0 0 var(--space-8);
+    }
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    /* ---------- brand marquee strip — blends into the hero (no band lines) ---------- */
+    .logo-strip {
+      flex: none;
+      background: transparent;          /* same surface as the hero */
+      padding-block: var(--space-4) var(--space-12);
+    }
+    .logo-strip-lead {
+      text-align: center;
+      margin-block: var(--space-5) 0;   /* shorthand was zeroing margin-inline: auto from .wrap */
+      font: var(--text-sm);
+      letter-spacing: 0;
+      color: hsl(var(--text-tertiary));
+    }
+    /* narrower carousel, centered, edges faded out (edge-fade masks) */
+    .marquee {
+      position: relative;
+      width: 100%;
+      max-width: var(--home-marquee-width);
+      margin-inline: auto;
+      overflow: hidden;                 /* clip the track to the narrow box → centers */
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+              mask-image: linear-gradient(90deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+      -webkit-mask-repeat: no-repeat;
+              mask-repeat: no-repeat;
+    }
+    .marquee-track {
+      display: flex;
+      align-items: center;
+      width: max-content;
+      animation: marquee var(--home-motion-marquee-duration) linear infinite;  /* slow drift */
+    }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+    .brand-logo {
+      flex: none;
+      margin-right: var(--space-16);   /* margin, not gap → seamless -50% loop */
+      font: var(--weight-semibold) var(--title-1);
+      letter-spacing: var(--tracking-title-1);
+      font-family: var(--font-display);
+      color: hsl(var(--text-tertiary));
+      white-space: nowrap;
+      user-select: none;
+      transition: color var(--speed-feedback) var(--ease-standard);
+    }
+    .brand-logo:hover { color: hsl(var(--text-primary)); }
+
+    /* hero hexagon honeycomb visual */
+    .hero-art {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      max-width: var(--home-hero-art-width);
+      max-height: 56vh;
+      margin-inline: auto;
+      justify-self: end;
+      -webkit-mask-image: radial-gradient(120% 120% at 60% 40%, #000 55%, transparent 88%);
+              mask-image: radial-gradient(120% 120% at 60% 40%, #000 55%, transparent 88%);
+    }
+    .hex-grid {
+      position: absolute; inset: 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--home-hex-gap);
+    }
+    .hex-grid .row-offset { transform: translateY(var(--home-hex-row-offset)); }
+    .hexcell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1.1547;            /* pointy-top hexagon ratio */
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: hsl(var(--border-muted));
+      display: grid; place-items: center;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-interactive);
+    }
+    /* clip-path eats borders; re-draw an inner fill so a hairline shows */
+    .hexcell::before {
+      content: "";
+      position: absolute; inset: var(--border-hairline);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: hsl(var(--bg-surface));
+    }
+    .hexcell .glyph { position: relative; z-index: 1; }
+    .hexcell .glyph {
+      font: var(--weight-bold) var(--text-sm);
+      color: hsl(var(--text-tertiary));
+    }
+    .hexcell.is-live::before { background: hsl(var(--accent)); }
+    .hexcell.is-live .glyph { color: hsl(var(--text-on-accent)); }
+    .hexcell.is-aqua::before { background: hsl(var(--aqua) / 0.16); }
+    .hexcell.is-aqua .glyph { color: hsl(var(--cat-teal)); }
+
+    /* ---------- band / boxed sections ---------- */
+    .band { border-top: var(--borderwidth-sm) solid hsl(var(--border-muted)); }
+    .band--muted { background: hsl(var(--bg-subtle)); }
+    .pad { padding-block: var(--space-20); }
+
+    /* metric strip — delineated boxes */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: hsl(var(--bg-surface));
+    }
+    .metric {
+      padding: var(--space-8);
+      border-right: var(--borderwidth-sm) solid hsl(var(--border-muted));
+    }
+    .metric:last-child { border-right: none; }
+    .metric .num {
+      font: var(--weight-bold) var(--title-3);
+      letter-spacing: var(--tracking-title-3);
+      color: hsl(var(--text-primary));
+    }
+    .metric .num .mono { font-family: var(--font-mono); }
+    .metric .label {
+      margin-top: var(--space-2);
+      font: var(--text-sm); color: hsl(var(--text-secondary));
+    }
+
+    .edison-section {
+      overflow: hidden;
+    }
+    .edison-section .wrap--xl {
+      display: grid;
+      gap: var(--space-10);
+    }
+    .edison-copy {
+      width: 100%;
+      max-width: calc(var(--space-20) * 9);
+      margin-inline: auto;
+      text-align: center;
+    }
+    .edison-copy h2 {
+      font: var(--weight-bold) var(--title-3);
+      letter-spacing: 0;
+      color: hsl(var(--text-primary));
+      margin: var(--space-4) 0;
+    }
+    .edison-copy p {
+      max-width: 58ch;
+      margin: 0 auto;
+      font: var(--text-lg);
+      letter-spacing: 0;
+      color: hsl(var(--text-secondary));
+    }
+
+    .edi-automation-section {
+      overflow: hidden;
+      background: hsl(var(--bg-base));
+    }
+    .edi-automation-layout {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+      column-gap: var(--space-10);
+      row-gap: var(--space-8);
+      align-items: start;
+    }
+    .edi-automation-title {
+      grid-column: 1 / span 6;
+      grid-row: 1;
+      margin: 0;
+      min-width: 0;
+      color: hsl(var(--text-primary));
+      font: var(--weight-bold) var(--title-3);
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+    .edi-automation-lead,
+    .edi-automation-detail {
+      grid-row: 2;
+      margin: 0;
+      min-width: 0;
+      color: hsl(var(--text-secondary));
+      font: var(--text-lg);
+      letter-spacing: 0;
+      text-wrap: pretty;
+    }
+    .edi-automation-lead {
+      grid-column: 1 / span 6;
+    }
+    .edi-automation-detail {
+      grid-column: 7 / span 6;
+    }
+    .edi-automation-emphasis {
+      color: hsl(var(--text-primary));
+      font-weight: inherit;
+    }
+
+    /* ---------- INTERACTIVE HEXAGON FEATURE SECTION ---------- */
+    .feature-split {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: var(--space-16);
+      align-items: center;
+    }
+    .feature-split--network {
+      grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+      gap: var(--space-12);
+    }
+    .feature-copy h2 {
+      font: var(--weight-bold) var(--title-3);
+      letter-spacing: var(--tracking-title-3);
+      color: hsl(var(--text-primary));
+      margin: var(--space-4) 0;
+      min-height: 2.4em;
+    }
+    .feature-copy > p {
+      font: var(--text-lg); letter-spacing: var(--tracking-lg);
+      color: hsl(var(--text-secondary));
+      margin: 0 0 var(--space-6); min-height: 4.6em;
+    }
+    .feature-copy--section {
+      max-width: calc(var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-16));
+    }
+    .feature-copy--section h2 {
+      min-height: auto;
+      margin: 0 0 var(--space-4);
+    }
+    .feature-copy--section > p {
+      min-height: auto;
+      max-width: 36ch;
+      margin: 0;
+    }
+    .feature-tag {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font: var(--weight-medium) var(--text-xs);
+      font-family: var(--font-mono);
+      color: hsl(var(--token-keyword));
+      padding: var(--space-1) var(--space-2);
+      border: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      border-radius: var(--radius-xs);
+      background: hsl(var(--accent-tint));
+    }
+
+    /* the honeycomb that fades at the edge */
+    .honeycomb-frame {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      width: 100%;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .honeycomb-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: var(--fade-soft-radial-overlay);
+    }
+    .honeycomb {
+      position: relative;
+      z-index: 1;
+      width: var(--home-honeycomb-grid-width);
+      display: grid;
+      justify-items: center;
+      transform: translateX(var(--home-honeycomb-field-shift));
+    }
+    .honeycomb-row {
+      display: flex;
+      justify-content: center;
+      gap: var(--home-honeycomb-gap);
+      width: 100%;
+    }
+    .honeycomb-row + .honeycomb-row {
+      margin-top: var(--home-honeycomb-row-offset);
+    }
+    .comb {
+      position: relative;
+      flex: 0 0 var(--home-honeycomb-cell-width);
+      width: var(--home-honeycomb-cell-width);
+      aspect-ratio: 1 / 1.1547;
+      border-radius: var(--home-hex-corner-radius);
+      background: transparent;
+      display: grid; place-items: center;
+      cursor: pointer; border: none; padding: 0;
+      transform: scale(var(--comb-scale, 1));
+      transform-origin: center;
+      will-change: transform;
+      transition: filter var(--speed-transition) var(--ease-out);
+    }
+    .comb-shape {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+    .comb-shape path {
+      fill: hsl(var(--bg-surface));
+      stroke: hsl(var(--border-secondary));
+      stroke-width: var(--borderwidth-sm);
+      transition: fill var(--speed-feedback) var(--ease-standard),
+                  stroke var(--speed-feedback) var(--ease-standard);
+    }
+    .comb .label {
+      position: relative; z-index: 1;
+      width: 70%;
+      font: var(--weight-semibold) var(--text-sm);
+      line-height: 1.22;
+      letter-spacing: 0;
+      text-align: center;
+      text-wrap: balance;
+      overflow-wrap: break-word;
+      color: hsl(var(--text-secondary));
+      transition: color var(--speed-feedback) var(--ease-standard);
+    }
+    .comb--ghost.is-near { z-index: 1; }
+    .comb:not(.comb--ghost):is(.is-near, :hover, :focus-visible, .is-active) { z-index: 2; }
+    .comb:hover,
+    .comb:focus-visible { filter: drop-shadow(var(--shadow-md)); }
+    .comb--ghost {
+      pointer-events: none;
+    }
+    .comb--ghost .comb-shape path {
+      fill: hsl(var(--bg-surface) / 0.32);
+      stroke: hsl(var(--border-secondary) / 0.76);
+    }
+    .comb.is-active .comb-shape path {
+      fill: hsl(var(--accent));
+      stroke: hsl(var(--accent));
+    }
+    .comb.is-active .label { color: hsl(var(--text-on-accent)); }
+    .comb:focus-visible { outline: var(--focus-ring-width) solid hsl(var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+
+    /* ---------- SCATTERED → STACK (trigger choreography) ---------- */
+    .stack-stage {
+      position: relative;
+      isolation: isolate;
+      height: var(--home-stack-stage-height);
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      overflow: visible;
+    }
+    .stack-stage.is-arranging {
+      --home-motion-stack-follow: var(--home-motion-stack-arrange);
+    }
+    .stack-stage.is-arranging .txn {
+      transition-delay: var(--txn-arrange-delay);
+    }
+    .txn {
+      --txn-border-color: hsl(var(--border-default));
+      --txn-arrange-delay: 0ms;
+      --txn-x: 0px;
+      --txn-y: 0px;
+      --txn-rot: 0deg;
+      --txn-lift: 0px;
+      --txn-scale: 1;
+      --txn-shadow: var(--shadow-sm);
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 2;
+      isolation: isolate;
+      width: var(--home-txn-width);
+      min-height: var(--home-txn-height);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) var(--size-control-sm);
+      gap: var(--space-3);
+      align-items: center;
+      padding: var(--space-2) var(--space-4);
+      border: none;
+      border-radius: var(--radius-md);
+      background: hsl(var(--bg-surface));
+      box-shadow:
+        inset 0 0 0 var(--borderwidth-sm) var(--txn-border-color),
+        var(--txn-shadow);
+      font: var(--text-sm);
+      color: hsl(var(--text-secondary));
+      transform: translate3d(var(--txn-x), calc(var(--txn-y) - var(--txn-lift)), 0) rotate(var(--txn-rot)) scale(var(--txn-scale));
+      transition:
+        transform var(--home-motion-stack-follow) var(--ease-standard),
+        opacity var(--home-motion-stack-follow) var(--ease-standard),
+        box-shadow var(--home-motion-stack-follow) var(--ease-standard);
+      transition-delay: 0ms;
+      will-change: transform;
+    }
+    .txn-icon-frame {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: var(--size-control-sm);
+      height: var(--size-control-sm);
+      border-radius: var(--radius-sm);
+      background: hsl(var(--bg-surface));
+      box-shadow: inset 0 0 0 var(--borderwidth-sm) hsl(var(--border-default));
+      color: hsl(var(--text-tertiary));
+      overflow: hidden;
+    }
+    .txn-icon {
+      position: relative;
+      z-index: 2;
+      width: calc(var(--space-4) + var(--space-1));
+      height: calc(var(--space-4) + var(--space-1));
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: color var(--speed-feedback) var(--ease-standard);
+    }
+    .txn-icon-trace {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .txn-icon-trace-rect {
+      fill: none;
+      opacity: 0;
+      stroke: hsl(var(--accent));
+      stroke-width: var(--borderwidth-sm);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 0.44 0.56;
+      stroke-dashoffset: 1;
+      filter: drop-shadow(0 0 3px hsl(var(--accent) / 0.24));
+      vector-effect: non-scaling-stroke;
+    }
+    .txn:is(.is-scanning, .is-complete) .txn-icon-frame {
+      box-shadow: none;
+      color: hsl(var(--accent));
+    }
+    .txn.is-scanning .txn-icon-trace-rect {
+      opacity: 0.9;
+      animation: txnIconTraceRace var(--home-motion-txn-icon-race) linear 2;
+    }
+    .txn.is-complete .txn-icon-trace-rect {
+      opacity: 0.96;
+      animation: txnIconTraceComplete var(--home-motion-txn-icon-complete) var(--ease-out) forwards;
+    }
+    @keyframes txnIconTraceRace {
+      from { stroke-dashoffset: 1; }
+      to { stroke-dashoffset: -1; }
+    }
+    @keyframes txnIconTraceComplete {
+      0% {
+        stroke: hsl(var(--accent));
+        stroke-dasharray: 0.44 0.56;
+        stroke-dashoffset: 1;
+        filter: drop-shadow(0 0 3px hsl(var(--accent) / 0.22));
+      }
+      100% {
+        stroke: hsl(var(--accent));
+        stroke-dasharray: 1 0;
+        stroke-dashoffset: 0;
+        filter: drop-shadow(0 0 3px hsl(var(--accent) / 0.2));
+      }
+    }
+    .txn-main {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 1px;
+      min-width: 0;
+    }
+    .txn-type {
+      min-width: 0;
+      color: hsl(var(--text-primary));
+      font: var(--weight-semibold) var(--text-sm);
+      letter-spacing: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .txn-partner {
+      color: hsl(var(--text-secondary));
+      font: var(--text-xs);
+      letter-spacing: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ---------- workflow steps ---------- */
+    .workflow-head {
+      display: grid;
+      grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+      column-gap: var(--space-5);
+      row-gap: var(--space-6);
+      align-items: start;
+      margin-bottom: var(--space-12);
+    }
+    .workflow-title {
+      grid-column: 1 / span 6;
+      margin: 0;
+      font: var(--weight-bold) var(--title-3);
+      letter-spacing: 0;
+      color: hsl(var(--text-primary));
+      text-wrap: balance;
+    }
+    .workflow-copy {
+      grid-column: 8 / span 5;
+      margin: 0;
+      font: var(--text-lg);
+      letter-spacing: 0;
+      color: hsl(var(--text-secondary));
+    }
+    .workflow-steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      overflow: hidden;
+      background: hsl(var(--bg-surface));
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+    .workflow-step {
+      min-width: 0;
+      min-height: calc(var(--space-20) + var(--space-16));
+      padding: var(--space-8);
+      border-right: var(--borderwidth-sm) solid hsl(var(--border-muted));
+    }
+    .workflow-step:last-child { border-right: none; }
+    .workflow-step-number {
+      display: inline-grid;
+      place-items: center;
+      width: var(--size-control-sm);
+      height: var(--size-control-sm);
+      margin-bottom: var(--space-6);
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-pill);
+      background: hsl(var(--bg-muted));
+      color: hsl(var(--text-secondary));
+      font: var(--weight-semibold) var(--text-xs);
+      font-family: var(--font-mono);
+      letter-spacing: 0;
+    }
+    .workflow-step h3 {
+      margin: 0 0 var(--space-2);
+      font: var(--weight-semibold) var(--title-1);
+      letter-spacing: 0;
+      color: hsl(var(--text-primary));
+    }
+    .workflow-step p {
+      margin: 0;
+      font: var(--text-base);
+      letter-spacing: 0;
+      color: hsl(var(--text-secondary));
+    }
+
+    /* ---------- testimonial carousel ---------- */
+    .testimonials {
+      overflow: hidden;
+    }
+    .testimonials-head {
+      display: grid;
+      grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+      column-gap: var(--space-5);
+      row-gap: var(--space-6);
+      align-items: end;
+      margin-bottom: var(--space-12);
+    }
+    .testimonials-title-group {
+      grid-column: 1 / span 7;
+    }
+    .testimonials h2 {
+      max-width: calc(var(--space-20) * 6);
+      margin: 0;
+      color: hsl(var(--text-primary));
+      font: var(--weight-bold) var(--title-3);
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+    .testimonials-actions {
+      grid-column: 9 / span 4;
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .testimonial-controls {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .testimonial-arrow {
+      display: grid;
+      place-items: center;
+      width: var(--size-control-md);
+      height: var(--size-control-md);
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-md);
+      background: hsl(var(--bg-surface));
+      color: hsl(var(--text-secondary));
+      cursor: pointer;
+      transition: var(--transition-interactive);
+    }
+    .testimonial-arrow:hover {
+      background: hsl(var(--bg-hover));
+      color: hsl(var(--text-primary));
+      border-color: hsl(var(--border-strong));
+    }
+    .testimonial-arrow:active { transform: scale(0.98); }
+    .testimonial-arrow:focus-visible {
+      outline: var(--focus-ring-width) solid hsl(var(--focus-ring));
+      outline-offset: var(--focus-ring-offset);
+      box-shadow: 0 0 0 var(--focus-ring-offset) hsl(var(--bg-base));
+    }
+    .testimonial-arrow svg {
+      width: var(--size-icon-sm);
+      height: var(--size-icon-sm);
+    }
+    .testimonial-frame {
+      --testimonial-rail-padding: max(var(--page-padding-inline), calc((100vw - var(--content-width-xl)) / 2 + var(--page-padding-inline)));
+      --testimonial-grid-width: min(calc(100vw - (var(--testimonial-rail-padding) * 2)), calc(var(--content-width-xl) - (var(--page-padding-inline) * 2)));
+      --testimonial-grid-gap: var(--space-5);
+      position: relative;
+      isolation: isolate;
+    }
+    .testimonial-frame::before,
+    .testimonial-frame::after {
+      content: "";
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      bottom: 0;
+      width: min(18vw, calc(var(--space-20) * 2.4));
+      pointer-events: none;
+    }
+    .testimonial-frame::before {
+      left: 0;
+      background: linear-gradient(90deg, hsl(var(--bg-subtle)) 0%, hsl(var(--bg-subtle) / 0.92) 32%, hsl(var(--bg-subtle) / 0) 100%);
+    }
+    .testimonial-frame::after {
+      right: 0;
+      background: linear-gradient(270deg, hsl(var(--bg-subtle)) 0%, hsl(var(--bg-subtle) / 0.92) 32%, hsl(var(--bg-subtle) / 0) 100%);
+    }
+    .testimonial-viewport {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scroll-padding-inline: var(--testimonial-rail-padding);
+      scrollbar-width: none;
+    }
+    .testimonial-viewport::-webkit-scrollbar { display: none; }
+    .testimonial-track {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: calc((var(--testimonial-grid-width) - (var(--testimonial-grid-gap) * 11)) / 12);
+      align-items: stretch;
+      gap: var(--testimonial-grid-gap);
+      width: max-content;
+      padding-inline: var(--testimonial-rail-padding);
+    }
+    .testimonial-card {
+      position: relative;
+      display: flex;
+      min-width: 0;
+      min-height: calc(var(--space-20) * 4.8);
+      flex-direction: column;
+      overflow: hidden;
+      background: hsl(var(--bg-surface));
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      color: hsl(var(--text-primary));
+      transition: var(--transition-interactive);
+      scroll-snap-align: start;
+    }
+    .testimonial-card--xl { grid-column: span 8; }
+    .testimonial-card--lg { grid-column: span 7; }
+    .testimonial-card--md { grid-column: span 5; }
+    .testimonial-card--sm { grid-column: span 4; }
+    .testimonial-card:hover {
+      border-color: hsl(var(--border-strong));
+    }
+    .testimonial-card:focus-visible {
+      outline: var(--focus-ring-width) solid hsl(var(--focus-ring));
+      outline-offset: var(--focus-ring-offset);
+      box-shadow:
+        0 0 0 var(--focus-ring-offset) hsl(var(--bg-base)),
+        var(--shadow-md);
+    }
+    .testimonial-company-logo {
+      position: relative;
+      z-index: 1;
+      display: block;
+      width: clamp(var(--home-testimonial-logo-size), 9vw, calc(var(--space-20) + var(--space-10)));
+      height: var(--home-testimonial-logo-size);
+      flex: none;
+    }
+    .testimonial-company-logo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      object-position: left center;
+      display: block;
+    }
+    .testimonial-body {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: var(--space-8);
+    }
+    .testimonial-quote {
+      margin: 0;
+      color: hsl(var(--text-primary));
+      font: var(--weight-semibold) var(--title-1);
+      letter-spacing: 0;
+      max-width: 24ch;
+    }
+    .testimonial-card--xl .testimonial-quote { max-width: 44ch; }
+    .testimonial-card--lg .testimonial-quote { max-width: 36ch; }
+    .testimonial-card--md .testimonial-quote { max-width: 28ch; }
+    .testimonial-card--sm .testimonial-quote { max-width: 22ch; }
+    .testimonial-byline {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin-top: auto;
+      padding-top: var(--space-12);
+    }
+    .testimonial-byline-divider {
+      width: var(--borderwidth-sm);
+      height: var(--size-avatar-lg);
+      background: hsl(var(--border-muted));
+      flex: none;
+    }
+    .testimonial-name {
+      color: hsl(var(--text-primary));
+      font: var(--weight-semibold) var(--text-sm);
+      letter-spacing: 0;
+    }
+    .testimonial-role {
+      margin-top: var(--space-1);
+      color: hsl(var(--text-tertiary));
+      font: var(--text-sm);
+      letter-spacing: 0;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .txn.is-scanning .txn-icon-trace-rect,
+      .txn.is-complete .txn-icon-trace-rect {
+        animation: none;
+      }
+      .txn.is-complete .txn-icon-trace-rect {
+        opacity: 0.96;
+        stroke-dasharray: 1 0;
+        stroke-dashoffset: 0;
+      }
+      .testimonial-viewport {
+        scroll-behavior: auto;
+      }
+    }
+
+    /* ---------- sequenced box reveals ---------- */
+    .reveal {
+      opacity: 0; transform: translateY(var(--space-4)) scale(0.985);
+      transition: opacity var(--speed-transition) var(--ease-standard), transform var(--speed-transition) var(--ease-standard);
+    }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* ---------- feature cards (delineating boxes) ---------- */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-5);
+    }
+    .feature-card {
+      padding: var(--space-8);
+      background: hsl(var(--bg-surface));
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-interactive);
+    }
+    .feature-card:hover {
+      border-color: hsl(var(--border-strong));
+      box-shadow: var(--shadow-md);
+      transform: translateY(var(--home-card-hover-lift));
+    }
+    .feature-card .hexmark { width: var(--home-icon-mark-size); height: var(--home-icon-mark-height); margin-bottom: var(--space-5); }
+    .feature-card h3 {
+      font: var(--weight-semibold) var(--title-1);
+      letter-spacing: var(--tracking-title-1);
+      color: hsl(var(--text-primary));
+      margin: 0 0 var(--space-2);
+    }
+    .feature-card p { margin: 0; font: var(--text-base); color: hsl(var(--text-secondary)); }
+
+    /* ---------- FAQ ---------- */
+    .faq-section {
+      overflow: hidden;
+      background: hsl(var(--bg-base));
+    }
+    .faq-layout {
+      display: grid;
+      grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+      column-gap: var(--space-5);
+      row-gap: var(--space-10);
+      align-items: start;
+    }
+    .faq-copy {
+      grid-column: 1 / span 4;
+      position: sticky;
+      top: calc(var(--size-nav) + var(--space-8));
+    }
+    .faq-copy h2 {
+      margin: 0;
+      color: hsl(var(--text-primary));
+      font: var(--weight-bold) var(--title-3);
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+    .faq-copy p {
+      max-width: 36ch;
+      margin: var(--space-4) 0 0;
+      color: hsl(var(--text-secondary));
+      font: var(--text-lg);
+      letter-spacing: 0;
+    }
+    .faq-list {
+      grid-column: 6 / span 7;
+      overflow: hidden;
+      background: hsl(var(--bg-surface));
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+    .faq-item {
+      border-bottom: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      background: hsl(var(--bg-surface));
+      transition:
+        background-color var(--speed-feedback) var(--ease-standard),
+        border-color var(--speed-feedback) var(--ease-standard);
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-item[open] { background: hsl(var(--bg-raised)); }
+    .faq-question {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) var(--size-control-sm);
+      align-items: center;
+      gap: var(--space-5);
+      min-height: var(--size-row-lg);
+      padding: var(--space-5) var(--space-6);
+      color: hsl(var(--text-primary));
+      cursor: pointer;
+      font: var(--weight-semibold) var(--text-lg);
+      letter-spacing: 0;
+      list-style: none;
+      text-wrap: balance;
+    }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-question:focus-visible {
+      outline: var(--focus-ring-width) solid hsl(var(--focus-ring));
+      outline-offset: calc(var(--focus-ring-offset) * -1);
+    }
+    .faq-toggle-icon {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: var(--size-control-sm);
+      height: var(--size-control-sm);
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-md);
+      background: hsl(var(--bg-surface));
+      color: hsl(var(--text-tertiary));
+      transition:
+        background-color var(--speed-feedback) var(--ease-standard),
+        border-color var(--speed-feedback) var(--ease-standard),
+        color var(--speed-feedback) var(--ease-standard);
+    }
+    .faq-toggle-icon::before,
+    .faq-toggle-icon::after {
+      content: "";
+      position: absolute;
+      width: var(--size-icon-sm);
+      height: var(--borderwidth-md);
+      border-radius: var(--radius-pill);
+      background: currentColor;
+      transition:
+        opacity var(--speed-feedback) var(--ease-standard),
+        transform var(--speed-feedback) var(--ease-standard);
+    }
+    .faq-toggle-icon::after {
+      transform: rotate(90deg);
+    }
+    .faq-item[open] .faq-toggle-icon {
+      border-color: hsl(var(--accent));
+      background: hsl(var(--accent));
+      color: hsl(var(--text-on-accent));
+    }
+    .faq-item[open] .faq-toggle-icon::after {
+      opacity: 0;
+      transform: rotate(90deg) scaleX(0.5);
+    }
+    .faq-answer {
+      padding: 0 var(--space-6) var(--space-6);
+      color: hsl(var(--text-secondary));
+      font: var(--text-base);
+      letter-spacing: 0;
+    }
+    .faq-answer p {
+      max-width: 74ch;
+      margin: 0;
+    }
+
+    /* ---------- CTA band ---------- */
+    .cta-section {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      background: hsl(var(--bg-base));
+      border-top: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      border-bottom: var(--borderwidth-sm) solid hsl(var(--border-muted));
+    }
+    .cta-section.pad {
+      padding-block: 0;
+    }
+    .cta-band {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      min-height: 640px;
+      padding: calc(var(--space-20) + var(--space-10)) 0;
+      text-align: center;
+    }
+    .cta-content {
+      position: relative;
+      z-index: 1;
+      max-width: calc(var(--space-20) * 10);
+    }
+    .cta-band h2 {
+      font: var(--weight-bold) 4.5rem/1 var(--font-display);
+      letter-spacing: 0;
+      margin: 0 0 var(--space-10);
+      color: hsl(var(--text-primary));
+    }
+    .cta-band .hero-cta { justify-content: center; }
+
+    /* ---------- footer ---------- */
+    .site-footer {
+      border-top: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      padding-block: var(--space-16) var(--space-10);
+      background: hsl(var(--bg-subtle));
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(4, 1fr);
+      gap: var(--space-12);
+    }
+    .footer-grid h4 {
+      font: var(--weight-semibold) var(--text-sm);
+      color: hsl(var(--text-primary));
+      margin: 0 0 var(--space-4); letter-spacing: var(--tracking-sm);
+    }
+    .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+    .footer-grid a { font: var(--text-sm); color: hsl(var(--text-secondary)); }
+    .footer-grid a:hover { color: hsl(var(--text-primary)); }
+    .footer-blurb { font: var(--text-sm); color: hsl(var(--text-secondary)); max-width: 34ch; margin: var(--space-4) 0 0; }
+    .footer-bottom {
+      margin-top: var(--space-16);
+      padding-top: var(--space-6);
+      border-top: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      display: flex; justify-content: space-between; align-items: center;
+      font: var(--text-xs); color: hsl(var(--text-tertiary));
+    }
+
+    /* theme toggle */
+    .theme-toggle {
+      width: var(--size-control-sm); height: var(--size-control-sm);
+      display: grid; place-items: center;
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-md);
+      background: hsl(var(--bg-surface));
+      color: hsl(var(--text-secondary));
+      cursor: pointer;
+      transition: var(--transition-interactive);
+    }
+    .theme-toggle:hover { background: hsl(var(--bg-hover)); color: hsl(var(--text-primary)); }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 900px) {
+      .hero .wrap--xl { max-width: 100%; }
+      .feature-split { grid-template-columns: 1fr; }
+      .feature-split--network { gap: var(--space-10); }
+      .transactions-split {
+        grid-template-columns: 1fr;
+      }
+      .transactions-split .section-head,
+      .transactions-split .stack-stage {
+        grid-column: 1 / -1;
+      }
+      .transactions-split .section-head {
+        max-width: var(--home-section-head-width);
+      }
+      .honeycomb-frame { justify-items: center; }
+      .edi-automation-title,
+      .edi-automation-lead,
+      .edi-automation-detail {
+        grid-column: 1 / -1;
+        grid-row: auto;
+      }
+      .edi-automation-lead,
+      .edi-automation-detail {
+        max-width: 68ch;
+      }
+      .workflow-title,
+      .workflow-copy {
+        grid-column: 1 / -1;
+      }
+      .workflow-copy {
+        max-width: 58ch;
+      }
+      .workflow-steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .workflow-step {
+        border-right: var(--borderwidth-sm) solid hsl(var(--border-muted));
+        border-bottom: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      }
+      .workflow-step:nth-child(2n) {
+        border-right: none;
+      }
+      .workflow-step:nth-last-child(-n + 2) {
+        border-bottom: none;
+      }
+      .testimonials-title-group,
+      .testimonials-actions {
+        grid-column: 1 / -1;
+      }
+      .testimonials-actions {
+        justify-self: start;
+        flex-wrap: wrap;
+      }
+      .testimonial-frame {
+        --testimonial-grid-gap: var(--space-4);
+      }
+      .testimonial-card--xl,
+      .testimonial-card--lg,
+      .testimonial-card--md,
+      .testimonial-card--sm {
+        grid-column: span 10;
+      }
+      .testimonial-card {
+        min-height: calc(var(--space-20) * 4);
+      }
+      .faq-copy,
+      .faq-list {
+        grid-column: 1 / -1;
+      }
+      .faq-copy {
+        position: static;
+        max-width: var(--home-section-head-width);
+      }
+      .faq-copy p {
+        max-width: 58ch;
+      }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .metric:nth-child(2) { border-right: none; }
+      .card-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+      .cta-band {
+        min-height: 560px;
+      }
+      .cta-band h2 {
+        font-size: 3.75rem;
+        line-height: 1;
+      }
+    }
+    @media (max-width: 560px) {
+      .hero { padding-block: var(--space-12) var(--space-6); }
+      .hero h1 {
+        max-width: 100%;
+        font-size: 2.25rem;
+        line-height: 1.05;
+      }
+      .hero-cta { width: 100%; }
+      .hero-cta .crstl-button { width: 100%; justify-content: center; }
+      .cta-band {
+        min-height: 480px;
+        padding: var(--space-20) 0;
+      }
+      .cta-band h2 {
+        font-size: 3rem;
+        line-height: 1.05;
+      }
+      .metrics { grid-template-columns: 1fr; }
+      .metric { border-right: none; border-bottom: var(--borderwidth-sm) solid hsl(var(--border-muted)); }
+      .stack-stage {
+        height: calc(var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-20) + var(--space-10));
+      }
+      .txn {
+        width: calc(100% - var(--space-16));
+      }
+      .workflow-steps {
+        grid-template-columns: 1fr;
+      }
+      .workflow-step,
+      .workflow-step:nth-child(2n),
+      .workflow-step:nth-last-child(-n + 2) {
+        border-right: none;
+        border-bottom: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      }
+      .workflow-step:last-child {
+        border-bottom: none;
+      }
+      .testimonials h2 {
+        max-width: 100%;
+        font-size: 2rem;
+        line-height: 1.1;
+      }
+      .testimonial-body {
+        padding: var(--space-6);
+      }
+      .testimonial-quote {
+        font: var(--weight-semibold) var(--text-lg);
+        letter-spacing: 0;
+      }
+      .testimonial-byline {
+        gap: var(--space-3);
+        padding-top: var(--space-10);
+      }
+      .testimonial-company-logo {
+        width: var(--space-16);
+      }
+      .testimonial-frame::before,
+      .testimonial-frame::after {
+        width: var(--space-12);
+      }
+      .testimonial-card--xl,
+      .testimonial-card--lg,
+      .testimonial-card--md,
+      .testimonial-card--sm {
+        grid-column: span 11;
+      }
+      .faq-question {
+        grid-template-columns: minmax(0, 1fr) var(--size-control-sm);
+        gap: var(--space-4);
+        padding: var(--space-5);
+        font: var(--weight-semibold) var(--text-lg);
+        letter-spacing: 0;
+      }
+      .faq-answer {
+        padding: 0 var(--space-5) var(--space-5);
+      }
+    }
+
+    /* ---- Edison agent workspace ---- */
+    .edison-stage {
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      align-items: end;
+      min-height: 720px;
+      padding: var(--space-5) var(--space-4) var(--space-10) 0;
+      perspective: 1400px;
+    }
+    .edison-stage::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: var(--space-8);
+      z-index: -1;
+      width: min(92vw, 1280px);
+      height: 170px;
+      transform: translateX(-50%);
+      background:
+        radial-gradient(70% 55% at 50% 48%, hsl(var(--foreground-default) / 0.2), transparent 72%),
+        linear-gradient(180deg, transparent, hsl(var(--border-muted) / 0.58));
+      filter: blur(var(--blur-md));
+      opacity: 0.42;
+      border-radius: var(--radius-circle);
+    }
+    .edison-shell {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      margin-inline: auto;
+      overflow: hidden;
+      border: var(--borderwidth-sm) solid hsl(var(--card-border));
+      border-radius: var(--radius-xl);
+      background: hsl(var(--bg-canvas));
+      box-shadow: var(--shadow-float);
+      transform: none;
+      transform-origin: center bottom;
+    }
+    .edison-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(42% 60% at 16% 0%, hsl(var(--accent) / 0.08), transparent 70%),
+        radial-gradient(32% 48% at 82% 12%, hsl(var(--aqua) / 0.12), transparent 78%);
+    }
+    .edison-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      min-height: var(--size-row-lg);
+      margin: 0 0 var(--space-5);
+    }
+    .edison-agent-id {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      gap: var(--space-3);
+      color: hsl(var(--text-primary));
+    }
+    .edison-mark {
+      display: grid;
+      place-items: center;
+      flex: 0 0 var(--size-control-sm);
+      width: var(--size-control-sm);
+      height: var(--size-control-sm);
+      color: hsl(var(--text-on-accent));
+      background: hsl(var(--accent));
+      clip-path: polygon(50% 0, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
+    }
+    .edison-mark svg {
+      width: var(--size-icon-md);
+      height: var(--size-icon-md);
+    }
+    .edison-agent-copy {
+      display: grid;
+      min-width: 0;
+      gap: var(--borderwidth-sm);
+    }
+    .edison-agent-name {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font: var(--weight-bold) var(--text-base);
+      letter-spacing: 0;
+      color: hsl(var(--text-primary));
+      white-space: nowrap;
+    }
+    .edison-agent-name svg {
+      width: var(--size-status-icon);
+      height: var(--size-status-icon);
+      color: hsl(var(--text-tertiary));
+    }
+    .edison-nav-actions {
+      display: inline-flex;
+      flex: none;
+      gap: var(--space-1);
+    }
+    .edison-nav-action {
+      display: grid;
+      place-items: center;
+      width: var(--size-control-sm);
+      height: var(--size-control-sm);
+      border: var(--borderwidth-sm) solid transparent;
+      border-radius: var(--radius-md);
+      background: transparent;
+      color: hsl(var(--text-tertiary));
+      padding: 0;
+      cursor: default;
+    }
+    .edison-nav-action:hover {
+      background: hsl(var(--bg-hover));
+      border-color: hsl(var(--border-muted));
+      color: hsl(var(--text-primary));
+    }
+    .edison-nav-action svg {
+      width: var(--size-icon-sm);
+      height: var(--size-icon-sm);
+    }
+    .edison-pulse-dot {
+      flex: none;
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-circle);
+      background: hsl(var(--accent));
+      animation: pulseDot 2s var(--ease-standard) infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { box-shadow: 0 0 0 0 hsl(var(--accent) / 0.45); }
+      55%       { box-shadow: 0 0 0 5px hsl(var(--accent) / 0); }
+    }
+    .edison-body {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: var(--edison-nav-width) minmax(0, 1fr);
+      height: 700px;
+      min-height: 0;
+      background: hsl(var(--bg-canvas));
+    }
+    .edison-nav {
+      min-height: 0;
+      padding: var(--space-3) var(--space-3) var(--space-4);
+      background: transparent;
+    }
+    .edison-nav-group {
+      display: grid;
+      gap: var(--space-1);
+    }
+    .edison-nav-group + .edison-nav-group {
+      margin-top: var(--space-6);
+    }
+    .edison-nav-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      min-height: var(--size-avatar-sm);
+      padding: 0 var(--space-3);
+      font: var(--weight-semibold) var(--text-xs);
+      letter-spacing: 0;
+      color: hsl(var(--text-meta));
+    }
+    .edison-nav-label svg {
+      width: var(--size-status-icon);
+      height: var(--size-status-icon);
+      color: hsl(var(--text-tertiary));
+    }
+    .edison-nav-list {
+      display: grid;
+      gap: var(--space-1);
+    }
+    .edison-nav-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      min-height: var(--size-control-lg);
+      padding: 0 var(--space-3);
+      border: var(--borderwidth-sm) solid transparent;
+      border-radius: var(--radius-lg);
+      color: hsl(var(--text-secondary));
+      font: var(--weight-semibold) var(--text-sm);
+      letter-spacing: 0;
+    }
+    .edison-nav-item svg {
+      width: var(--size-icon-sm);
+      height: var(--size-icon-sm);
+      color: hsl(var(--text-tertiary));
+      flex: none;
+    }
+    .edison-nav-item.is-active {
+      background: hsl(var(--bg-raised));
+      border-color: hsl(var(--card-border));
+      color: hsl(var(--text-primary));
+      box-shadow: var(--shadow-sm);
+    }
+    .edison-nav-item.is-active svg { color: hsl(var(--accent)); }
+    .edison-main {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      min-width: 0;
+      min-height: 0;
+      margin: var(--space-2);
+      overflow: hidden;
+      border: var(--borderwidth-sm) solid hsl(var(--card-border));
+      border-radius: var(--radius-lg);
+      background: hsl(var(--bg-surface));
+      box-shadow: var(--shadow-sm);
+    }
+    .edison-thread-head {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: var(--size-row);
+      padding: 0 var(--space-8);
+      border-bottom: var(--borderwidth-sm) solid hsl(var(--card-border));
+      background: hsl(var(--bg-surface));
+    }
+    .edison-thread-title strong {
+      display: block;
+      color: hsl(var(--text-primary));
+      font: var(--weight-semibold) var(--text-sm);
+    }
+    .edison-chat {
+      display: grid;
+      align-content: start;
+      gap: var(--space-5);
+      overflow: clip;
+      padding: var(--space-8);
+      min-width: 0;
+    }
+    .chat-message {
+      display: grid;
+      gap: var(--space-3);
+      width: 100%;
+      min-width: 0;
+      padding: var(--space-4);
+      border: var(--borderwidth-sm) solid hsl(var(--card-border));
+      border-radius: var(--radius-lg);
+      background: hsl(var(--bg-raised));
+      box-shadow: var(--shadow-sm);
+    }
+    .chat-message-head {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-width: 0;
+    }
+    .chat-avatar {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: var(--size-avatar-sm);
+      height: var(--size-avatar-sm);
+      border-radius: var(--radius-circle);
+      border: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      background: hsl(var(--bg-muted));
+      color: hsl(var(--text-tertiary));
+      font: var(--weight-semibold) var(--text-xs);
+      font-family: var(--font-mono);
+    }
+    .chat-avatar--agent {
+      color: hsl(var(--text-on-accent));
+      background: hsl(var(--accent));
+      border-color: hsl(var(--accent));
+    }
+    .chat-author {
+      color: hsl(var(--text-primary));
+      font: var(--weight-semibold) var(--text-sm);
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+    .chat-time {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-width: 0;
+      color: hsl(var(--text-meta));
+      font: var(--weight-medium) var(--text-sm);
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+    .chat-time::before {
+      content: "";
+      width: 3px;
+      height: 3px;
+      border-radius: var(--radius-circle);
+      background: currentColor;
+      opacity: 0.7;
+    }
+    .chat-bubble {
+      color: hsl(var(--text-secondary));
+      font: var(--text-sm);
+      letter-spacing: 0;
+      line-height: 1.55;
+    }
+    .chat-bubble strong {
+      color: hsl(var(--text-primary));
+      font-weight: var(--weight-semibold);
+    }
+    .chat-bubble--user {
+      color: hsl(var(--text-primary));
+    }
+    .agent-action {
+      display: grid;
+      gap: var(--space-2);
+      padding-inline: var(--space-4);
+      transition:
+        opacity var(--home-motion-agent-reset) var(--ease-standard),
+        transform var(--home-motion-agent-reset) var(--ease-standard);
+    }
+    .agent-action.is-resetting {
+      opacity: 0;
+      transform: translateY(var(--space-2));
+    }
+    .agent-action-list {
+      position: relative;
+      display: block;
+    }
+    .action-row {
+      position: relative;
+      z-index: 1;
+      isolation: isolate;
+      display: grid;
+      grid-template-columns: var(--size-avatar-sm) minmax(0, 1fr);
+      align-items: center;
+      column-gap: var(--space-3);
+      min-height: var(--size-avatar-sm);
+      min-width: 0;
+      color: hsl(var(--text-secondary));
+      font: var(--text-sm);
+      overflow: visible;
+    }
+    .action-row + .action-row {
+      margin-top: var(--space-2);
+    }
+    @keyframes actionStepShimmer {
+      from {
+        -webkit-mask-position: 120% 0;
+        mask-position: 120% 0;
+      }
+      to {
+        -webkit-mask-position: -120% 0;
+        mask-position: -120% 0;
+      }
+    }
+    .action-row[data-visible="false"] {
+      pointer-events: none;
+    }
+    .action-icon {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: var(--size-avatar-sm);
+      height: var(--size-avatar-sm);
+      border-radius: var(--radius-circle);
+      background: hsl(var(--card-bg));
+      color: hsl(var(--text-tertiary));
+    }
+    .action-icon svg {
+      display: block;
+      width: calc(var(--size-status-icon) + var(--space-1));
+      height: calc(var(--size-status-icon) + var(--space-1));
+      overflow: visible;
+    }
+    .action-icon-shimmer {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      color: hsl(var(--white));
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 44%, #000 56%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 44%, #000 56%, transparent 100%);
+      -webkit-mask-size: 220% 100%;
+      mask-size: 220% 100%;
+      -webkit-mask-position: 120% 0;
+      mask-position: 120% 0;
+      pointer-events: none;
+    }
+    .action-icon,
+    .action-copy {
+      transition:
+        opacity var(--home-motion-agent-row) var(--ease-standard),
+        transform var(--home-motion-agent-row) var(--ease-standard),
+        color var(--duration-fast) var(--ease-standard);
+    }
+    .action-copy {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      min-width: 0;
+      overflow-wrap: break-word;
+    }
+    .action-copy-base {
+      position: relative;
+      z-index: 1;
+      display: block;
+      line-height: inherit;
+    }
+    .action-copy-shimmer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: block;
+      line-height: inherit;
+      color: hsl(var(--white));
+      opacity: 0;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 44%, #000 56%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 44%, #000 56%, transparent 100%);
+      -webkit-mask-size: 220% 100%;
+      mask-size: 220% 100%;
+      -webkit-mask-position: 120% 0;
+      mask-position: 120% 0;
+      pointer-events: none;
+    }
+    .action-copy-shimmer strong {
+      color: hsl(var(--white));
+      font-weight: var(--weight-semibold);
+    }
+    .action-copy strong {
+      color: hsl(var(--text-primary));
+      font-weight: var(--weight-semibold);
+    }
+    .action-row[data-state="pending"] .action-icon {
+      opacity: 0.58;
+    }
+    .action-row[data-state="active"] {
+      color: hsl(var(--text-primary));
+    }
+    .action-row[data-state="active"] .action-icon {
+      color: hsl(var(--accent));
+    }
+    .action-row[data-state="active"][data-visible="true"] .action-icon-shimmer,
+    .action-row[data-state="active"][data-visible="true"] .action-copy-shimmer {
+      opacity: 0.92;
+      animation: actionStepShimmer var(--home-motion-agent-shimmer) linear infinite;
+    }
+    .action-row[data-state="done"] .action-icon {
+      color: hsl(var(--status-success));
+    }
+    .action-row[data-state="done"] .action-copy strong {
+      color: hsl(var(--text-primary));
+      -webkit-text-fill-color: currentColor;
+    }
+    .action-row[data-visible="false"] .action-icon,
+    .action-row[data-visible="false"] .action-copy,
+    .action-row[data-visible="staged"] .action-icon,
+    .action-row[data-visible="staged"] .action-copy {
+      opacity: 0;
+      transform: translateY(var(--space-2)) scale(0.96);
+    }
+    .action-row[data-visible="false"] .action-icon,
+    .action-row[data-visible="staged"] .action-icon {
+      visibility: hidden;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .action-row[data-state="active"][data-visible="true"] .action-copy,
+      .action-row[data-state="active"][data-visible="true"] .action-copy strong {
+        animation: none;
+        color: hsl(var(--text-primary));
+        background: none;
+        -webkit-text-fill-color: currentColor;
+      }
+      .action-row[data-state="active"][data-visible="true"] .action-icon-shimmer,
+      .action-row[data-state="active"][data-visible="true"] .action-copy-shimmer {
+        animation: none;
+        opacity: 0;
+      }
+    }
+    .chat-message[data-agent-final] {
+      max-height: 0;
+      padding-block: 0;
+      border-color: transparent;
+      box-shadow: none;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transform: translateY(var(--space-3));
+    }
+    .chat-message[data-agent-final][data-visible="true"],
+    .chat-message[data-agent-final].is-visible {
+      max-height: calc(var(--space-20) + var(--space-12));
+      padding-block: var(--space-4);
+      border-color: hsl(var(--card-border));
+      box-shadow: var(--shadow-sm);
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+      animation: finalMessageEnter var(--home-motion-agent-row) var(--ease-standard) both;
+    }
+    .chat-message[data-agent-final][data-resetting="true"],
+    .chat-message[data-agent-final].is-resetting {
+      max-height: calc(var(--space-20) + var(--space-12));
+      padding-block: var(--space-4);
+      border-color: hsl(var(--card-border));
+      box-shadow: var(--shadow-sm);
+      opacity: 0;
+      transform: translateY(var(--space-2));
+      animation: finalMessageExit var(--home-motion-agent-reset) var(--ease-standard) both;
+    }
+    @keyframes finalMessageEnter {
+      from { opacity: 1; transform: translateY(var(--space-3)); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes finalMessageExit {
+      from { opacity: 0; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(var(--space-2)); }
+    }
+    .edison-composer {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      min-height: var(--size-row-lg);
+      margin: 0 var(--space-8) var(--space-8);
+      padding: 0 var(--space-3) 0 var(--space-5);
+      border: var(--borderwidth-sm) solid hsl(var(--card-border));
+      border-radius: var(--radius-lg);
+      background: hsl(var(--bg-raised));
+      color: hsl(var(--text-meta));
+      font: var(--text-sm);
+    }
+    .composer-placeholder {
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .composer-send {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: var(--size-icon-md);
+      height: var(--size-icon-md);
+      color: hsl(var(--text-tertiary));
+      transition: color var(--speed-feedback) var(--ease-standard);
+    }
+    .composer-send:hover { color: hsl(var(--text-primary)); }
+    .composer-send svg {
+      width: var(--size-icon-md);
+      height: var(--size-icon-md);
+    }
+    @media (max-width: 1000px) {
+      .edison-body {
+        grid-template-columns: 1fr;
+      }
+      .edison-nav {
+        display: none;
+      }
+      .edison-main {
+        margin: var(--space-2);
+        border-radius: var(--radius-lg);
+      }
+    }
+    @media (max-width: 760px) {
+      .edison-stage {
+        min-height: 0;
+        /* remove right padding — shell fills full width on mobile */
+        padding: var(--space-4) 0 var(--space-6);
+      }
+      .edison-stage::after {
+        bottom: var(--space-2);
+        height: 120px;
+      }
+      .edison-shell {
+        transform: none;
+        border-radius: var(--radius-lg);
+      }
+      .edison-body {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+    }
+    @media (max-width: 560px) {
+      .edison-copy h2 {
+        font-size: 2rem;
+        line-height: 1.1;
+      }
+      .edi-automation-title {
+        font-size: 2rem;
+        line-height: 1.1;
+      }
+      .edi-automation-lead,
+      .edi-automation-detail {
+        font: var(--text-base);
+      }
+      .edison-thread-head {
+        padding-inline: var(--space-4);
+        padding-block: var(--space-3);
+      }
+      .edison-chat {
+        padding: var(--space-4);
+        gap: var(--space-4);
+      }
+      .chat-message {
+        padding: var(--space-3);
+      }
+      .chat-bubble {
+        max-width: 100%;
+      }
+      .action-row {
+        gap: var(--space-2);
+        min-height: 28px;
+      }
+      .edison-composer {
+        margin: 0 var(--space-3) var(--space-3);
+        padding: 0 var(--space-2) 0 var(--space-3);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================ HEADER ============================ -->
+  <header class="site-header">
+    <div class="wrap wrap--xl">
+      <a href="#" class="brand" aria-label="Crstl home">
+        <svg class="brand-mark" viewBox="0 0 28 32" fill="none" aria-hidden="true">
+          <path d="M14 1 27 8.5v15L14 31 1 23.5v-15L14 1Z" fill="hsl(var(--accent))"/>
+          <path d="M14 8 20.5 11.75v7.5L14 23l-6.5-3.75v-7.5L14 8Z" fill="hsl(var(--bg-base))"/>
+          <path d="M14 12.5 16.5 14v4L14 19.5 11.5 18v-4L14 12.5Z" fill="hsl(var(--accent))"/>
+        </svg>
+        Crstl
+      </a>
+      <nav class="nav-links" aria-label="Primary" data-nav-menu>
+        <div class="nav-menu__list" data-nav-list>
+          <span class="nav-menu__highlight" aria-hidden="true" data-nav-highlight></span>
+          <button class="nav-link" type="button" aria-expanded="false" aria-controls="primaryNavDropdown" data-menu-trigger="solutions">
+            Solutions
+          </button>
+          <button class="nav-link" type="button" aria-expanded="false" aria-controls="primaryNavDropdown" data-menu-trigger="resources">
+            Resources
+          </button>
+          <button class="nav-link" type="button" aria-expanded="false" aria-controls="primaryNavDropdown" data-menu-trigger="company">
+            Company
+          </button>
+          <a class="nav-link nav-link--accent" href="https://www.crstl.ai/ditch-document-fees">Ditch Document Fees</a>
+        </div>
+        <div class="nav-menu__dropdown" id="primaryNavDropdown" data-menu-dropdown aria-hidden="true">
+          <div class="nav-menu__surface">
+            <div class="nav-menu-panel" data-menu-panel="solutions" data-menu-width="720">
+              <div class="nav-panel__body nav-panel__body--solutions">
+                <div class="nav-panel__group">
+                  <p class="nav-panel__eyebrow">By customer</p>
+                  <div class="nav-panel__items nav-panel__items--two">
+                    <a class="nav-panel__item" href="https://www.crstl.ai/solutions/brands">
+                      <span class="nav-panel__title">Brands</span>
+                      <span class="nav-panel__description">Onboard, transact, integrate, and save</span>
+                    </a>
+                    <a class="nav-panel__item" href="https://www.crstl.ai/solutions/logistics">
+                      <span class="nav-panel__title">Logistics Providers</span>
+                      <span class="nav-panel__description">3PL, WMS, TMS</span>
+                    </a>
+                    <a class="nav-panel__item" href="https://www.crstl.ai/solutions/retailers">
+                      <span class="nav-panel__title">Retailers</span>
+                      <span class="nav-panel__description">Wholesale, dropship, direct store delivery</span>
+                    </a>
+                    <a class="nav-panel__item" href="https://www.crstl.ai/solutions/commerce-platforms">
+                      <span class="nav-panel__title">Commerce Enablement Platforms</span>
+                      <span class="nav-panel__description">Ecommerce, ERP, WMS, and more</span>
+                    </a>
+                  </div>
+                </div>
+                <div class="nav-panel__group">
+                  <p class="nav-panel__eyebrow">Ecosystem</p>
+                  <div class="nav-panel__items">
+                    <a class="nav-panel__item" href="https://www.crstl.ai/retail-network">
+                      <span class="nav-panel__title">Retailer Network</span>
+                      <span class="nav-panel__description">Expand distribution</span>
+                    </a>
+                    <a class="nav-panel__item" href="https://www.crstl.ai/integrations">
+                      <span class="nav-panel__title">Integrations Network</span>
+                      <span class="nav-panel__description">Connect essential systems</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="nav-panel__footer">
+                <span><strong>Edison</strong> keeps every buyer workflow compliant.</span>
+                <a href="https://www.crstl.ai/blog/the-end-of-the-error-code-chase-meet-edison-your-ai-powered-edi-agent">Meet Edison →</a>
+              </div>
+            </div>
+
+            <div class="nav-menu-panel" data-menu-panel="resources" data-menu-width="580">
+              <div class="nav-panel__body nav-panel__body--resources">
+                <div class="nav-panel__group">
+                  <p class="nav-panel__eyebrow">Learn</p>
+                  <div class="nav-panel__items">
+                    <a class="nav-panel__item" href="https://www.crstl.ai/case-studies">
+                      <span class="nav-panel__title">Case studies</span>
+                      <span class="nav-panel__description">Success stories with Crstl</span>
+                    </a>
+                    <a class="nav-panel__item" href="https://www.crstl.ai/blog">
+                      <span class="nav-panel__title">Blog</span>
+                      <span class="nav-panel__description">Insights, trends, and updates</span>
+                    </a>
+                  </div>
+                </div>
+                <div class="nav-panel__group">
+                  <p class="nav-panel__eyebrow">Support</p>
+                  <div class="nav-panel__items">
+                    <a class="nav-panel__item" href="https://www.crstl.ai/faqs">
+                      <span class="nav-panel__title">FAQ</span>
+                      <span class="nav-panel__description">Quick answers to common questions</span>
+                    </a>
+                    <a class="nav-panel__item" href="https://www.crstl.ai/partner-program">
+                      <span class="nav-panel__title">Partners</span>
+                      <span class="nav-panel__description">Join Crstl's partner network</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="nav-panel__footer">
+                <span>Explore practical guides for modern EDI operations.</span>
+                <a href="https://www.crstl.ai/blog">View all →</a>
+              </div>
+            </div>
+
+            <div class="nav-menu-panel" data-menu-panel="company" data-menu-width="500">
+              <div class="nav-panel__body nav-panel__body--company">
+                <div class="nav-panel__group">
+                  <p class="nav-panel__eyebrow">Company</p>
+                  <div class="nav-panel__items">
+                    <a class="nav-panel__item" href="https://www.crstl.ai/company/about">
+                      <span class="nav-panel__title">About us</span>
+                      <span class="nav-panel__description">What drives Crstl forward</span>
+                    </a>
+                    <a class="nav-panel__item" href="https://www.crstl.ai/company/careers">
+                      <span class="nav-panel__title">Careers</span>
+                      <span class="nav-panel__description">Join our growing team</span>
+                    </a>
+                    <a class="nav-panel__item" href="https://www.crstl.ai/company/newsroom">
+                      <span class="nav-panel__title">Newsroom</span>
+                      <span class="nav-panel__description">News and press updates</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="nav-panel__footer">
+                <span>Need help deciding where to start?</span>
+                <a href="https://www.crstl.ai/contact">Contact us →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+        </button>
+        <a href="https://omnicrstl.web.app/login" class="nav-ghost">Sign in</a>
+        <a href="https://www.crstl.ai/demo" class="crstl-button crstl-button--primary crstl-button--sm on-accent">Book a demo</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ ABOVE-THE-FOLD: HERO + TRUST STRIP ============ -->
+  <div class="first-screen">
+
+  <!-- ============================ HERO ============================ -->
+  <section class="hero">
+    <div class="wrap wrap--xl">
+      <div class="hero-copy">
+        <a href="crstl-edison-pipeline.html" class="crstl-pill hero-edison-pill">
+          <span class="crstl-pill__dot" aria-hidden="true"></span>
+          Meet Edison — Your Always-On Buyer Compliance Agent
+          <svg class="crstl-pill__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+        </a>
+        <h1>
+          <span class="hero-title-line">The agentic B2B</span>
+          <span class="hero-title-line">commerce network for</span>
+          <span class="hero-title-rotator">
+            <span class="rotator" aria-label="3PLs, Shopify Plus, NetSuite, Brands, Retailers, Target brands, Walmart brands, Costco brands, Wholesalers, Manufacturers, Government">
+              <span>3PLs</span>
+              <span>Shopify Plus</span>
+              <span>NetSuite</span>
+              <span>Brands</span>
+              <span>Retailers</span>
+              <span>Target brands</span>
+              <span>Walmart brands</span>
+              <span>Costco brands</span>
+              <span>Wholesalers</span>
+              <span>Manufacturers</span>
+              <span>Government</span>
+            </span>
+          </span>
+        </h1>
+        <p class="hero-sub">Connecting buyers, suppliers, and logistics providers across EDI and API. Automate every transaction, compliance, and workflow — from order to payment.</p>
+        <div class="hero-cta">
+          <a href="#" class="crstl-button crstl-button--primary crstl-button--lg on-accent">Book a demo</a>
+          <a href="#" class="crstl-button crstl-button--secondary crstl-button--lg">
+            Explore the platform
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BRAND MARQUEE STRIP ===================== -->
+  <section class="logo-strip" aria-label="Brands and partners on Crstl">
+    <div class="marquee" id="marquee">
+      <div class="marquee-track" id="marqueeTrack"></div>
+    </div>
+    <p class="logo-strip-lead wrap">Trusted by leading brands, retailers, 3PLs, and more.</p>
+  </section>
+
+  </div><!-- /.first-screen -->
+
+  <!-- ============================ EDISON AI ============================ -->
+  <section class="band band--muted pad edison-section" id="edison" aria-label="Edison AI">
+    <div class="wrap wrap--xl">
+      <div class="edison-copy reveal">
+        <h2>Your EDI agent, working in the thread.</h2>
+        <p>Chat with Edison, watch it inspect buyer rules, and see every action resolve against live orders, labels, ASNs, and invoices.</p>
+      </div>
+
+      <div class="edison-stage reveal">
+        <div class="edison-shell" aria-label="Edison AI agent workspace">
+          <div class="edison-body">
+            <aside class="edison-nav" aria-label="Edison workspace navigation">
+              <div class="edison-topbar">
+                <div class="edison-agent-id">
+                  <span class="edison-mark" aria-hidden="true">
+                    <svg class="lucide lucide-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 8V4H8"/>
+                      <rect width="16" height="12" x="4" y="8" rx="2"/>
+                      <path d="M2 14h2"/>
+                      <path d="M20 14h2"/>
+                      <path d="M15 13v2"/>
+                      <path d="M9 13v2"/>
+                    </svg>
+                  </span>
+                  <span class="edison-agent-copy">
+                    <span class="edison-agent-name">
+                      Edison
+                      <svg class="lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                    </span>
+                  </span>
+                </div>
+                <div class="edison-nav-actions">
+                  <button class="edison-nav-action" type="button" aria-label="Search Edison workspace">
+                    <svg class="lucide lucide-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                  </button>
+                  <button class="edison-nav-action" type="button" aria-label="Create Edison task">
+                    <svg class="lucide lucide-square-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="edison-nav-group">
+                <div class="edison-nav-list">
+                  <div class="edison-nav-item is-active">
+                    <svg class="lucide lucide-message-square-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M13 8H7"/><path d="M17 12H7"/></svg>
+                    Agent thread
+                  </div>
+                  <div class="edison-nav-item">
+                    <svg class="lucide lucide-clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+                    Orders
+                  </div>
+                  <div class="edison-nav-item">
+                    <svg class="lucide lucide-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                    Documents
+                  </div>
+                </div>
+              </div>
+
+              <div class="edison-nav-group">
+                <div class="edison-nav-label">
+                  Workspace
+                  <svg class="lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+                <div class="edison-nav-list">
+                  <div class="edison-nav-item">
+                    <svg class="lucide lucide-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                    Compliance
+                  </div>
+                  <div class="edison-nav-item">
+                    <svg class="lucide lucide-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>
+                    Insights
+                  </div>
+                  <div class="edison-nav-item">
+                    <svg class="lucide lucide-network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>
+                    Partners
+                  </div>
+                </div>
+              </div>
+
+              <div class="edison-nav-group">
+                <div class="edison-nav-label">
+                  Automation
+                  <svg class="lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+                <div class="edison-nav-list">
+                  <div class="edison-nav-item">
+                    <svg class="lucide lucide-workflow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg>
+                    Workflows
+                  </div>
+                  <div class="edison-nav-item">
+                    <svg class="lucide lucide-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.937A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
+                    Agent tasks
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <main class="edison-main">
+              <div class="edison-thread-head">
+                <div class="edison-thread-title">
+                  <strong>Prepare shipment docs for Target</strong>
+                </div>
+              </div>
+
+              <div class="edison-chat">
+                <div class="chat-message">
+                  <div class="chat-message-head">
+                    <div class="chat-avatar">YR</div>
+                    <span class="chat-author">You</span>
+                    <span class="chat-time">just now</span>
+                  </div>
+                  <div class="chat-bubble chat-bubble--user">Can you validate the Target PO, create the ASN, and make sure the labels match their latest routing guide?</div>
+                </div>
+                <div class="chat-message">
+                  <div class="chat-message-head">
+                    <div class="chat-avatar chat-avatar--agent">E</div>
+                    <span class="chat-author">Edison</span>
+                    <span class="chat-time">now</span>
+                  </div>
+                  <div class="chat-bubble"><strong>On it.</strong> I found the purchase order, matched it to the NetSuite fulfillment, and I am checking carton weights against Target's routing guide.</div>
+                </div>
+
+                <div class="agent-action" aria-label="Edison action responses">
+                  <div class="agent-action-list">
+                    <div class="action-row" data-agent-action data-state="active" data-visible="true">
+                      <span class="action-icon" aria-hidden="true">
+                        <svg class="lucide lucide-scan-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+                          <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+                          <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+                          <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                          <path d="M7 12h10"/>
+                        </svg>
+                        <svg class="lucide lucide-scan-line action-icon-shimmer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+                          <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+                          <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+                          <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                          <path d="M7 12h10"/>
+                        </svg>
+                      </span>
+                      <span class="action-copy">
+                        <span class="action-copy-base"><strong>Edison</strong> parsed the <strong>EDI 850</strong> order</span>
+                        <span class="action-copy-shimmer" aria-hidden="true"><strong>Edison</strong> parsed the <strong>EDI 850</strong> order</span>
+                      </span>
+                    </div>
+                    <div class="action-row" data-agent-action data-state="pending" data-visible="false">
+                      <span class="action-icon" aria-hidden="true">
+                        <svg class="lucide lucide-badge-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/>
+                          <path d="m9 13 2 2 4-4"/>
+                        </svg>
+                        <svg class="lucide lucide-badge-check action-icon-shimmer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/>
+                          <path d="m9 13 2 2 4-4"/>
+                        </svg>
+                      </span>
+                      <span class="action-copy">
+                        <span class="action-copy-base"><strong>Edison</strong> checked <strong>GS1-128</strong> labels</span>
+                        <span class="action-copy-shimmer" aria-hidden="true"><strong>Edison</strong> checked <strong>GS1-128</strong> labels</span>
+                      </span>
+                    </div>
+                    <div class="action-row" data-agent-action data-state="pending" data-visible="false">
+                      <span class="action-icon" aria-hidden="true">
+                        <svg class="lucide lucide-package-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m16 16 2 2 4-4"/>
+                          <path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/>
+                          <path d="m7.5 4.27 9 5.15"/>
+                          <path d="m3.29 7 8.71 5 8.71-5"/>
+                          <path d="M12 22V12"/>
+                        </svg>
+                        <svg class="lucide lucide-package-check action-icon-shimmer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m16 16 2 2 4-4"/>
+                          <path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/>
+                          <path d="m7.5 4.27 9 5.15"/>
+                          <path d="m3.29 7 8.71 5 8.71-5"/>
+                          <path d="M12 22V12"/>
+                        </svg>
+                      </span>
+                      <span class="action-copy">
+                        <span class="action-copy-base"><strong>Edison</strong> queued the <strong>EDI 856</strong> ASN</span>
+                        <span class="action-copy-shimmer" aria-hidden="true"><strong>Edison</strong> queued the <strong>EDI 856</strong> ASN</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="chat-message" data-agent-final data-visible="false">
+                  <div class="chat-message-head">
+                    <div class="chat-avatar chat-avatar--agent">E</div>
+                    <span class="chat-author">Edison</span>
+                    <span class="chat-time">now</span>
+                  </div>
+                  <div class="chat-bubble">I corrected 3 carton weights, queued the ASN, and will hold the invoice until shipment confirmation lands</div>
+                </div>
+              </div>
+
+              <div class="edison-composer">
+                <span class="composer-placeholder">Ask Edison to reconcile, explain, or take action...</span>
+                <span class="composer-send" aria-hidden="true">
+                  <svg class="lucide lucide-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+                </span>
+              </div>
+            </main>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== WHAT IS EDI AUTOMATION ===================== -->
+  <section class="band pad edi-automation-section" id="edi-automation" aria-labelledby="ediAutomationTitle">
+    <div class="wrap">
+      <div class="edi-automation-layout reveal">
+        <h2 class="edi-automation-title" id="ediAutomationTitle">What Is EDI Automation?</h2>
+        <p class="edi-automation-lead"><span class="edi-automation-emphasis">Electronic Data Interchange (EDI)</span> is the standardized electronic exchange of business documents — <span class="edi-automation-emphasis">purchase orders, invoices, advance ship notices</span>, and more — between trading partners. <span class="edi-automation-emphasis">EDI automation replaces manual data entry</span> and error-prone processes with intelligent, <span class="edi-automation-emphasis">rules-based workflows</span> that process these documents automatically.</p>
+        <p class="edi-automation-detail">Crstl is an <span class="edi-automation-emphasis">AI-native EDI and supply chain commerce platform</span> that <span class="edi-automation-emphasis">automates order-to-cash workflows</span> between brands, retailers, and logistics partners. With Crstl, brands <span class="edi-automation-emphasis">onboard new retail trading partners in days</span> instead of months, automatically generate <span class="edi-automation-emphasis">compliant ASNs and invoices</span>, and connect seamlessly with Shopify, NetSuite, Microsoft Dynamics 365, QuickBooks, Amazon, Walmart, Target, Costco, and hundreds more.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== INTERACTIVE HONEYCOMB FEATURE ============== -->
+  <section class="band pad" id="platform">
+    <div class="wrap">
+      <div class="feature-split feature-split--network">
+        <div class="feature-copy feature-copy--section reveal" aria-live="polite">
+          <h2 id="featureTitle">AI-Powered Integrations</h2>
+          <p id="featureBody">Rapid expansion of our reliable integrations network ensures your business can scale without limits.</p>
+        </div>
+
+        <div class="honeycomb-frame reveal" aria-label="Crstl integration network">
+          <div class="honeycomb" id="honeycomb"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== SCATTERED → STACK ============== -->
+  <section class="band band--muted pad" id="features">
+    <div class="wrap">
+      <div class="transactions-split">
+        <div class="section-head reveal">
+          <h2>All your transactions organized in one place.</h2>
+          <p>Crstl compiles documents, transactions, invoices, and partner updates into one easy-to-use dashboard your team can trust.</p>
+        </div>
+        <div class="stack-stage reveal" id="stackStage" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== WORKFLOW STEPS ============== -->
+  <section class="band pad" id="workflow">
+    <div class="wrap">
+      <div class="workflow-head reveal">
+        <h2 class="workflow-title">Get Started with AI-Powered EDI in 4 Steps</h2>
+        <p class="workflow-copy">Easily onboard and communicate with all your B2B partners using Crstl AI. Efficiently connect to WMS, ERP, and other critical systems with no EDI expertise needed. Accelerate growth while saving time and reducing costs.</p>
+      </div>
+
+      <div class="workflow-steps reveal" aria-label="Get started with Crstl in four steps">
+        <article class="workflow-step">
+          <span class="workflow-step-number">01</span>
+          <h3>Sign up</h3>
+          <p>Sign up with Crstl to transact with your B2B trading partners.</p>
+        </article>
+        <article class="workflow-step">
+          <span class="workflow-step-number">02</span>
+          <h3>Onboard</h3>
+          <p>Crstl handles compliance and testing with the trading partner, keeping your team in the loop at every step.</p>
+        </article>
+        <article class="workflow-step">
+          <span class="workflow-step-number">03</span>
+          <h3>All set!</h3>
+          <p>Send and receive every document needed to transact with full transparency and reliability.</p>
+        </article>
+        <article class="workflow-step">
+          <span class="workflow-step-number">04</span>
+          <h3>Expand</h3>
+          <p>Link Crstl to your 3PL, ERP, and other systems to unlock automation and clean data exchange.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== TESTIMONIAL CAROUSEL ============== -->
+  <section class="band band--muted pad testimonials" id="case-studies" aria-label="What Brands Say About Switching to Crstl">
+    <div class="wrap wrap--xl">
+      <div class="testimonials-head reveal">
+        <div class="testimonials-title-group">
+          <h2>What Brands Say About Switching to Crstl</h2>
+        </div>
+        <div class="testimonials-actions">
+          <a href="https://www.crstl.ai/case-studies" class="crstl-button crstl-button--secondary">View all case studies</a>
+          <div class="testimonial-controls" aria-label="Customer story carousel controls">
+            <button class="testimonial-arrow" type="button" id="testimonialPrev" aria-label="Previous customer stories">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18 9 12l6-6"/></svg>
+            </button>
+            <button class="testimonial-arrow" type="button" id="testimonialNext" aria-label="Next customer stories">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-frame reveal">
+      <div class="testimonial-viewport" id="testimonialViewport" aria-label="Customer case studies carousel">
+        <div class="testimonial-track" id="testimonialTrack">
+          <a href="https://www.crstl.ai/case-study/kitchensupply" aria-label="Read KitchenSupply case study" class="testimonial-card testimonial-card--lg">
+            <div class="testimonial-body">
+              <p class="testimonial-quote">"The ability and willingness of Crstl to help is night and day compared to other providers. They're not just a vendor; they're genuinely invested in our success."</p>
+              <div class="testimonial-byline">
+                <span class="testimonial-company-logo"><img src="assets/testimonials/kitchensupply-logo.avif" alt="KitchenSupply logo" loading="eager" /></span>
+                <span class="testimonial-byline-divider" aria-hidden="true"></span>
+                <div>
+                  <div class="testimonial-name">Josh Lazenby</div>
+                  <div class="testimonial-role">Senior Operations Manager, KitchenSupply</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://www.crstl.ai/case-study/elavi" aria-label="Read Elavi case study" class="testimonial-card testimonial-card--md">
+            <div class="testimonial-body">
+              <p class="testimonial-quote">"Crstl provided the hands-on approach during onboarding, ensuring we had the right amount of services without overpaying for features we wouldn't need for years."</p>
+              <div class="testimonial-byline">
+                <span class="testimonial-company-logo"><img src="assets/testimonials/elavi-logo.png" alt="Elavi logo" loading="eager" /></span>
+                <span class="testimonial-byline-divider" aria-hidden="true"></span>
+                <div>
+                  <div class="testimonial-name">Nikki Elliott</div>
+                  <div class="testimonial-role">Co-founder, Elavi</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://www.crstl.ai/case-study/freestyle" aria-label="Read Freestyle case study" class="testimonial-card testimonial-card--xl">
+            <div class="testimonial-body">
+              <p class="testimonial-quote">"As a startup, our biggest advantage is speed of execution. Having a partner, like Crstl, who shares that same advantage and acts quickly was incredibly valuable, especially when it allowed us to get EDI set up with UNFI sooner, which in turn allowed us to secure better payment terms."</p>
+              <div class="testimonial-byline">
+                <span class="testimonial-company-logo"><img src="assets/testimonials/freestyle-logo.png" alt="Freestyle logo" loading="eager" /></span>
+                <span class="testimonial-byline-divider" aria-hidden="true"></span>
+                <div>
+                  <div class="testimonial-name">Russ Wallace</div>
+                  <div class="testimonial-role">CEO &amp; Co-founder, Freestyle</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://www.crstl.ai/case-study/immi" aria-label="Read Immi case study" class="testimonial-card testimonial-card--sm">
+            <div class="testimonial-body">
+              <p class="testimonial-quote">"Our team is a lot more efficient [since switching to Crstl]. When it comes to onboarding a customer, the time that it takes is very short."</p>
+              <div class="testimonial-byline">
+                <span class="testimonial-company-logo"><img src="assets/testimonials/immi-logo.svg" alt="Immi logo" loading="eager" /></span>
+                <span class="testimonial-byline-divider" aria-hidden="true"></span>
+                <div>
+                  <div class="testimonial-name">Silas Ang</div>
+                  <div class="testimonial-role">Director of Supply Chain, Immi</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://www.crstl.ai/case-study/neuro" aria-label="Read Neuro case study" class="testimonial-card testimonial-card--lg">
+            <div class="testimonial-body">
+              <p class="testimonial-quote">"Crstl delivers a product that makes traditional platforms look like a protection racket. As a fast-emerging brand, Crstl enables us to adapt and scale without viewing us as another pocket to pick. Out with the old, in with the new, please and thank you."</p>
+              <div class="testimonial-byline">
+                <span class="testimonial-company-logo"><img src="assets/testimonials/neuro-logo.avif" alt="Neuro logo" loading="eager" /></span>
+                <span class="testimonial-byline-divider" aria-hidden="true"></span>
+                <div>
+                  <div class="testimonial-name">Ryan Chen</div>
+                  <div class="testimonial-role">CFO &amp; Co-founder, Neuro</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://www.crstl.ai/case-study/biom" aria-label="Read Biom case study" class="testimonial-card testimonial-card--md">
+            <div class="testimonial-body">
+              <p class="testimonial-quote">"To me, the real difference with Crstl is how fast they respond. There's always going to be issues, but just knowing that the Crstl customer support team is there and will respond quickly if we have an issue makes all the difference."</p>
+              <div class="testimonial-byline">
+                <span class="testimonial-company-logo"><img src="assets/testimonials/biom-logo.png" alt="Biom logo" loading="eager" /></span>
+                <span class="testimonial-byline-divider" aria-hidden="true"></span>
+                <div>
+                  <div class="testimonial-name">Will Gahagan</div>
+                  <div class="testimonial-role">CEO, Biom</div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== FAQ ============== -->
+  <section class="band pad faq-section" id="faq" aria-labelledby="faqTitle">
+    <div class="wrap">
+      <div class="faq-layout">
+        <div class="faq-copy reveal">
+          <h2 id="faqTitle">Your Frequently Asked Questions (FAQs) About EDI Automation, Answered</h2>
+          <p>Straight answers for teams replacing manual EDI work, legacy providers, and disconnected order-to-cash systems.</p>
+        </div>
+
+        <div class="faq-list reveal">
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>What is Crstl?</span>
+              <span class="faq-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>Crstl is an AI-powered EDI and B2B agentic commerce platform that automates order-to-cash workflows between brands, retailers, and logistics providers. Our AI agent, Edison, processes purchase orders, generates ASNs, creates invoices, and ensures retailer compliance autonomously — handling over $1 billion in B2B GMV.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>What is EDI automation?</span>
+              <span class="faq-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>EDI (Electronic Data Interchange) automation replaces manual document exchange between trading partners with software that automatically sends and receives standardized business documents like purchase orders <span class="crstl-code-chip">850</span>, advance ship notices <span class="crstl-code-chip">856</span>, and invoices <span class="crstl-code-chip">810</span>. Crstl takes this further with AI agents that not only transmit documents but validate, reconcile, and resolve errors autonomously.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>How long does EDI onboarding take with Crstl?</span>
+              <span class="faq-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>Most brands are fully onboarded and transacting with their retail trading partners within days or weeks, not the months typical of legacy EDI providers. Crstl handles all compliance testing and trading partner certification for you.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>What retailers and trading partners does Crstl support?</span>
+              <span class="faq-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>Crstl supports all major retailers including Walmart, Target, Costco, Amazon, UNFI, Whole Foods, Kroger, and hundreds more. We handle the full range of EDI document types required by each retailer, including retailer-specific compliance requirements and routing guides.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>How is Crstl different from legacy EDI providers?</span>
+              <span class="faq-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>Crstl is AI-native, built from the ground up with agentic automation. Some key differences: an AI agent (Edison) that resolves errors autonomously; full proprietary vendor compliance API access for developer teams; no per-document fees; and every account gets a dedicated implementation specialist and direct Slack access to the Crstl team.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Does Crstl integrate with NetSuite, Shopify, and other ERPs?</span>
+              <span class="faq-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>Yes. Crstl integrates with NetSuite, Shopify, Microsoft Dynamics 365 Business Central, QuickBooks, and other ERP and commerce platforms. These integrations enable fully automated order-to-cash workflows without manual data entry or CSV exports.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>What EDI documents does Crstl support?</span>
+              <span class="faq-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>Crstl supports all standard EDI transaction sets in the 800- and 900-series including: <span class="crstl-code-chip">850</span> Purchase Order, <span class="crstl-code-chip">855</span> Purchase Order Acknowledgment, <span class="crstl-code-chip">856</span> Advance Ship Notice / ASN, <span class="crstl-code-chip">810</span> Invoice, <span class="crstl-code-chip">820</span> Payment Order, <span class="crstl-code-chip">997</span> Functional Acknowledgment, and dozens more. We also support custom document mappings for retailer-specific requirements.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Does Crstl charge per-document fees?</span>
+              <span class="faq-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>No. Unlike legacy EDI providers that charge per document or per kilocharacter, Crstl offers transparent, predictable pricing with unlimited EDI documents. This means your costs stay predictable as your order volume grows, with no surprise fees during peak seasons.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Can Crstl help reduce EDI chargebacks?</span>
+              <span class="faq-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>Yes. EDI chargebacks from retailers like Walmart and Target are typically caused by ASN errors, late shipments, or non-compliant labels. Crstl's AI agent Edison validates every document against the retailer's specific compliance rules before submission, catching errors that would otherwise result in chargebacks.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Is Crstl suitable for small businesses or only enterprise?</span>
+              <span class="faq-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>Crstl serves businesses of all sizes — from emerging DTC brands making their first retail shipment to enterprise companies managing hundreds of trading partners. For small businesses, we offer full-service EDI that requires no technical expertise. For developer teams at larger companies, we provide full API access and webhook integrations for custom workflows.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== CTA ============== -->
+  <section class="band pad cta-section" id="pricing">
+    <div class="wrap">
+      <div class="cta-band">
+        <div class="cta-content">
+          <h2>Bring order to your supply chain.</h2>
+          <div class="hero-cta">
+            <a href="#" class="crstl-button crstl-button--primary crstl-button--lg on-accent">Book a demo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== FOOTER ============== -->
+  <footer class="site-footer" id="docs">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand" aria-label="Crstl home">
+            <svg class="brand-mark" viewBox="0 0 28 32" fill="none" aria-hidden="true">
+              <path d="M14 1 27 8.5v15L14 31 1 23.5v-15L14 1Z" fill="hsl(var(--accent))"/>
+              <path d="M14 8 20.5 11.75v7.5L14 23l-6.5-3.75v-7.5L14 8Z" fill="hsl(var(--bg-subtle))"/>
+              <path d="M14 12.5 16.5 14v4L14 19.5 11.5 18v-4L14 12.5Z" fill="hsl(var(--accent))"/>
+            </svg>
+            Crstl
+          </a>
+          <p class="footer-blurb">The EDI and supply-chain automation platform for modern operators.</p>
+        </div>
+        <div>
+          <h4>SOLUTIONS</h4>
+          <ul>
+            <li><a href="#">For Brands</a></li>
+            <li><a href="#">For Logistics Providers</a></li>
+            <li><a href="#">For Commerce Enablement Platforms</a></li>
+            <li><a href="#">For Retailers</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>RESOURCES</h4>
+          <ul>
+            <li><a href="#">Case Studies</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#faq">FAQs</a></li>
+            <li><a href="#">Partners</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>COMPANY</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Newsroom</a></li>
+            <li><a href="#">Help Center</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>LEGAL</h4>
+          <ul>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Crstl, Inc. All rights reserved.</span>
+        <span class="crstl-mono">Built on the Crstl design system</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* =====================================================================
+       Visual-system behaviours. Vanilla JS, no deps. Respects reduced-motion.
+       ===================================================================== */
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------- theme toggle ---------- */
+    const root = document.documentElement;
+    const cssLengthCache = new Map();
+    const cssTimeCache = new Map();
+    const cssLength = (name, scope = document.body) => {
+      const cacheKey = scope === document.body ? name : null;
+      if (cacheKey && cssLengthCache.has(cacheKey)) return cssLengthCache.get(cacheKey);
+      const probe = document.createElement('div');
+      probe.style.position = 'absolute';
+      probe.style.visibility = 'hidden';
+      probe.style.pointerEvents = 'none';
+      probe.style.width = `var(${name})`;
+      scope.appendChild(probe);
+      const value = Number.parseFloat(getComputedStyle(probe).width);
+      probe.remove();
+      if (cacheKey) cssLengthCache.set(cacheKey, value);
+      return value;
+    };
+    const cssTime = (name) => {
+      if (cssTimeCache.has(name)) return cssTimeCache.get(name);
+      const probe = document.createElement('div');
+      probe.style.position = 'absolute';
+      probe.style.visibility = 'hidden';
+      probe.style.pointerEvents = 'none';
+      probe.style.transitionDuration = `var(${name})`;
+      document.body.appendChild(probe);
+      const raw = getComputedStyle(probe).transitionDuration.split(',')[0].trim();
+      probe.remove();
+      const value = raw.endsWith('ms') ? Number.parseFloat(raw) : Number.parseFloat(raw) * 1000;
+      cssTimeCache.set(name, value);
+      return value;
+    };
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      root.setAttribute('data-theme', root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+
+    /* ---------- Linear-style primary nav dropdown ---------- */
+    (function navDropdown(){
+      const nav = document.querySelector('[data-nav-menu]');
+      if (!nav) return;
+
+      const list = nav.querySelector('[data-nav-list]');
+      const dropdown = nav.querySelector('[data-menu-dropdown]');
+      const highlight = nav.querySelector('[data-nav-highlight]');
+      const triggers = [...nav.querySelectorAll('[data-menu-trigger]')];
+      const directLinks = [...nav.querySelectorAll('.nav-link:not([data-menu-trigger])')];
+      const panels = new Map([...nav.querySelectorAll('[data-menu-panel]')].map(panel => [panel.dataset.menuPanel, panel]));
+      const hoverPointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+      const viewportInset = 24;
+      let activeKey = null;
+      let closeTimer = 0;
+
+      const cancelClose = () => {
+        if (!closeTimer) return;
+        window.clearTimeout(closeTimer);
+        closeTimer = 0;
+      };
+
+      const activeTrigger = () => triggers.find(trigger => trigger.dataset.menuTrigger === activeKey);
+
+      const setTriggerState = () => {
+        triggers.forEach(trigger => {
+          const active = trigger.dataset.menuTrigger === activeKey && nav.classList.contains('is-open');
+          trigger.classList.toggle('is-active', active);
+          trigger.setAttribute('aria-expanded', active ? 'true' : 'false');
+        });
+      };
+
+      const setPanelState = () => {
+        panels.forEach((panel, key) => {
+          panel.classList.toggle('is-active', key === activeKey);
+        });
+      };
+
+      const syncPosition = () => {
+        const trigger = activeTrigger();
+        const panel = activeKey ? panels.get(activeKey) : null;
+        if (!trigger || !panel || !list || !dropdown || !highlight) return;
+
+        const width = Math.min(Number(panel.dataset.menuWidth) || 640, window.innerWidth - viewportInset * 2);
+        nav.style.setProperty('--nav-menu-width', `${width}px`);
+
+        const navRect = nav.getBoundingClientRect();
+        const listRect = list.getBoundingClientRect();
+        const triggerRect = trigger.getBoundingClientRect();
+        const center = triggerRect.left + triggerRect.width / 2 - navRect.left;
+        const minX = viewportInset - navRect.left;
+        const maxX = window.innerWidth - viewportInset - navRect.left - width;
+        const x = Math.min(Math.max(center - width / 2, minX), maxX);
+
+        nav.style.setProperty('--nav-menu-x', `${Math.round(x)}px`);
+        nav.style.setProperty('--nav-highlight-x', `${Math.round(triggerRect.left - listRect.left)}px`);
+        nav.style.setProperty('--nav-highlight-w', `${Math.round(triggerRect.width)}px`);
+        nav.style.setProperty('--nav-menu-height', `${panel.scrollHeight}px`);
+      };
+
+      const open = (key) => {
+        cancelClose();
+        activeKey = key;
+        setPanelState();
+        nav.classList.add('is-open');
+        dropdown?.setAttribute('aria-hidden', 'false');
+        setTriggerState();
+        syncPosition();
+      };
+
+      const close = () => {
+        cancelClose();
+        nav.classList.remove('is-open');
+        dropdown?.setAttribute('aria-hidden', 'true');
+        activeKey = null;
+        setTriggerState();
+      };
+
+      const scheduleClose = () => {
+        cancelClose();
+        closeTimer = window.setTimeout(close, 140);
+      };
+
+      triggers.forEach(trigger => {
+        const key = trigger.dataset.menuTrigger;
+        trigger.addEventListener('pointerenter', () => {
+          if (hoverPointer.matches) open(key);
+        });
+        trigger.addEventListener('focus', () => open(key));
+        trigger.addEventListener('click', () => {
+          if (activeKey === key && nav.classList.contains('is-open')) close();
+          else open(key);
+        });
+      });
+
+      directLinks.forEach(link => {
+        link.addEventListener('pointerenter', () => {
+          if (hoverPointer.matches) close();
+        });
+      });
+
+      nav.addEventListener('pointerenter', cancelClose);
+      nav.addEventListener('pointerleave', scheduleClose);
+      nav.addEventListener('focusout', event => {
+        if (!nav.contains(event.relatedTarget)) scheduleClose();
+      });
+      document.addEventListener('pointerdown', event => {
+        if (!nav.contains(event.target)) close();
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') close();
+      });
+      window.addEventListener('resize', syncPosition);
+    })();
+
+    /* ---------- brand marquee (retailers Crstl connects) ---------- */
+    (function marquee(){
+      const track = document.getElementById('marqueeTrack');
+      const brands = ['Target','Walmart','Costco','Amazon','UNFI','Whole Foods','Kroger','Albertsons','Sprouts'];
+      // two identical copies → translateX(-50%) loops seamlessly
+      for (let pass = 0; pass < 2; pass++) {
+        brands.forEach(name => {
+          const el = document.createElement('span');
+          el.className = 'brand-logo';
+          el.textContent = name;
+          if (pass === 1) el.setAttribute('aria-hidden', 'true');
+          track.appendChild(el);
+        });
+      }
+    })();
+
+    /* ---------- testimonial case-study carousel ---------- */
+    (function testimonialCarousel(){
+      const viewport = document.getElementById('testimonialViewport');
+      const track = document.getElementById('testimonialTrack');
+      const prev = document.getElementById('testimonialPrev');
+      const next = document.getElementById('testimonialNext');
+      if (!viewport || !track) return;
+
+      const cards = [...track.querySelectorAll('.testimonial-card')];
+      if (!cards.length) return;
+      let current = 0;
+      let scrollFrame = 0;
+
+      function railPadding() {
+        return Number.parseFloat(getComputedStyle(viewport).scrollPaddingLeft) || 0;
+      }
+
+      function targetLeft(card) {
+        return card.offsetLeft - railPadding();
+      }
+
+      function nearestCardIndex() {
+        const left = viewport.scrollLeft;
+        let nearest = 0;
+        let nearestDistance = Number.POSITIVE_INFINITY;
+        cards.forEach((card, index) => {
+          const distance = Math.abs(targetLeft(card) - left);
+          if (distance < nearestDistance) {
+            nearest = index;
+            nearestDistance = distance;
+          }
+        });
+        return nearest;
+      }
+
+      function scrollToCard(index) {
+        current = (index + cards.length) % cards.length;
+        viewport.scrollTo({
+          left: targetLeft(cards[current]),
+          behavior: reduceMotion ? 'auto' : 'smooth'
+        });
+      }
+
+      prev?.addEventListener('click', () => {
+        current = nearestCardIndex();
+        scrollToCard(current - 1);
+      });
+
+      next?.addEventListener('click', () => {
+        current = nearestCardIndex();
+        scrollToCard(current + 1);
+      });
+
+      viewport.addEventListener('scroll', () => {
+        if (scrollFrame) cancelAnimationFrame(scrollFrame);
+        scrollFrame = requestAnimationFrame(() => {
+          current = nearestCardIndex();
+          scrollFrame = 0;
+        });
+      }, { passive: true });
+    })();
+
+    /* ---------- hero rotating word ("...network for ___") ---------- */
+    (function rotator(){
+      const wrap = document.querySelector('.rotator');
+      if (!wrap) return;
+      const words = [...wrap.children];
+      if (!words.length) return;
+      let i = 0;
+      words[0].classList.add('is-current');           // first word visible on load
+      if (reduceMotion) return;                        // hold first word, no cycling
+      const hold = cssTime('--home-motion-rotator-hold');
+      const resetDelay = cssTime('--home-motion-rotator-reset');
+      setInterval(() => {
+        words[i].classList.replace('is-current', 'is-prev');   // slide current up + fade out
+        const prev = i;
+        i = (i + 1) % words.length;
+        words[i].classList.add('is-current');                  // slide next up + fade in
+        // once off-screen, drop .is-prev so it resets (invisibly) to the "below" base
+        setTimeout(() => words[prev].classList.remove('is-prev'), resetDelay);
+      }, hold);
+    })();
+
+    /* ---------- Edison agent workspace ---------- */
+    (function edisonAgent(){
+      const actions = [...document.querySelectorAll('[data-agent-action]')];
+      const agentAction = document.querySelector('.agent-action');
+      const finalMessage = document.querySelector('[data-agent-final]');
+      if (!actions.length) return;
+
+      const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+      const rowTime = cssTime('--home-motion-agent-row');
+      const activeTime = cssTime('--home-motion-agent-active');
+      const resetTime = cssTime('--home-motion-agent-reset');
+      const completePause = cssTime('--home-motion-rotator-reset');
+      const finalHold = cssTime('--home-motion-pipeline-reset');
+
+      function setActionVisibility(action, visibility) {
+        action.dataset.visible = visibility;
+        action.setAttribute('aria-hidden', visibility === 'false' ? 'true' : 'false');
+      }
+
+      function setFinalVisibility(isVisible) {
+        if (!finalMessage) return;
+        finalMessage.dataset.visible = isVisible ? 'true' : 'false';
+        finalMessage.dataset.resetting = 'false';
+        finalMessage.classList.toggle('is-visible', isVisible);
+        finalMessage.classList.remove('is-resetting');
+        finalMessage.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+      }
+
+      function setStartState() {
+        agentAction?.classList.remove('is-resetting');
+        actions.forEach((action, i) => {
+          action.dataset.state = i === 0 ? 'active' : 'pending';
+          setActionVisibility(action, i === 0 ? 'true' : 'false');
+        });
+        setFinalVisibility(false);
+      }
+
+      function setCompleteState() {
+        agentAction?.classList.remove('is-resetting');
+        actions.forEach((action) => {
+          action.dataset.state = 'done';
+          setActionVisibility(action, 'true');
+        });
+        setFinalVisibility(true);
+      }
+
+      async function revealAction(index) {
+        const action = actions[index];
+        if (!action) return;
+
+        action.dataset.state = 'active';
+        setActionVisibility(action, 'true');
+        await wait(rowTime + activeTime);
+
+        action.dataset.state = 'done';
+        await wait(completePause);
+      }
+
+      async function runSequence() {
+        while (true) {
+          setStartState();
+          await wait(activeTime);
+
+          actions[0].dataset.state = 'done';
+          await wait(completePause);
+
+          await revealAction(1);
+          await revealAction(2);
+
+          setFinalVisibility(true);
+          await wait(finalHold);
+
+          agentAction?.classList.add('is-resetting');
+          if (finalMessage) {
+            finalMessage.dataset.visible = 'false';
+            finalMessage.dataset.resetting = 'true';
+            finalMessage.classList.remove('is-visible');
+            finalMessage.classList.add('is-resetting');
+            finalMessage.setAttribute('aria-hidden', 'true');
+          }
+          await wait(resetTime);
+        }
+      }
+
+      if (reduceMotion) {
+        setCompleteState();
+        return;
+      }
+
+      runSequence();
+    })();
+
+    /* ---------- interactive feature honeycomb ---------- */
+    (function featureHoney(){
+      const host = document.getElementById('honeycomb');
+      if (!host) return;
+
+      const featureTitle = document.getElementById('featureTitle');
+      const featureBody = document.getElementById('featureBody');
+      const rows = [
+        [{}, {}, {
+          title: 'Your AI agent for EDI',
+          body: 'Exchange critical documents, unify systems, and ensure business compliance.'
+        }, {}, {}],
+        [{}, {
+          title: 'From SMBs to Enterprise',
+          body: 'Starting fresh or upgrading to scale? Crstl lets you focus on growth while we handle all the EDI complexity.'
+        }, {
+          title: 'For Ops and Developers',
+          body: 'Full-service EDI for small businesses, API flexibility for developers—scale without the complexity.'
+        }, {}],
+        [{}, {
+          title: 'Fast Onboarding',
+          body: 'Crstl handles trading partner testing and certification, ensuring peace of mind every step of the way.'
+        }, {
+          title: 'AI-Powered Integrations',
+          body: 'Rapid expansion of our reliable integrations network ensures your business can scale without limits.',
+          active: true
+        }, {
+          title: 'Total EDI compliance',
+          body: 'Confidently transact with all your trading partners in full compliance with their business requirements.'
+        }, {}],
+        [{}, {
+          title: 'Crstl-clear Pricing',
+          body: 'We leave the price haggling to the pawn shops. Our straightforward pricing saves you time and money.'
+        }, {
+          title: 'Best-in-class Support',
+          body: 'We understand your commitment to your customers. We provide timely, reliable support via Slack and email.'
+        }, {}],
+        [{}, {}, {
+          title: 'Your data is yours',
+          body: 'We set your data free, so that you can efficiently run and grow your business.'
+        }, {}, {}],
+      ];
+      const roundedHexPath = 'M51.73 1 L98.27 27.87 Q100 28.87 100 30.87 L100 84.6 Q100 86.6 98.27 87.6 L51.73 114.47 Q50 115.47 48.27 114.47 L1.73 87.6 Q0 86.6 0 84.6 L0 30.87 Q0 28.87 1.73 27.87 L48.27 1 Q50 0 51.73 1 Z';
+      let activeFeature = null;
+      let activeCell = null;
+
+      const setActiveFeature = (feature, cell) => {
+        if (!feature || !cell || !featureTitle || !featureBody) return;
+        host.querySelectorAll('.comb').forEach(c => {
+          c.classList.remove('is-active');
+          if (c.matches('button')) c.setAttribute('aria-pressed', 'false');
+        });
+        cell.classList.add('is-active');
+        cell.setAttribute('aria-pressed', 'true');
+        featureTitle.textContent = feature.title;
+        featureBody.textContent = feature.body;
+      };
+
+      rows.forEach((row) => {
+        const rowEl = document.createElement('div');
+        rowEl.className = 'honeycomb-row';
+        row.forEach((d) => {
+          const cell = document.createElement(d.title ? 'button' : 'div');
+          if (d.title) cell.type = 'button';
+          cell.className = 'comb' + (d.title ? '' : ' comb--ghost') + (d.active ? ' is-active' : '');
+          if (d.title) {
+            cell.setAttribute('aria-label', d.title);
+            cell.setAttribute('aria-pressed', d.active ? 'true' : 'false');
+          }
+          else cell.setAttribute('aria-hidden', 'true');
+          cell.innerHTML = `
+            <svg class="comb-shape" viewBox="0 0 100 115.47" aria-hidden="true" focusable="false">
+              <path d="${roundedHexPath}" vector-effect="non-scaling-stroke"></path>
+            </svg>
+            ${d.title ? `<span class="label">${d.title}</span>` : ''}`;
+          if (d.title) {
+            if (d.active) {
+              activeFeature = d;
+              activeCell = cell;
+            }
+            cell.addEventListener('click', () => setActiveFeature(d, cell));
+          }
+          rowEl.appendChild(cell);
+        });
+        host.appendChild(rowEl);
+      });
+      setActiveFeature(activeFeature, activeCell);
+
+      if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        const range = cssLength('--home-comb-proximity-range');
+        const maxScaleBoost = 0.055;
+        const spring = { stiffness: 0.16, damping: 0.72 };
+        const combs = [...host.querySelectorAll('.comb')].map(el => ({
+          el,
+          scale: 1,
+          target: 1,
+          velocity: 0
+        }));
+        let frame = 0;
+
+        const smoothstep = value => value * value * (3 - 2 * value);
+        const requestTick = () => {
+          if (!frame) frame = requestAnimationFrame(tick);
+        };
+        const setTargets = (x, y) => {
+          combs.forEach(state => {
+            const r = state.el.getBoundingClientRect();
+            const dx = x - (r.left + r.width / 2);
+            const dy = y - (r.top + r.height / 2);
+            const proximity = smoothstep(Math.max(0, 1 - Math.hypot(dx, dy) / range));
+            state.target = 1 + proximity * maxScaleBoost;
+            state.el.classList.toggle('is-near', proximity > 0.18);
+          });
+        };
+        const resetTargets = () => {
+          combs.forEach(state => {
+            state.target = 1;
+            state.el.classList.remove('is-near');
+          });
+        };
+        function tick() {
+          frame = 0;
+          let moving = false;
+          combs.forEach(state => {
+            state.velocity += (state.target - state.scale) * spring.stiffness;
+            state.velocity *= spring.damping;
+            state.scale += state.velocity;
+            if (Math.abs(state.target - state.scale) < 0.001 && Math.abs(state.velocity) < 0.001) {
+              state.scale = state.target;
+              state.velocity = 0;
+            } else {
+              moving = true;
+            }
+            state.el.style.setProperty('--comb-scale', state.scale.toFixed(3));
+          });
+          if (moving) requestTick();
+        }
+
+        host.addEventListener('mousemove', e => {
+          setTargets(e.clientX, e.clientY);
+          requestTick();
+        });
+        host.addEventListener('mouseleave', () => {
+          resetTargets();
+          requestTick();
+        });
+      }
+    })();
+
+    /* ---------- scattered → stack trigger ---------- */
+    (function stack(){
+      const stage = document.getElementById('stackStage');
+      const lucideIcons = {
+        fileCheck: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="m9 15 2 2 4-4"></path>',
+        receiptText: '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path><path d="M14 8H8"></path><path d="M16 12H8"></path><path d="M13 16H8"></path>',
+        packageCheck: '<path d="m16 16 2 2 4-4"></path><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"></path><path d="m7.5 4.27 9 5.15"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><path d="M12 22V12"></path>',
+        circleCheck: '<circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>',
+        banknote: '<rect width="20" height="12" x="2" y="6" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01"></path><path d="M18 12h.01"></path>',
+        boxes: '<path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z"></path><path d="m7 16.5-4.74-2.85"></path><path d="m7 16.5 5-3"></path><path d="M7 16.5v5.17"></path><path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z"></path><path d="m17 16.5-5-3"></path><path d="m17 16.5 4.74-2.85"></path><path d="M17 16.5v5.17"></path><path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z"></path><path d="M12 8 7.26 5.15"></path><path d="m12 8 4.74-2.85"></path><path d="M12 13.5V8"></path>'
+      };
+      const documents = [
+        { type: 'Purchase Order', partner: 'Target', icon: 'fileCheck', x: -48, y: -12, r: -17 },
+        { type: 'Invoice', partner: 'Walmart', icon: 'receiptText', x: 132, y: 0, r: 15 },
+        { type: 'Advance Ship Notice', partner: 'Costco', icon: 'packageCheck', x: -36, y: 50, r: 13 },
+        { type: 'Order Ack', partner: 'Kroger', icon: 'circleCheck', x: 122, y: 42, r: -14 },
+        { type: 'Payment Remittance', partner: 'Amazon', icon: 'banknote', x: -52, y: 108, r: 12 },
+        { type: 'Inventory Advice', partner: 'UNFI', icon: 'boxes', x: 134, y: 98, r: -16 }
+      ];
+      const cards = [];
+      documents.forEach((doc, i) => {
+        const el = document.createElement('div');
+        el.className = 'txn';
+        el.style.setProperty('--txn-arrange-delay', `calc(${i} * var(--home-motion-stack-arrange-stagger))`);
+        el.innerHTML = `
+          <span class="txn-main">
+            <span class="txn-type">${doc.type}</span>
+            <span class="txn-partner">${doc.partner}</span>
+          </span>
+          <span class="txn-icon-frame">
+            <svg class="txn-icon-trace" viewBox="0 0 32 32" preserveAspectRatio="none" focusable="false" aria-hidden="true">
+              <rect class="txn-icon-trace-rect" x="0.5" y="0.5" width="31" height="31" rx="4" pathLength="1"></rect>
+            </svg>
+            <svg class="txn-icon" viewBox="0 0 24 24" focusable="false" aria-hidden="true">${lucideIcons[doc.icon]}</svg>
+          </span>
+        `;
+        stage.appendChild(el);
+        cards.push({ el, doc });
+      });
+      const rowH = cssLength('--home-stack-row-offset');
+      const hover = { active: false, x: 0, y: 0 };
+      const hoverEnabled = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+      let txnTraceStarted = false;
+      const txnTraceTimers = [];
+
+      function clearTransactionTraceTimers(){
+        while (txnTraceTimers.length) window.clearTimeout(txnTraceTimers.pop());
+      }
+
+      function completeTransactionTraces(){
+        txnTraceStarted = true;
+        clearTransactionTraceTimers();
+        cards.forEach(({ el }) => {
+          el.classList.remove('is-scanning');
+          el.classList.add('is-complete');
+        });
+      }
+
+      function startTransactionTraces(){
+        if (txnTraceStarted) return;
+        txnTraceStarted = true;
+        const raceLoops = 2;
+        const raceDuration = cssTime('--home-motion-txn-icon-race') * raceLoops;
+        const stagger = cssTime('--home-motion-txn-icon-stagger');
+        cards.forEach(({ el }, i) => {
+          const delay = i * stagger;
+          txnTraceTimers.push(window.setTimeout(() => {
+            el.classList.remove('is-complete');
+            el.classList.add('is-scanning');
+          }, delay));
+          txnTraceTimers.push(window.setTimeout(() => {
+            el.classList.remove('is-scanning');
+            el.classList.add('is-complete');
+          }, delay + raceDuration));
+        });
+      }
+
+      function render(stackProgress){ // stack: 0 scattered → 1 organized; transaction traces run after stack settles
+        const stageW = stage.clientWidth;
+        const stageH = stage.clientHeight;
+        const totalH = (cards.length - 1) * rowH + cards[0].el.offsetHeight;
+        const finalTop = Math.max(0, (stageH - totalH) / 2);
+        cards.forEach(({ el, doc }, i) => {
+          const cardW = el.offsetWidth;
+          const cardH = el.offsetHeight;
+          const startX = (stageW - cardW) * (doc.x / 100);
+          const startY = (stageH - cardH) * (doc.y / 100);
+          const finalX = (stageW - cardW) / 2;
+          const finalY = finalTop + i * rowH;
+          const tx = startX + (finalX - startX) * stackProgress;
+          const ty = startY + (finalY - startY) * stackProgress;
+          const rot = doc.r * (1 - stackProgress);
+          el.style.setProperty('--txn-x', `${tx}px`);
+          el.style.setProperty('--txn-y', `${ty}px`);
+          el.style.setProperty('--txn-rot', `${rot}deg`);
+          el.style.opacity = (0.76 + 0.24 * stackProgress).toFixed(2);
+          el.style.zIndex = String(10 + i);
+        });
+        applyHover();
+      }
+
+      function applyHover(){
+        if (!hoverEnabled) return;
+        cards.forEach(({ el }, i) => {
+          let influence = 0;
+          if (hover.active) {
+            const rect = el.getBoundingClientRect();
+            const dx = hover.x - (rect.left + rect.width / 2);
+            const dy = hover.y - (rect.top + rect.height / 2);
+            const xInfluence = Math.max(0, 1 - Math.abs(dx) / (rect.width * 0.95));
+            const yInfluence = Math.max(0, 1 - Math.abs(dy) / (rowH * 2.15));
+            influence = xInfluence * yInfluence;
+          }
+          const eased = influence * influence * (3 - 2 * influence);
+          const lift = eased * 12;
+          el.style.setProperty('--txn-lift', `${lift.toFixed(2)}px`);
+          el.style.setProperty('--txn-scale', (1 + eased * 0.006).toFixed(3));
+          el.style.setProperty('--txn-shadow', eased > 0.01
+            ? `0 ${Math.round(2 + lift * 0.16)}px ${Math.round(8 + lift * 0.48)}px hsl(0 0% 0% / ${(0.05 + eased * 0.03).toFixed(3)})`
+            : 'var(--shadow-sm)');
+          el.style.zIndex = String(10 + i + Math.round(eased * 20));
+        });
+      }
+
+      render(reduceMotion ? 1 : 0);
+      if (reduceMotion) {
+        completeTransactionTraces();
+        return;
+      }
+
+      if (hoverEnabled) {
+        stage.addEventListener('pointermove', e => {
+          hover.active = true;
+          hover.x = e.clientX;
+          hover.y = e.clientY;
+          applyHover();
+        });
+        stage.addEventListener('pointerleave', () => {
+          hover.active = false;
+          applyHover();
+        });
+      }
+
+      let stackArrangeStarted = false;
+      let stackArrangeTimer = 0;
+      const stackTriggerRatio = 0.58;
+      function triggerStackArrange(){
+        if (stackArrangeStarted) return;
+        stackArrangeStarted = true;
+        window.clearTimeout(stackArrangeTimer);
+        stage.classList.add('is-arranging');
+        render(1);
+        const arrangeDuration = cssTime('--home-motion-stack-arrange');
+        const arrangeStagger = cssTime('--home-motion-stack-arrange-stagger') * Math.max(0, cards.length - 1);
+        stackArrangeTimer = window.setTimeout(() => {
+          stage.classList.remove('is-arranging');
+          stage.classList.add('is-arranged');
+          startTransactionTraces();
+        }, arrangeDuration + arrangeStagger);
+      }
+
+      window.addEventListener('resize', () => {
+        render(stackArrangeStarted ? 1 : 0);
+        checkStackVisibility();
+      });
+
+      function checkStackVisibility(){
+        if (stackArrangeStarted) return;
+        const rect = stage.getBoundingClientRect();
+        const visible = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+        if (visible / rect.height >= stackTriggerRatio) triggerStackArrange();
+      }
+
+      if ('IntersectionObserver' in window) {
+        const stackObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio >= stackTriggerRatio) {
+              triggerStackArrange();
+              stackObserver.disconnect();
+            }
+          });
+        }, { threshold: [stackTriggerRatio], rootMargin: '0px 0px -12% 0px' });
+        stackObserver.observe(stage);
+      } else {
+        triggerStackArrange();
+      }
+      window.addEventListener('scroll', checkStackVisibility, { passive: true });
+      checkStackVisibility();
+      const stackVisibilityTimer = window.setInterval(() => {
+        checkStackVisibility();
+        if (stackArrangeStarted) window.clearInterval(stackVisibilityTimer);
+      }, 120);
+    })();
+
+    /* ---------- sequenced box reveals ---------- */
+    (function reveals(){
+      const items = [...document.querySelectorAll('.reveal')];
+      if (reduceMotion) { items.forEach(i => i.classList.add('in')); return; }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            const sibs = [...e.target.parentElement.querySelectorAll(':scope > .reveal')];
+            const idx = Math.max(0, sibs.indexOf(e.target));
+            e.target.style.transitionDelay = `${idx * cssTime('--home-motion-reveal-stagger')}ms`;
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+      items.forEach(i => io.observe(i));
+    })();
+  </script>
+</body>
+</html>
