@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edison AI Pipeline · Crstl</title>
+  <link rel="stylesheet" href="crstl-design-system.css" />
+  <script src="crstl-brand-toggle.js" defer></script>
+
+  <style>
+    /* ====================================================================
+       EDISON PIPELINE DEMO — vertical layout, no stats, no replay
+       All values reference crstl-design-system.css tokens only.
+       ==================================================================== */
+
+    .demo-page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: var(--space-20) var(--space-6);
+      background: hsl(var(--bg-base));
+    }
+
+    .section-container { width: 100%; max-width: 800px; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      height: 26px; padding: 0 var(--space-3);
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-pill);
+      background: hsl(var(--bg-surface));
+      font: var(--weight-medium) var(--text-xs);
+      letter-spacing: var(--tracking-xs);
+      color: hsl(var(--text-secondary));
+      margin-bottom: var(--space-5);
+    }
+    .eyebrow-dot {
+      width: 6px; height: 6px; border-radius: var(--radius-circle);
+      background: hsl(var(--aqua)); flex-shrink: 0;
+      animation: aqPulse 2.4s var(--ease-out) infinite;
+    }
+    @keyframes aqPulse {
+      0%   { box-shadow: 0 0 0 0   hsl(var(--aqua) / 0.6); }
+      70%  { box-shadow: 0 0 0 6px hsl(var(--aqua) / 0); }
+      100% { box-shadow: 0 0 0 0   hsl(var(--aqua) / 0); }
+    }
+    .section-heading {
+      font: var(--weight-bold) var(--title-3);
+      letter-spacing: var(--tracking-title-3);
+      color: hsl(var(--text-primary));
+      margin: 0 0 var(--space-3);
+    }
+    .section-sub {
+      font: var(--text-lg); letter-spacing: var(--tracking-lg);
+      color: hsl(var(--text-secondary));
+      max-width: 52ch; margin: 0 0 var(--space-10);
+    }
+
+    /* ── Pipeline card ──────────────────────────────────────────────── */
+    .pipeline-card {
+      background: hsl(var(--background-surface-75));
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      max-width: 400px;
+    }
+
+    /* ── Agent header ───────────────────────────────────────────────── */
+    .agent-bar {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-4) var(--space-5);
+      border-bottom: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      background: hsl(var(--background-surface-100));
+    }
+    .agent-name {
+      font: var(--weight-semibold) var(--text-sm);
+      letter-spacing: var(--tracking-sm);
+      color: hsl(var(--text-primary));
+      line-height: 1.25;
+    }
+    .agent-status {
+      display: flex; align-items: center; gap: var(--space-2);
+      font: var(--text-xs); color: hsl(var(--cat-teal)); margin-top: 2px;
+    }
+    .live-dot {
+      width: 6px; height: 6px; border-radius: var(--radius-circle);
+      background: hsl(var(--aqua)); flex-shrink: 0;
+      animation: aqPulse 2.4s var(--ease-out) infinite;
+    }
+
+    /* ── Vertical pipeline track ─────────────────────────────────────── */
+    .pipeline-body { padding: var(--space-5); }
+    .pipeline-track { display: flex; flex-direction: column; }
+
+    .pipeline-step {
+      display: flex; flex-direction: row; gap: var(--space-3);
+    }
+
+    /* left column: node + vertical connector */
+    .step-left {
+      display: flex; flex-direction: column; align-items: center;
+      flex-shrink: 0; width: 40px;
+    }
+
+    .step-node {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-circle);
+      display: grid; place-items: center;
+      border: 2px solid hsl(var(--border-muted));
+      background: hsl(var(--bg-surface));
+      flex-shrink: 0; position: relative;
+      transition:
+        border-color var(--speed-feedback) var(--ease-standard),
+        background   var(--speed-feedback) var(--ease-standard),
+        box-shadow   var(--speed-feedback) var(--ease-standard);
+    }
+
+    /* sonar ring — active only */
+    .step-node::after {
+      content: ""; position: absolute; inset: -6px;
+      border-radius: var(--radius-circle);
+      border: 1.5px solid transparent; pointer-events: none;
+    }
+    .pipeline-step[data-state="active"] .step-node::after {
+      animation: sonar 2s var(--ease-out) infinite;
+    }
+    @keyframes sonar {
+      0%   { transform: scale(0.9); border-color: hsl(var(--aqua) / 0.6); }
+      100% { transform: scale(1.5); border-color: hsl(var(--aqua) / 0); }
+    }
+
+    /* icon layers — CSS handles the swap, no JS needed */
+    .node-icon, .node-check {
+      position: absolute; display: grid; place-items: center;
+      transition: opacity var(--speed-feedback) var(--ease-standard);
+    }
+    .node-icon  { opacity: 1; }
+    .node-check { opacity: 0; }
+    .node-icon  svg { stroke: hsl(var(--text-tertiary)); transition: stroke var(--speed-feedback) var(--ease-standard); }
+    .node-check svg { stroke: hsl(var(--status-success)); }
+
+    .pipeline-step[data-state="done"] .step-node {
+      border-color: hsl(var(--status-success)); background: hsl(var(--success-tint));
+    }
+    .pipeline-step[data-state="done"] .node-icon  { opacity: 0; }
+    .pipeline-step[data-state="done"] .node-check { opacity: 1; }
+
+    .pipeline-step[data-state="active"] .step-node {
+      border-color: hsl(var(--accent)); background: hsl(var(--accent-tint));
+      box-shadow: 0 0 0 4px hsl(var(--accent) / 0.12), 0 0 16px hsl(var(--aqua) / 0.22);
+    }
+    .pipeline-step[data-state="active"] .node-icon svg { stroke: hsl(var(--accent)); }
+
+    /* vertical connector */
+    .step-conn {
+      width: 2px; flex: 1; min-height: 24px;
+      background: hsl(var(--border-muted)); margin: 4px 0; position: relative;
+    }
+    .step-conn-fill {
+      position: absolute; top: 0; left: 0; width: 100%; height: 0%;
+      background: hsl(var(--accent)); transition: height 0.5s var(--ease-standard);
+    }
+    .pipeline-step[data-state="done"] .step-conn-fill { height: 100%; }
+    .pipeline-step:last-child .step-conn { display: none; }
+
+    /* right column: label + meta */
+    .step-right { padding-bottom: var(--space-5); flex: 1; min-width: 0; }
+    .pipeline-step:last-child .step-right { padding-bottom: 0; }
+
+    .step-label {
+      font: var(--weight-semibold) var(--text-sm);
+      letter-spacing: var(--tracking-sm);
+      color: hsl(var(--text-tertiary)); line-height: 1.35;
+      transition: color var(--speed-feedback) var(--ease-standard);
+    }
+    .pipeline-step[data-state="done"]   .step-label,
+    .pipeline-step[data-state="active"] .step-label { color: hsl(var(--text-primary)); }
+
+    .step-meta {
+      display: flex; align-items: center; gap: var(--space-2);
+      margin-top: var(--space-1); flex-wrap: wrap;
+    }
+    .step-code {
+      font-family: var(--font-mono); font-size: 0.6875rem; color: hsl(var(--text-tertiary));
+    }
+    .step-chip {
+      display: inline-flex; align-items: center;
+      padding: 1px var(--space-2); border-radius: var(--radius-pill);
+      font: var(--weight-medium) var(--text-xs); font-family: var(--font-mono);
+      background: hsl(var(--bg-muted)); color: hsl(var(--text-tertiary));
+      transition: background var(--speed-feedback) var(--ease-standard),
+                  color     var(--speed-feedback) var(--ease-standard);
+    }
+    .pipeline-step[data-state="done"] .step-chip {
+      background: hsl(var(--success-tint)); color: hsl(var(--status-success));
+    }
+    .pipeline-step[data-state="active"] .step-chip {
+      background: hsl(var(--accent-tint)); color: hsl(var(--accent));
+    }
+    .step-timing {
+      font-family: var(--font-mono); font-size: 0.6875rem;
+      color: hsl(var(--status-success)); opacity: 0;
+      transition: opacity var(--speed-feedback) var(--ease-standard);
+    }
+    .pipeline-step[data-state="done"]   .step-timing { opacity: 1; }
+    .pipeline-step[data-state="active"] .step-timing { color: hsl(var(--accent)); opacity: 1; }
+
+    /* ── Theme toggle ────────────────────────────────────────────────── */
+    .page-controls { position: fixed; top: var(--space-5); right: var(--space-5); }
+    .theme-btn {
+      width: var(--size-control-sm); height: var(--size-control-sm);
+      display: grid; place-items: center;
+      border: var(--borderwidth-sm) solid hsl(var(--border-default));
+      border-radius: var(--radius-md);
+      background: hsl(var(--bg-surface));
+      color: hsl(var(--text-secondary));
+      cursor: pointer; transition: var(--transition-interactive);
+    }
+    .theme-btn:hover { background: hsl(var(--bg-hover)); color: hsl(var(--text-primary)); }
+  </style>
+</head>
+<body>
+
+  <div class="page-controls">
+    <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="demo-page">
+    <div class="section-container">
+
+      <span class="eyebrow"><span class="eyebrow-dot"></span>Meet Edison</span>
+      <h2 class="section-heading">Every order, handled end-to-end.</h2>
+      <p class="section-sub">Edison maps incoming POs, validates compliance, generates ASNs, and routes fulfillment — autonomously, in under two seconds.</p>
+
+      <div class="pipeline-card">
+        <div class="agent-bar">
+          <div>
+            <div class="agent-name">Crstl Edison AI</div>
+            <div class="agent-status">
+              <span class="live-dot"></span>
+              Processing Autonomously
+            </div>
+          </div>
+        </div>
+        <div class="pipeline-body">
+          <div class="pipeline-track" id="pipelineTrack"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const r = document.documentElement;
+      r.setAttribute('data-theme', r.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+
+    (function pipeline(){
+      const track = document.getElementById('pipelineTrack');
+
+      const steps = [
+        { label: 'PO Received',   code: 'EDI 850',  chip: 'Received',  timing: '0.3s', icon: 'doc'    },
+        { label: 'Schema Mapped', code: 'X12→INT',  chip: 'Mapped',    timing: '0.5s', icon: 'arrows' },
+        { label: 'Validated',     code: 'GS1-12',   chip: 'Validated', timing: '0.8s', icon: 'shield' },
+        { label: 'ASN Sent',      code: 'EDI 856',  chip: 'Sent',      timing: '1.1s', icon: 'send'   },
+        { label: 'Labels Queued', code: 'GS1-128',  chip: 'Queued',    timing: '1.4s', icon: 'tag'    },
+        { label: 'Invoice Ready', code: 'EDI 810',  chip: 'Matched',   timing: '1.7s', icon: 'receipt'},
+      ];
+
+      const ICONS = {
+        doc:    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
+        arrows: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>`,
+        shield: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>`,
+        send:   `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/></svg>`,
+        tag:    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29a1 1 0 0 0 1.41 0l7.3-7.3a1 1 0 0 0 0-1.41Z"/><circle cx="7" cy="7" r="1.5" fill="currentColor" stroke="none"/></svg>`,
+        receipt:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="15" x2="7" y2="15.01"/><line x1="11" y1="15" x2="17" y2="15"/></svg>`,
+      };
+      const CHECK = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+
+      const stepEls = steps.map(s => {
+        const el = document.createElement('div');
+        el.className = 'pipeline-step';
+        el.dataset.state = 'pending';
+        el.innerHTML = `
+          <div class="step-left">
+            <div class="step-node">
+              <span class="node-icon">${ICONS[s.icon]}</span>
+              <span class="node-check">${CHECK}</span>
+            </div>
+            <div class="step-conn"><div class="step-conn-fill"></div></div>
+          </div>
+          <div class="step-right">
+            <div class="step-label">${s.label}</div>
+            <div class="step-meta">
+              <span class="step-code">${s.code}</span>
+              <span class="step-chip">${s.chip}</span>
+              <span class="step-timing">${s.timing}</span>
+            </div>
+          </div>`;
+        track.appendChild(el);
+        return el;
+      });
+
+      let cur = 0, timer = null;
+      function reset() { stepEls.forEach(el => { el.dataset.state = 'pending'; }); cur = 0; }
+      function tick() {
+        if (cur >= steps.length) { clearInterval(timer); setTimeout(() => { reset(); run(); }, 2200); return; }
+        if (cur > 0) stepEls[cur - 1].dataset.state = 'done';
+        stepEls[cur].dataset.state = 'active';
+        cur++;
+      }
+      function run() {
+        if (reduceMotion) { steps.forEach((_, i) => { stepEls[i].dataset.state = 'done'; }); return; }
+        tick(); timer = setInterval(tick, 1600);
+      }
+      run();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Powered EDI Automation Platform for Brands &amp; Retailers | Crstl</title>
+<meta name="description" content="Crstl automates EDI transactions for brands, retailers & 3PLs with AI agents. Onboard trading partners in days, not months. $1B+ in B2B GMV processed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* PRIMITIVES */
+  --gray-50:210 20% 99%;--gray-100:220 20% 97%;--gray-200:222 22% 95%;--gray-300:222 22% 91%;
+  --gray-400:222 20% 86%;--gray-500:220 18% 79%;--gray-600:220 14% 69%;--gray-700:220 12% 55%;
+  --gray-800:222 14% 41%;--gray-900:222 18% 29%;--gray-1000:222 24% 19%;--gray-1100:222 62% 12%;
+  --brand:225 100% 59%;--brand-hover:227 88% 53%;--brand-tint:222 100% 96%;--brand-ink:222 62% 12%;
+  --status-success:150 70% 32%;--status-warning:38 100% 35%;--status-destructive:6 65% 49%;
+  --cat-teal:172 68% 37%;--cat-violet:252 100% 68%;--cat-amber:38 72% 55%;--cat-green:150 56% 42%;--cat-magenta:320 58% 59%;
+  /* SEMANTICS · LIGHT */
+  --bg-base:var(--gray-50);--bg-subtle:var(--gray-100);--bg-muted:var(--gray-200);--bg-surface:0 0% 100%;
+  --bg-hover:var(--gray-100);--bg-selected:var(--brand-tint);
+  --text-primary:var(--gray-1100);--text-secondary:var(--gray-900);--text-tertiary:var(--gray-800);
+  --text-disabled:var(--gray-700);--text-on-accent:0 0% 100%;
+  --border-muted:var(--gray-200);--border-default:var(--gray-300);--border-strong:var(--gray-400);
+  --accent:var(--brand);--accent-hover:var(--brand-hover);--accent-tint:var(--brand-tint);--focus-ring:var(--brand);
+  --shadow-sm:0 1px 2px hsl(222 62% 12%/.06);--shadow-md:0 4px 12px hsl(222 62% 12%/.08);--shadow-lg:0 12px 32px hsl(222 62% 12%/.12);
+  --font-display:"Geist","Inter",-apple-system,sans-serif;
+  --font-body:"Inter",-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --radius-xs:4px;--radius-sm:6px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;--radius-2xl:20px;--radius-stage:28px;--radius-pill:9999px;
+  --space-xs:4px;--space-sm:8px;--space-md:16px;--space-lg:32px;--space-xl:64px;
+  --speed-feedback:120ms;--speed-transition:240ms;
+  --ease-standard:cubic-bezier(.2,0,.2,1);--ease-out:cubic-bezier(.16,1,.3,1);
+  --content:1120px;--content-xl:1280px;
+}
+[data-theme="dark"]{
+  --bg-base:var(--brand-ink);--bg-subtle:222 40% 14%;--bg-muted:222 34% 18%;--bg-surface:222 40% 16%;
+  --bg-hover:222 34% 20%;--bg-selected:225 60% 22%;
+  --text-primary:210 20% 98%;--text-secondary:220 16% 80%;--text-tertiary:220 14% 64%;--text-disabled:220 12% 46%;
+  --border-muted:222 28% 22%;--border-default:222 24% 26%;--border-strong:222 22% 34%;
+  --shadow-sm:0 1px 2px hsl(0 0% 0%/.4);--shadow-md:0 4px 14px hsl(0 0% 0%/.45);--shadow-lg:0 14px 40px hsl(0 0% 0%/.55);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:hsl(var(--bg-base));color:hsl(var(--text-primary));
+  line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  transition:background var(--speed-transition) var(--ease-standard),color var(--speed-transition) var(--ease-standard)}
+a{color:inherit;text-decoration:none}
+.container{max-width:var(--content);margin:0 auto;padding:0 24px}
+.container-xl{max-width:var(--content-xl);margin:0 auto;padding:0 24px}
+
+/* blueprint grid substrate */
+.blueprint{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(hsl(var(--border-default)/.45) .5px,transparent .5px),
+    linear-gradient(90deg,hsl(var(--border-default)/.45) .5px,transparent .5px);
+  background-size:28px 28px;
+  mask-image:radial-gradient(ellipse 90% 50% at 50% 0%,black,transparent 70%)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;font-family:var(--font-body);
+  font-weight:500;font-size:15px;border-radius:var(--radius-md);cursor:pointer;border:none;white-space:nowrap;
+  transition:all var(--speed-feedback) var(--ease-standard)}
+.btn--primary{background:hsl(var(--accent));color:hsl(var(--text-on-accent));box-shadow:var(--shadow-sm)}
+.btn--primary:hover{background:hsl(var(--accent-hover))}
+.btn--primary:active{transform:scale(.99)}
+.btn--secondary{background:hsl(var(--bg-surface));color:hsl(var(--text-primary));border:1px solid hsl(var(--border-default))}
+.btn--secondary:hover{background:hsl(var(--bg-hover))}
+.btn--ghost{background:transparent;color:hsl(var(--text-secondary));height:40px;padding:0 12px}
+.btn--ghost:hover{background:hsl(var(--bg-hover));color:hsl(var(--text-primary))}
+.btn--sm{height:36px;font-size:14px;padding:0 14px}
+.btn kbd{font-family:var(--font-mono);font-size:12px;padding:1px 6px;border-radius:4px;background:hsl(var(--text-on-accent)/.18)}
+.btn:focus-visible{outline:2px solid hsl(var(--focus-ring));outline-offset:2px}
+
+/* announcement banner */
+.banner{position:relative;z-index:3;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:9px 16px;font-size:13.5px;background:hsl(var(--brand-ink));color:hsl(210 20% 96%);text-align:center}
+.banner a{color:hsl(0 0% 100%);font-weight:500;border-bottom:1px solid hsl(var(--accent));padding-bottom:1px}
+.banner .pill{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;
+  background:hsl(var(--accent));color:#fff;padding:2px 8px;border-radius:var(--radius-pill)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:200;background:hsl(var(--bg-base)/.78);backdrop-filter:blur(20px) saturate(160%);
+  border-bottom:1px solid hsl(var(--border-muted))}
+.nav__inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:19px;letter-spacing:-.02em}
+.logo-mark{width:26px;height:26px;flex-shrink:0}
+.nav__links{display:flex;align-items:center;gap:4px}
+.nav__links a{padding:8px 12px;border-radius:var(--radius-sm);font-size:14.5px;color:hsl(var(--text-secondary));
+  transition:all var(--speed-feedback) var(--ease-standard)}
+.nav__links a:hover{background:hsl(var(--bg-hover));color:hsl(var(--text-primary))}
+.nav__cta{display:flex;align-items:center;gap:8px}
+.toggle{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:var(--radius-pill);
+  border:1px solid hsl(var(--border-default));background:hsl(var(--bg-surface));color:hsl(var(--text-primary));
+  cursor:pointer;font-family:var(--font-mono);font-size:12px;transition:all var(--speed-feedback) var(--ease-standard)}
+.toggle:hover{background:hsl(var(--bg-hover))}
+
+/* eyebrow + section heads */
+.eyebrow{font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:hsl(var(--accent));display:inline-flex;align-items:center;gap:8px}
+.eyebrow::before{content:"";width:18px;height:1px;background:hsl(var(--accent))}
+.section{position:relative;z-index:1;padding:96px 0}
+.section--tight{padding:64px 0}
+.sec-title{font-family:var(--font-display);font-weight:600;font-size:clamp(1.9rem,1.5rem+1.8vw,2.6rem);
+  letter-spacing:-.02em;line-height:1.1;margin:16px 0 14px}
+.sec-lead{font-size:1.08rem;color:hsl(var(--text-secondary));max-width:620px}
+.center{text-align:center}.center .sec-lead{margin-left:auto;margin-right:auto}
+
+/* HERO */
+.hero{position:relative;z-index:1;padding:72px 0 40px;text-align:center}
+.hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2.6rem,2rem+3.4vw,4.4rem);
+  line-height:1.03;letter-spacing:-.026em;margin:22px auto 0;max-width:14ch}
+.hero .rot{color:hsl(var(--accent));display:inline-block}
+.hero p.sub{font-size:1.18rem;color:hsl(var(--text-secondary));max-width:600px;margin:22px auto 30px}
+.hero__cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero__meta{margin-top:18px;font-family:var(--font-mono);font-size:12.5px;color:hsl(var(--text-tertiary))}
+
+/* hero live panel */
+.stage{position:relative;z-index:1;margin:56px auto 0;max-width:980px}
+.stage__frame{position:relative;background:hsl(var(--bg-surface));border:1px solid hsl(var(--border-muted));
+  border-radius:var(--radius-stage);box-shadow:var(--shadow-lg);padding:28px;overflow:hidden}
+.corner{position:absolute;width:14px;height:14px;color:hsl(var(--border-strong))}
+.corner svg{width:100%;height:100%}
+.c-tl{top:14px;left:14px}.c-tr{top:14px;right:14px;transform:rotate(90deg)}
+.c-bl{bottom:14px;left:14px;transform:rotate(-90deg)}.c-br{bottom:14px;right:14px;transform:rotate(180deg)}
+.stage__grid{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:center}
+.proc-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.proc-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:12px;
+  padding:5px 12px;border-radius:var(--radius-pill);background:hsl(var(--accent-tint));color:hsl(var(--accent));font-weight:500}
+.live-dot{width:7px;height:7px;border-radius:50%;background:hsl(var(--accent));animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+.route{font-family:var(--font-mono);font-size:13px;color:hsl(var(--text-secondary))}
+.timeline{display:flex;flex-direction:column;gap:9px}
+.tl{display:flex;align-items:center;gap:12px;padding:11px 14px;background:hsl(var(--bg-base));
+  border:1px solid hsl(var(--border-muted));border-radius:var(--radius-md);transition:all var(--speed-feedback) var(--ease-standard)}
+.tl.active{background:hsl(var(--bg-surface));border-color:hsl(var(--accent));box-shadow:0 0 0 1px hsl(var(--accent)/.25),var(--shadow-md)}
+.tl__icon{width:30px;height:30px;border-radius:var(--radius-sm);display:grid;place-items:center;flex-shrink:0;
+  background:hsl(var(--bg-muted));color:hsl(var(--text-tertiary))}
+.tl.active .tl__icon,.tl.done .tl__icon{background:hsl(var(--accent-tint));color:hsl(var(--accent))}
+.tl__body{flex:1;min-width:0}
+.tl__t{font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:8px}
+.tl__s{font-family:var(--font-mono);font-size:11px;color:hsl(var(--text-tertiary))}
+.tl__time{font-family:var(--font-mono);font-size:12px;color:hsl(var(--text-tertiary))}
+.mini-badge{font-family:var(--font-mono);font-size:10px;padding:1px 7px;border-radius:var(--radius-pill);font-weight:500}
+.mb-ok{background:hsl(var(--status-success)/.12);color:hsl(var(--status-success))}
+.mb-live{background:hsl(var(--accent-tint));color:hsl(var(--accent))}
+.mb-wait{background:hsl(var(--status-warning)/.14);color:hsl(var(--status-warning))}
+.stats{display:flex;gap:10px;margin-top:18px}
+.stat{flex:1;background:hsl(var(--bg-base));border:1px solid hsl(var(--border-muted));border-radius:var(--radius-md);padding:12px 14px}
+.stat b{font-family:var(--font-display);font-size:22px;font-weight:600;letter-spacing:-.02em;display:block}
+.stat span{font-family:var(--font-mono);font-size:11px;color:hsl(var(--text-tertiary))}
+
+/* constellation mini */
+.constel{width:100%;height:auto}
+.edi-flow{stroke-dasharray:3 7;animation:travel 1.6s linear infinite}
+@keyframes travel{to{stroke-dashoffset:-20}}
+.node-glow{animation:nodepulse 2.6s ease-in-out infinite}
+@keyframes nodepulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* logo marquee */
+.trust{position:relative;z-index:1;padding:40px 0 8px;text-align:center}
+.trust p{font-family:var(--font-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;
+  color:hsl(var(--text-tertiary));margin-bottom:22px}
+.marquee{overflow:hidden;mask-image:linear-gradient(to right,transparent,black 8%,black 92%,transparent)}
+.track{display:flex;gap:54px;align-items:center;width:max-content;animation:marquee 30s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.track span{font-family:var(--font-display);font-weight:600;font-size:21px;color:hsl(var(--text-tertiary));
+  opacity:.5;letter-spacing:-.01em;transition:all var(--speed-feedback) var(--ease-standard)}
+.track span:hover{opacity:1;color:hsl(var(--text-primary))}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* explainer */
+.explain{background:hsl(var(--bg-subtle));border-top:1px solid hsl(var(--border-muted));border-bottom:1px solid hsl(var(--border-muted))}
+.explain .body{font-size:1.05rem;color:hsl(var(--text-secondary));max-width:760px;line-height:1.7}
+.explain .body strong{color:hsl(var(--text-primary));font-weight:600}
+
+/* legacy cards */
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:36px}
+.lcard{background:hsl(var(--bg-surface));border:1px solid hsl(var(--border-muted));border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);padding:26px;transition:all var(--speed-feedback) var(--ease-standard)}
+.lcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.lcard__tag{font-family:var(--font-mono);font-size:11px;color:hsl(var(--status-destructive));text-transform:uppercase;letter-spacing:.05em}
+.lcard h3{font-family:var(--font-display);font-size:1.3rem;font-weight:600;margin:14px 0 10px;letter-spacing:-.01em}
+.lcard p{font-size:14.5px;color:hsl(var(--text-secondary));line-height:1.6}
+
+/* feature bento */
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.feat{background:hsl(var(--bg-surface));border:1px solid hsl(var(--border-muted));border-radius:var(--radius-lg);
+  padding:24px;transition:all var(--speed-feedback) var(--ease-standard);position:relative;overflow:hidden}
+.feat:hover{filter:brightness(.99);transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:hsl(var(--border-default))}
+.feat__icon{width:40px;height:40px;border-radius:var(--radius-md);display:grid;place-items:center;margin-bottom:16px;
+  background:hsl(var(--accent-tint));color:hsl(var(--accent))}
+.feat__icon svg{width:21px;height:21px}
+.feat h3{font-family:var(--font-display);font-size:1.05rem;font-weight:600;margin-bottom:7px;letter-spacing:-.01em}
+.feat p{font-size:13.5px;color:hsl(var(--text-secondary));line-height:1.55}
+
+/* steps */
+.steps{background:hsl(var(--bg-subtle));border-top:1px solid hsl(var(--border-muted))}
+.step-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:42px}
+.step{position:relative;padding-top:28px}
+.step__n{position:absolute;top:0;left:0;font-family:var(--font-mono);font-size:13px;color:hsl(var(--accent));font-weight:500}
+.step::before{content:"";position:absolute;top:6px;left:34px;right:-9px;height:1px;
+  background:repeating-linear-gradient(90deg,hsl(var(--border-strong)) 0 2px,transparent 2px 8px)}
+.step:last-child::before{display:none}
+.step h3{font-family:var(--font-display);font-size:1.1rem;font-weight:600;margin-bottom:8px}
+.step p{font-size:13.5px;color:hsl(var(--text-secondary));line-height:1.55}
+
+/* testimonials */
+.tmarquee{overflow:hidden;margin-top:40px;mask-image:linear-gradient(to right,transparent,black 5%,black 95%,transparent)}
+.ttrack{display:flex;gap:18px;width:max-content;animation:marquee 60s linear infinite}
+.tmarquee:hover .ttrack{animation-play-state:paused}
+.quote{width:360px;background:hsl(var(--bg-surface));border:1px solid hsl(var(--border-muted));
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:24px;display:flex;flex-direction:column;gap:16px}
+.quote p{font-size:14.5px;line-height:1.6;color:hsl(var(--text-primary))}
+.quote .who{display:flex;align-items:center;gap:12px;margin-top:auto}
+.avatar{width:36px;height:36px;border-radius:50%;background:hsl(var(--accent-tint));color:hsl(var(--accent));
+  display:grid;place-items:center;font-family:var(--font-display);font-weight:600;font-size:14px;flex-shrink:0}
+.who b{display:block;font-size:13.5px}.who span{font-size:12px;color:hsl(var(--text-tertiary))}
+
+/* FAQ */
+.faq{max-width:780px;margin:40px auto 0}
+.qa{border-bottom:1px solid hsl(var(--border-muted))}
+.qa summary{list-style:none;cursor:pointer;padding:20px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  font-family:var(--font-display);font-size:1.05rem;font-weight:500}
+.qa summary::-webkit-details-marker{display:none}
+.qa .chev{flex-shrink:0;width:20px;height:20px;color:hsl(var(--text-tertiary));transition:transform var(--speed-feedback) var(--ease-standard)}
+.qa[open] .chev{transform:rotate(45deg);color:hsl(var(--accent))}
+.qa p{font-size:14.5px;color:hsl(var(--text-secondary));line-height:1.65;padding:0 0 22px;max-width:680px}
+
+/* final CTA */
+.cta{position:relative;z-index:1;margin:96px auto;max-width:var(--content)}
+.cta__inner{position:relative;background:hsl(var(--brand-ink));border-radius:var(--radius-stage);
+  padding:72px 40px;text-align:center;overflow:hidden}
+.cta__inner h2{font-family:var(--font-display);font-weight:700;font-size:clamp(2rem,1.6rem+2vw,3rem);
+  letter-spacing:-.022em;color:#fff;margin-bottom:24px;position:relative;z-index:1}
+.cta__grid{position:absolute;inset:0;opacity:.4;
+  background-image:linear-gradient(hsl(var(--accent)/.18) .5px,transparent .5px),
+    linear-gradient(90deg,hsl(var(--accent)/.18) .5px,transparent .5px);background-size:28px 28px;
+  mask-image:radial-gradient(ellipse 70% 90% at 50% 0%,black,transparent 75%)}
+
+/* footer */
+footer{position:relative;z-index:1;border-top:1px solid hsl(var(--border-muted));padding:56px 0 40px}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px}
+.foot-brand .brand{margin-bottom:14px}
+.foot-brand p{font-size:13.5px;color:hsl(var(--text-tertiary));max-width:260px}
+.fcol h4{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  color:hsl(var(--text-tertiary));margin-bottom:14px}
+.fcol a{display:block;font-size:14px;color:hsl(var(--text-secondary));padding:5px 0;transition:color var(--speed-feedback)}
+.fcol a:hover{color:hsl(var(--accent))}
+.foot-bottom{margin-top:48px;padding-top:24px;border-top:1px solid hsl(var(--border-muted));
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:hsl(var(--text-tertiary))}
+
+@media(prefers-reduced-motion:reduce){.edi-flow,.track,.ttrack,.node-glow,.live-dot{animation:none!important}}
+@media(max-width:920px){
+  .stage__grid{grid-template-columns:1fr}.tri,.bento,.step-grid,.foot-grid{grid-template-columns:1fr 1fr}
+  .nav__links{display:none}
+}
+@media(max-width:600px){
+  .tri,.bento,.step-grid,.foot-grid{grid-template-columns:1fr}.stats{flex-direction:column}
+  .nav__cta .btn--secondary{display:none}
+}
+</style>
+</head>
+<body>
+<div class="blueprint"></div>
+
+<!-- BANNER -->
+<div class="banner">
+  <span class="pill">New</span>
+  <span>🤖 Meet Edison — Your Always-On Buyer Compliance Agent &nbsp;<a href="#">Read more →</a></span>
+</div>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="container nav__inner">
+    <a class="brand" href="#">
+      <svg class="logo-mark" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" fill="hsl(var(--accent))" opacity=".12"/>
+        <path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" stroke="hsl(var(--accent))" stroke-width="1.5"/>
+        <path d="M12 2 V22 M3 7 L21 17 M21 7 L3 17" stroke="hsl(var(--accent))" stroke-width="1" opacity=".45"/>
+      </svg>Crstl
+    </a>
+    <nav class="nav__links">
+      <a href="#">Solutions</a><a href="#">Resources</a><a href="#">Company</a>
+      <a href="#" style="color:hsl(var(--accent))">Ditch Document Fees</a>
+    </nav>
+    <div class="nav__cta">
+      <button class="toggle" onclick="toggleTheme()"><span id="tlabel">◑ Dark</span></button>
+      <a href="#" class="btn btn--secondary btn--sm">Sign in</a>
+      <a href="#" class="btn btn--primary btn--sm">Book Demo</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">The Agentic B2B Commerce Network</span>
+    <h1>The commerce network for <span class="rot" id="rot">brands</span></h1>
+    <p class="sub">Connecting buyers, suppliers, and logistics providers across EDI and API. Automate every transaction, compliance, and workflow — from order to payment.</p>
+    <div class="hero__cta">
+      <a href="#" class="btn btn--primary">Book a demo <kbd>↵</kbd></a>
+      <a href="#" class="btn btn--secondary">See how it works</a>
+    </div>
+    <div class="hero__meta">$1B+ B2B GMV processed · onboard in days, not months</div>
+  </div>
+
+  <!-- LIVE STAGE -->
+  <div class="stage container-xl">
+    <div class="stage__frame">
+      <span class="corner c-tl"><svg viewBox="0 0 14 14" fill="none"><path d="M1 5V1h4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      <span class="corner c-tr"><svg viewBox="0 0 14 14" fill="none"><path d="M1 5V1h4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      <span class="corner c-bl"><svg viewBox="0 0 14 14" fill="none"><path d="M1 5V1h4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      <span class="corner c-br"><svg viewBox="0 0 14 14" fill="none"><path d="M1 5V1h4" stroke="currentColor" stroke-width="1.5"/></svg></span>
+
+      <div class="stage__grid">
+        <!-- left: live processing -->
+        <div>
+          <div class="proc-head">
+            <span class="proc-badge"><span class="live-dot"></span>Edison AI · Processing</span>
+            <span class="route">Target&nbsp;→&nbsp;NetSuite</span>
+          </div>
+          <div class="timeline">
+            <div class="tl done"><div class="tl__icon">📦</div><div class="tl__body"><div class="tl__t">PO validated <span class="mini-badge mb-ok">850</span></div><div class="tl__s">PO# 58392017466-1234</div></div><span class="tl__time">0.3s</span></div>
+            <div class="tl done"><div class="tl__icon">📝</div><div class="tl__body"><div class="tl__t">ASN generated <span class="mini-badge mb-ok">856</span></div><div class="tl__s">Sent to Target</div></div><span class="tl__time">0.8s</span></div>
+            <div class="tl active"><div class="tl__icon">🏷️</div><div class="tl__body"><div class="tl__t">GS1-128 labels <span class="mini-badge mb-live">live</span></div><div class="tl__s">Queued for print</div></div><span class="tl__time">1.2s</span></div>
+            <div class="tl"><div class="tl__icon">💲</div><div class="tl__body"><div class="tl__t">Invoice <span class="mini-badge mb-wait">810</span></div><div class="tl__s">Awaiting shipment</div></div><span class="tl__time">—</span></div>
+          </div>
+          <div class="stats">
+            <div class="stat"><b>56</b><span>orders today</span></div>
+            <div class="stat"><b>99.7%</b><span>auto-resolved</span></div>
+            <div class="stat"><b>$283K</b><span>GMV processed</span></div>
+          </div>
+        </div>
+        <!-- right: constellation -->
+        <svg class="constel" viewBox="0 0 420 360" fill="none" aria-label="Commerce network">
+          <g stroke="hsl(var(--border-strong))" stroke-width="1">
+            <path d="M210 180 L80 80"/><path d="M210 180 L80 280"/><path d="M210 180 L340 80"/>
+            <path d="M210 180 L340 280"/><path d="M210 180 L210 44"/><path d="M210 180 L210 316"/>
+          </g>
+          <g class="edi-flow" stroke="hsl(var(--accent))" stroke-width="2">
+            <path d="M210 180 L80 80"/><path d="M210 180 L340 280"/><path d="M210 180 L210 44"/>
+          </g>
+          <g font-family="var(--font-mono)" font-size="10" text-anchor="middle">
+            <g><path d="M80 80 l13 7 v15 l-13 8 -13-8 v-15 z" fill="hsl(var(--bg-surface))" stroke="hsl(var(--accent))" stroke-width="1.5"/><text x="80" y="122" fill="hsl(var(--text-tertiary))">Brands</text></g>
+            <g><path d="M80 280 l13 7 v15 l-13 8 -13-8 v-15 z" fill="hsl(var(--bg-surface))" stroke="hsl(var(--cat-teal))" stroke-width="1.5"/><text x="80" y="322" fill="hsl(var(--text-tertiary))">Retailers</text></g>
+            <g><path d="M340 80 l13 7 v15 l-13 8 -13-8 v-15 z" fill="hsl(var(--bg-surface))" stroke="hsl(var(--cat-amber))" stroke-width="1.5"/><text x="340" y="122" fill="hsl(var(--text-tertiary))">3PLs</text></g>
+            <g><path d="M340 280 l13 7 v15 l-13 8 -13-8 v-15 z" fill="hsl(var(--bg-surface))" stroke="hsl(var(--cat-violet))" stroke-width="1.5"/><text x="340" y="322" fill="hsl(var(--text-tertiary))">Platforms</text></g>
+            <g><path d="M210 44 l12 7 v14 l-12 7 -12-7 v-14 z" fill="hsl(var(--bg-surface))" stroke="hsl(var(--cat-green))" stroke-width="1.5"/><text x="210" y="26" fill="hsl(var(--text-tertiary))">Wholesalers</text></g>
+            <g><path d="M210 316 l12 7 v14 l-12 7 -12-7 v-14 z" fill="hsl(var(--bg-surface))" stroke="hsl(var(--cat-magenta))" stroke-width="1.5"/><text x="210" y="352" fill="hsl(var(--text-tertiary))">Manufacturers</text></g>
+          </g>
+          <circle cx="210" cy="180" r="42" fill="hsl(var(--accent)/.12)" class="node-glow"/>
+          <circle cx="210" cy="180" r="24" fill="hsl(var(--accent))"/>
+          <text x="210" y="184" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="#fff" font-weight="500">Edison</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust">
+  <div class="container">
+    <p>Trusted by leading brands, retailers, 3PLs &amp; backed by top investors</p>
+    <div class="marquee">
+      <div class="track">
+        <span>Walmart</span><span>Target</span><span>Costco</span><span>Amazon</span><span>UNFI</span><span>Kroger</span><span>Whole Foods</span><span>NetSuite</span><span>Shopify</span>
+        <span>Walmart</span><span>Target</span><span>Costco</span><span>Amazon</span><span>UNFI</span><span>Kroger</span><span>Whole Foods</span><span>NetSuite</span><span>Shopify</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLAINER -->
+<section class="section explain">
+  <div class="container">
+    <span class="eyebrow">What is EDI automation?</span>
+    <h2 class="sec-title">The standard exchange of business, automated.</h2>
+    <p class="body">Electronic Data Interchange (EDI) is the standardized electronic exchange of business documents — purchase orders, invoices, advance ship notices, and more — between trading partners. <strong>Crstl is an AI-native EDI and supply-chain commerce platform</strong> that automates order-to-cash workflows between brands, retailers, and logistics partners. Onboard new retail trading partners in days instead of months, automatically generate compliant ASNs and invoices, and connect seamlessly with Shopify, NetSuite, Microsoft Dynamics 365, QuickBooks, Amazon, Walmart, Target, Costco, and hundreds more.</p>
+  </div>
+</section>
+
+<!-- LEGACY -->
+<section class="section">
+  <div class="container">
+    <span class="eyebrow">Why legacy EDI falls short</span>
+    <h2 class="sec-title">Old EDI is slow, painful, and stodgy.</h2>
+    <p class="sec-lead">Legacy providers hold your growth back. Crstl is the modern, AI-powered alternative.</p>
+    <div class="tri">
+      <div class="lcard"><span class="lcard__tag">Problem 01</span><h3>Slow</h3><p>Weeks to onboard a new trading partner and months to integrate critical systems. Your EDI provider shouldn't be the bottleneck. Get Crstl, break free.</p></div>
+      <div class="lcard"><span class="lcard__tag">Problem 02</span><h3>Painful</h3><p>No visibility into mission-critical operational data, and no support when you need it. Get Crstl for a delightful customer experience.</p></div>
+      <div class="lcard"><span class="lcard__tag">Problem 03</span><h3>Stodgy</h3><p>Old is gold, but your provider's tech, processes, and experience shouldn't be dated. Get Crstl to run and grow on a state-of-the-art platform.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" style="padding-top:24px">
+  <div class="container">
+    <span class="eyebrow">How Crstl automates EDI</span>
+    <h2 class="sec-title">Everything modern brands need to transact.</h2>
+    <p class="sec-lead">Onboard and communicate with every B2B partner using Crstl AI. Connect WMS, ERP, and critical systems — no EDI expertise required.</p>
+    <div class="bento" id="bento"></div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="section steps">
+  <div class="container">
+    <span class="eyebrow">Get started in 4 steps</span>
+    <h2 class="sec-title">From sign-up to scale.</h2>
+    <p class="sec-lead">Easily onboard and communicate with all your B2B partners. Accelerate growth while saving time and reducing cost.</p>
+    <div class="step-grid">
+      <div class="step"><span class="step__n">01</span><h3>Sign up</h3><p>Sign up with Crstl to transact with your B2B trading partners.</p></div>
+      <div class="step"><span class="step__n">02</span><h3>Onboard</h3><p>Crstl handles compliance and testing with the trading partner, keeping you in the loop at every step.</p></div>
+      <div class="step"><span class="step__n">03</span><h3>All set!</h3><p>Send and receive every document needed to transact — with full transparency and complete reliability.</p></div>
+      <div class="step"><span class="step__n">04</span><h3>Expand</h3><p>Link Crstl to your 3PL, ERP, and other systems to turbocharge automations and data exchange.</p></div>
+    </div>
+    <div style="margin-top:36px"><a href="#" class="btn btn--primary">Book a demo <kbd>↵</kbd></a></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="container center">
+    <span class="eyebrow" style="justify-content:center">What brands say</span>
+    <h2 class="sec-title">Switching to Crstl is night and day.</h2>
+  </div>
+  <div class="tmarquee">
+    <div class="ttrack" id="ttrack"></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" style="padding-top:24px">
+  <div class="container center">
+    <span class="eyebrow" style="justify-content:center">FAQ</span>
+    <h2 class="sec-title">Your EDI questions, answered.</h2>
+  </div>
+  <div class="faq" id="faq"></div>
+</section>
+
+<!-- CTA -->
+<div class="cta container">
+  <div class="cta__inner">
+    <div class="cta__grid"></div>
+    <h2>Ready to simplify your operations?</h2>
+    <div style="position:relative;z-index:1;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="#" class="btn btn--primary">Book a demo <kbd>↵</kbd></a>
+      <a href="#" class="btn btn--secondary" style="background:transparent;color:#fff;border-color:hsl(0 0% 100%/.25)">Contact us</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="#"><svg class="logo-mark" viewBox="0 0 24 24" fill="none"><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" fill="hsl(var(--accent))" opacity=".12"/><path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" stroke="hsl(var(--accent))" stroke-width="1.5"/><path d="M12 2 V22 M3 7 L21 17 M21 7 L3 17" stroke="hsl(var(--accent))" stroke-width="1" opacity=".45"/></svg>Crstl</a>
+        <p>The agentic B2B commerce network. AI-powered EDI for brands, retailers &amp; 3PLs.</p>
+      </div>
+      <div class="fcol"><h4>Solutions</h4><a href="#">For Brands</a><a href="#">For Logistics Providers</a><a href="#">For Retailers</a><a href="#">For Commerce Platforms</a></div>
+      <div class="fcol"><h4>Resources</h4><a href="#">Case Studies</a><a href="#">Blog</a><a href="#">FAQs</a><a href="#">Partners</a></div>
+      <div class="fcol"><h4>Company</h4><a href="#">About</a><a href="#">Careers</a><a href="#">Newsroom</a><a href="#">Help Center</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2025 Crstl Technologies, Inc. All Rights Reserved.</span>
+      <span>Terms of Service · Privacy Policy</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// rotating hero word
+const words=["brands","retailers","3PLs","wholesalers","manufacturers","platforms"];
+let wi=0;const rot=document.getElementById('rot');
+setInterval(()=>{wi=(wi+1)%words.length;rot.style.opacity=0;
+  setTimeout(()=>{rot.textContent=words[wi];rot.style.opacity=1;},200);},2200);
+rot.style.transition="opacity .2s var(--ease-standard)";
+
+// feature bento
+const feats=[
+  ["⚡","Your AI agent for EDI","Exchange critical documents, unify systems, and ensure business compliance — autonomously."],
+  ["📈","From SMBs to Enterprise","Starting fresh or scaling up, Crstl handles all the EDI complexity while you focus on growth."],
+  ["⟁","For Ops &amp; Developers","Full-service EDI for small teams, API flexibility for developers — scale without the complexity."],
+  ["🚀","Fast Onboarding","Crstl handles trading-partner testing and certification, with peace of mind every step."],
+  ["✓","Total EDI Compliance","Confidently transact with every partner in full compliance with their requirements."],
+  ["◇","AI-Powered Integrations","A rapidly expanding, reliable integrations network so your business scales without limits."],
+  ["$","Crstl-clear Pricing","No price haggling. Straightforward pricing with no per-document fees saves time and money."],
+  ["◐","Best-in-class Support","Timely, reliable support via Slack and email from a team invested in your success."],
+  ["⊡","Your data is yours","We set your data free so you can efficiently run and grow your business."]
+];
+document.getElementById('bento').innerHTML=feats.map(f=>
+  `<div class="feat"><div class="feat__icon" style="font-family:var(--font-display);font-weight:600;font-size:18px">${f[0]}</div><h3>${f[1]}</h3><p>${f[2]}</p></div>`).join('');
+
+// testimonials
+const quotes=[
+  ["The ability and willingness of Crstl to help is night and day compared to other providers. They're not just a vendor; they're genuinely invested in our success.","Josh Lazenby","Sr. Operations Manager, KitchenSupply"],
+  ["Crstl provided the hands-on approach during onboarding, ensuring we had the right services without overpaying for features we wouldn't need for years.","Nikki Elliott","Co-founder, Elavi"],
+  ["Having a partner like Crstl who acts quickly was incredibly valuable — it let us get EDI set up with UNFI sooner and secure better payment terms.","Russ Wallace","CEO & Co-founder, Freestyle"],
+  ["The real difference with Crstl is how fast they respond. Knowing their support team is there and will respond quickly makes all the difference.","Will Gahagan","CEO, Biom"],
+  ["Crstl delivers a product that makes traditional platforms look like a protection racket. Out with the old, in with the new, please and thank you.","Ryan Chen","CFO & Co-founder, Neuro"],
+  ["Our team is a lot more efficient since switching to Crstl. The time it takes to onboard a customer is very short.","Silas Ang","Director of Supply Chain, Immi"]
+];
+const qhtml=quotes.map(q=>
+  `<div class="quote"><p>"${q[0]}"</p><div class="who"><div class="avatar">${q[1].split(' ').map(n=>n[0]).join('').slice(0,2)}</div><div><b>${q[1]}</b><span>${q[2]}</span></div></div></div>`).join('');
+document.getElementById('ttrack').innerHTML=qhtml+qhtml;
+
+// FAQ
+const faqs=[
+  ["What is Crstl?","Crstl is an AI-powered EDI and B2B agentic commerce platform that automates order-to-cash workflows between brands, retailers, and logistics providers. Edison processes purchase orders, generates ASNs, creates invoices, and ensures retailer compliance autonomously — handling over $1 billion in B2B GMV."],
+  ["What is EDI automation?","EDI automation replaces manual document exchange between trading partners with software that automatically sends and receives standardized documents like purchase orders (850), advance ship notices (856), and invoices (810). Crstl goes further with AI agents that validate, reconcile, and resolve errors autonomously."],
+  ["How long does EDI onboarding take?","Most brands are fully onboarded and transacting with their retail trading partners within days or weeks — not the months typical of legacy providers. Crstl handles all compliance testing and certification for you."],
+  ["What retailers does Crstl support?","All major retailers including Walmart, Target, Costco, Amazon, UNFI, Whole Foods, Kroger, and hundreds more — including retailer-specific compliance requirements and routing guides."],
+  ["Does Crstl charge per-document fees?","No. Unlike legacy providers that charge per document or per kilocharacter, Crstl offers transparent, predictable pricing with unlimited EDI documents. Your costs stay predictable as order volume grows."],
+  ["Does Crstl integrate with NetSuite, Shopify, and other ERPs?","Yes. Crstl integrates with NetSuite, Shopify, Microsoft Dynamics 365 Business Central, QuickBooks, and more — enabling fully automated order-to-cash workflows without manual data entry."]
+];
+document.getElementById('faq').innerHTML=faqs.map((f,i)=>
+  `<details class="qa"${i===0?' open':''}><summary>${f[0]}<svg class="chev" viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></summary><p>${f[1]}</p></details>`).join('');
+
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');document.getElementById('tlabel').textContent=d?'◑ Dark':'◐ Light';}
+</script>
+</body>
+</html>

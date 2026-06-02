@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supabase Feature Illustrations</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      padding: 40px 24px;
+      color: #171717;
+    }
+    h1 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #888;
+      margin-bottom: 20px;
+      letter-spacing: -0.01em;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      max-width: 1160px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e2e2e2;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 360px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .card:hover { border-color: #ccc; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+    .card--db { grid-column: span 2; }
+    .card-header { padding: 20px 22px 14px; flex-shrink: 0; }
+    .card-icon { width: 20px; height: 20px; color: #555; margin-bottom: 10px; display: block; }
+    .card-title { font-size: 13.5px; font-weight: 600; color: #111; margin-bottom: 7px; letter-spacing: -0.01em; }
+    .card-desc { font-size: 12.5px; line-height: 1.6; color: #666; max-width: 280px; }
+    .card-desc strong { font-weight: 600; color: #111; }
+    .card-visual {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ---- Database ---- */
+    .db-visual {
+      background: linear-gradient(170deg, #f8f8f8 0%, #f0f0f0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+    }
+    .db-visual svg { width: 260px; height: 260px; }
+
+    /* ---- Auth ---- */
+    .auth-visual svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 280px;
+    }
+
+    /* ---- Edge Functions ---- */
+    .ef-visual {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .ef-visual .ef-bg svg {
+      display: block;
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    .ef-terminal {
+      margin: 0 16px 18px;
+      background: #1c1c1c;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'SF Mono', 'Fira Mono', 'Roboto Mono', monospace;
+      font-size: 11.5px;
+      color: #d4d4d4;
+      border: 1px solid #333;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .ef-terminal .p { color: #3ecf8e; }
+    .ef-terminal .s { color: #3ecf8e; }
+    .cursor-blink {
+      display: inline-block; width: 1px; height: 12px;
+      background: #3ecf8e; margin-left: 1px;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+
+    /* ---- Storage ---- */
+    .storage-visual {
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 0;
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    }
+    .storage-track {
+      display: flex;
+      flex-shrink: 0;
+      gap: 8px;
+      padding: 8px;
+      animation: marquee-st 20s linear infinite;
+      will-change: transform;
+    }
+    .card:hover .storage-track { animation-play-state: paused; }
+    @keyframes marquee-st { to { transform: translateX(-50%); } }
+    .st-col { display: flex; flex-direction: column; gap: 8px; }
+    .st-box {
+      width: 58px; height: 58px;
+      border: 1px solid #e2e2e2;
+      border-radius: 8px;
+      background: #fafafa;
+      display: flex; align-items: center; justify-content: center;
+      color: #aaa;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+    .st-box:hover { background: #f0f0f0; color: #555; }
+    .st-box svg { width: 22px; height: 22px; display: block; }
+
+    /* ---- Realtime ---- */
+    .rt-visual {
+      position: absolute;
+      inset: 0;
+    }
+    .rt-visual > svg.rt-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .rt-cursor {
+      position: absolute;
+      pointer-events: none;
+      transition: transform 0.75s ease-out;
+    }
+    .rt-bubble {
+      position: absolute;
+      left: calc(100% + 5px);
+      top: -26px;
+      display: flex;
+      gap: 3px;
+      align-items: center;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid #e2e2e2;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .rt-dot {
+      width: 5px; height: 5px; border-radius: 50%; background: #aaa;
+      animation: rt-pulse 0.6s cubic-bezier(0.4,0,0.6,1) infinite;
+    }
+    .rt-dot:nth-child(2) { animation-delay: 200ms; }
+    .rt-dot:nth-child(3) { animation-delay: 400ms; }
+    @keyframes rt-pulse {
+      0%,100% { opacity: 0.35; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+    .rt-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0; height: 80px;
+      background: linear-gradient(to top, #fff 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* ---- Vector ---- */
+    .vc-visual svg { display: block; width: 100%; height: 100%; max-height: 280px; }
+
+    /* ---- Data APIs ---- */
+    .da-visual { position: absolute; inset: 0; }
+    .da-visual .da-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .da-visual .da-routes { position: absolute; inset: 0; width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+<h1>Supabase — Product Feature Illustrations</h1>
+<div class="products-grid">
+
+  <!-- ══════════ POSTGRES DATABASE ══════════ -->
+  <div class="card card--db">
+    <div class="card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="12" cy="5" rx="9" ry="3"/>
+        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+        <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/>
+      </svg>
+      <div class="card-title">Postgres Database</div>
+      <p class="card-desc">Every project is <strong>a full Postgres database</strong>, the world's most trusted relational database.</p>
+    </div>
+    <div class="card-visual db-visual">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 390 430">
+        <defs>
+          <filter id="db-glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#3ecf8e" flood-opacity="0.2"/>
+          </filter>
+        </defs>
+        <!-- shadow layer -->
+        <g stroke="#d4d4d4" stroke-width="1.5" fill="none" filter="url(#db-glow)">
+          <path d="M192.144 125.816h-53.465c-8.506 0-16.159 5.17-19.334 13.061L99.0045 189.43c-3.0613 7.608-1.3448 16.306 4.3775 22.181l10.232 10.506c4.792 4.919 7.474 11.516 7.474 18.384l-.001 14.473c0 20.197 16.373 36.569 36.569 36.569 6.16 0 11.154-4.993 11.154-11.153l.001-86.241c0-18.629 7.441-36.486 20.668-49.602 2.746-2.723 7.178-2.704 9.9.041 2.722 2.745 2.703 7.178-.042 9.9-10.577 10.488-16.526 24.766-16.526 39.661l-.001 86.241c0 13.892-11.262 25.153-25.154 25.153-27.928 0-50.569-22.64-50.569-50.569l.001-14.474c0-3.218-1.257-6.309-3.503-8.615L93.353 221.38c-9.5904-9.847-12.4673-24.424-7.3366-37.176l20.3406-50.553c5.308-13.192 18.101-21.835 32.322-21.835h55.729v.084h10.339c49.104 0 88.91 39.806 88.91 88.91v50.842c0 3.866-3.134 7-7 7s-7-3.134-7-7V200.81c0-41.372-33.538-74.91-74.91-74.91H193.23c-.37 0-.732-.029-1.086-.084Z"/>
+          <path d="M210.03 283.94c0-3.866-3.134-7-7-7s-7 3.134-7 7v3.113c0 26.959 21.854 48.814 48.813 48.814 26.351 0 47.825-20.879 48.781-46.996h24.614c3.866 0 7-3.134 7-7s-3.134-7-7-7h-26.841c-30.744 0-60.256-12.083-82.173-33.643-2.756-2.711-7.188-2.675-9.899.081-2.711 2.756-2.675 7.188.081 9.9 21.725 21.371 50.116 34.423 80.228 37.134-.679 18.629-15.995 33.524-34.791 33.524-19.227 0-34.813-15.587-34.813-34.814v-3.113Z"/>
+          <path d="M238.03 202.145c0 4.792 3.885 8.677 8.677 8.677s8.676-3.885 8.676-8.677-3.884-8.676-8.676-8.676-8.677 3.884-8.677 8.676Z"/>
+        </g>
+        <!-- green accent layer -->
+        <g stroke="#3ecf8e" stroke-width="1.5" fill="none" opacity="0.85">
+          <path d="M192.144 125.816h-53.465c-8.506 0-16.159 5.17-19.334 13.061L99.0045 189.43c-3.0613 7.608-1.3448 16.306 4.3775 22.181l10.232 10.506c4.792 4.919 7.474 11.516 7.474 18.384l-.001 14.473c0 20.197 16.373 36.569 36.569 36.569 6.16 0 11.154-4.993 11.154-11.153l.001-86.241c0-18.629 7.441-36.486 20.668-49.602 2.746-2.723 7.178-2.704 9.9.041 2.722 2.745 2.703 7.178-.042 9.9-10.577 10.488-16.526 24.766-16.526 39.661l-.001 86.241c0 13.892-11.262 25.153-25.154 25.153-27.928 0-50.569-22.64-50.569-50.569l.001-14.474c0-3.218-1.257-6.309-3.503-8.615L93.353 221.38c-9.5904-9.847-12.4673-24.424-7.3366-37.176l20.3406-50.553c5.308-13.192 18.101-21.835 32.322-21.835h55.729v.084h10.339c49.104 0 88.91 39.806 88.91 88.91v50.842c0 3.866-3.134 7-7 7s-7-3.134-7-7V200.81c0-41.372-33.538-74.91-74.91-74.91H193.23c-.37 0-.732-.029-1.086-.084Z"/>
+          <path d="M210.03 283.94c0-3.866-3.134-7-7-7s-7 3.134-7 7v3.113c0 26.959 21.854 48.814 48.813 48.814 26.351 0 47.825-20.879 48.781-46.996h24.614c3.866 0 7-3.134 7-7s-3.134-7-7-7h-26.841c-30.744 0-60.256-12.083-82.173-33.643-2.756-2.711-7.188-2.675-9.899.081-2.711 2.756-2.675 7.188.081 9.9 21.725 21.371 50.116 34.423 80.228 37.134-.679 18.629-15.995 33.524-34.791 33.524-19.227 0-34.813-15.587-34.813-34.814v-3.113Z"/>
+          <path d="M238.03 202.145c0 4.792 3.885 8.677 8.677 8.677s8.676-3.885 8.676-8.677-3.884-8.676-8.676-8.676-8.677 3.884-8.677 8.676Z"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ══════════ AUTHENTICATION ══════════ -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      <div class="card-title">Authentication</div>
+      <p class="card-desc">Add user sign ups and logins, securing your data with Row Level Security.</p>
+    </div>
+    <div class="card-visual auth-visual">
+      <svg xmlns="http://www.w3.org/2000/svg" width="331" height="430" fill="none" viewBox="0 0 331 430">
+        <g clip-path="url(#au-a)">
+          <rect width="219.287" height="62" x="-60.929" y="278" fill="#fff" stroke="#dfdfdf" rx="8"/>
+          <rect width="223.933" height="62" x="167.868" y="278" fill="#fff" stroke="#dfdfdf" rx="8"/>
+          <rect width="219.287" height="62" x="-60.929" y="205" fill="#fff" stroke="#dfdfdf" rx="8"/>
+          <path fill="#707070" d="m-41.29 241-2.59-7.224h1.134l1.036 3.024 1.12 3.262h.056l1.12-3.262 1.036-3.024h1.106l-2.59 7.224zm9.108.168q-.756 0-1.372-.266a3 3 0 0 1-1.036-.756 3.6 3.6 0 0 1-.644-1.19 5.1 5.1 0 0 1-.224-1.568q0-.853.224-1.554.224-.7.644-1.19.435-.504 1.036-.77.615-.266 1.372-.266.756 0 1.358.266.616.266 1.036.77.435.49.658 1.19t.224 1.554q0 .868-.224 1.568-.225.686-.658 1.19-.42.49-1.036.756a3.3 3.3 0 0 1-1.358.266m0-.966q.939 0 1.512-.56t.574-1.736v-1.036q0-1.176-.574-1.736-.573-.56-1.512-.56-.938 0-1.512.56t-.574 1.736v1.036q0 1.176.574 1.736.575.56 1.512.56m5.623 2.646h3.5v-8.12h-3.626v-.952h4.746v8.372q0 .728-.392 1.19-.379.462-1.204.462h-3.024zm4.06-10.668q-.49 0-.686-.196a.73.73 0 0 1-.196-.518v-.224q0-.308.196-.504.195-.21.686-.21.49 0 .686.21.195.197.196.504v.224a.73.73 0 0 1-.196.518q-.197.196-.686.196m7.554 0q-.49 0-.686-.196a.73.73 0 0 1-.196-.518v-.224q0-.308.196-.504.196-.21.686-.21t.686.21q.196.197.196.504v.224a.73.73 0 0 1-.196.518q-.196.196-.686.196m-3.164 7.868h2.604v-5.32h-2.604v-.952h3.724v6.272h2.436V241h-6.16zm7.765.952 2.688-3.668-2.618-3.556h1.344l1.092 1.526.868 1.204h.056l.84-1.204 1.078-1.526h1.288l-2.646 3.542L-3.638 241h-1.344l-1.218-1.694-.826-1.148h-.056l-.798 1.148L-9.056 241zm11.74.168q-.756 0-1.372-.266a3 3 0 0 1-1.036-.756 3.6 3.6 0 0 1-.644-1.19 5.1 5.1 0 0 1-.224-1.568q0-.853.224-1.554.224-.7.644-1.19.435-.504 1.036-.77.616-.266 1.372-.266t1.358.266q.616.266 1.036.77.435.49.658 1.19.225.7.224 1.554 0 .868-.224 1.568-.223.686-.658 1.19-.42.49-1.036.756a3.3 3.3 0 0 1-1.358.266m0-.966q.939 0 1.512-.56t.574-1.736v-1.036q0-1.176-.574-1.736-.573-.56-1.512-.56-.937 0-1.512.56-.573.56-.574 1.736v1.036q0 1.176.574 1.736.575.56 1.512.56"/>
+          <rect width="219.287" height="62" x="-60.929" y="351" fill="#fff" stroke="#dfdfdf" rx="8"/>
+          <rect width="223.933" height="62" x="167.868" y="351" fill="#fff" stroke="#dfdfdf" rx="8"/>
+          <rect width="223.933" height="62" x="167.868" y="205" fill="#fff" stroke="#dfdfdf" rx="8"/>
+          <!-- dots separator row 1 -->
+          <g fill="#b2b2b2">
+            <circle cx="185" cy="309" r="3"/>
+            <circle cx="200" cy="309" r="3"/>
+            <circle cx="215" cy="309" r="3"/>
+            <circle cx="230" cy="309" r="3"/>
+            <circle cx="245" cy="309" r="3"/>
+            <circle cx="260" cy="309" r="3"/>
+            <circle cx="275" cy="309" r="3"/>
+          </g>
+          <!-- dots separator row 2 -->
+          <g fill="#b2b2b2" opacity="0.45">
+            <circle cx="10" cy="309" r="3"/>
+            <circle cx="25" cy="309" r="3"/>
+            <circle cx="40" cy="309" r="3"/>
+            <circle cx="55" cy="309" r="3"/>
+            <circle cx="70" cy="309" r="3"/>
+            <circle cx="85" cy="309" r="3"/>
+            <circle cx="100" cy="309" r="3"/>
+          </g>
+          <!-- table icons in each row -->
+          <path stroke="#b2b2b2" stroke-linecap="round" stroke-linejoin="round" d="M-48 289h-2.667A1.33 1.33 0 0 0-52 290.333V293m4-4h6.667A1.33 1.33 0 0 1-40 290.333V293m-8-4v12m-4-8v6.667A1.333 1.333 0 0 0-48.667 301H-46m-4-8h12m0 0v6.667A1.333 1.333 0 0 1-44.333 301H-46"/>
+          <path stroke="#b2b2b2" stroke-linecap="round" stroke-linejoin="round" d="M-48 216h-2.667A1.33 1.33 0 0 0-52 217.333V220m4-4h6.667A1.33 1.33 0 0 1-40 217.333V220m-8-4v12m-4-8v6.667A1.333 1.333 0 0 0-48.667 228H-46m-4-8h12m0 0v6.667A1.333 1.333 0 0 1-44.333 228H-46"/>
+          <path stroke="#b2b2b2" stroke-linecap="round" stroke-linejoin="round" d="M-48 362h-2.667A1.33 1.33 0 0 0-52 363.333V366m4-4h6.667A1.33 1.33 0 0 1-40 363.333V366m-8-4v12m-4-8v6.667A1.333 1.333 0 0 0-48.667 374H-46m-4-8h12m0 0v6.667A1.333 1.333 0 0 1-44.333 374H-46"/>
+          <!-- email placeholder text row 1 -->
+          <rect width="90" height="10" x="-28" y="304" rx="2" fill="#e0e0e0"/>
+          <rect width="60" height="10" x="180" y="304" rx="2" fill="#e8e8e8"/>
+          <!-- email placeholder text row 2 -->
+          <rect width="80" height="10" x="-28" y="231" rx="2" fill="#e0e0e0"/>
+          <rect width="70" height="10" x="180" y="231" rx="2" fill="#e8e8e8"/>
+          <!-- email placeholder text row 3 -->
+          <rect width="100" height="10" x="-28" y="377" rx="2" fill="#e0e0e0"/>
+          <rect width="55" height="10" x="180" y="377" rx="2" fill="#e8e8e8"/>
+          <!-- green dot for active row -->
+          <circle cx="176" cy="309" r="4" fill="#3ecf8e"/>
+          <!-- pill labels on right rects -->
+          <rect width="60" height="22" x="185" y="287" rx="11" fill="#f3f3f3" stroke="#d4d4d4"/>
+          <rect width="60" height="22" x="185" y="214" rx="11" fill="#f3f3f3" stroke="#d4d4d4"/>
+          <rect width="60" height="22" x="185" y="360" rx="11" fill="#f3f3f3" stroke="#d4d4d4"/>
+        </g>
+        <defs>
+          <clipPath id="au-a"><path fill="#fff" d="M0 0h331v430H0z"/></clipPath>
+        </defs>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ══════════ EDGE FUNCTIONS ══════════ -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v4l3 3"/>
+      </svg>
+      <div class="card-title">Edge Functions</div>
+      <p class="card-desc">Easily write custom code <strong>without deploying or scaling servers</strong>.</p>
+    </div>
+    <div class="card-visual ef-visual">
+      <div class="ef-bg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="330" height="160" viewBox="0 0 330 430" preserveAspectRatio="xMidYMid slice">
+          <g clip-path="url(#ef-a)">
+            <mask id="ef-c" width="501" height="307" x="-72" y="194" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+              <path fill="url(#ef-b)" d="M-71.32 194.31H428.9v306.136H-71.32z"/>
+            </mask>
+            <g mask="url(#ef-c)">
+              <path stroke="#707070" stroke-width=".63" d="M56.936 615.864c-1.862-1.135 1.53-10.785 9.81-27.996 8.281-17.212 21.17-41.37 37.364-70.058s35.125-60.882 54.893-93.342c19.777-32.475 39.69-64.063 57.731-91.624 18.057-27.552 33.611-50.089 45.099-65.337 11.496-15.264 18.52-22.693 20.383-21.558M29.738 596.282c-7.736-6.546-8.88-20.62-3.326-40.805 5.569-20.176 17.655-45.773 35.035-74.188s39.463-58.656 64.008-87.672c24.554-29.032 50.7-55.822 75.816-77.69 25.131-21.86 48.343-38.036 67.319-46.876 18.976-8.841 33.044-10.048 40.789-3.518M3.204 569.554c-11.152-13.388-14.407-32.932-9.469-56.681 4.94-23.749 17.932-50.87 37.648-78.636 19.715-27.766 45.469-55.199 74.674-79.54s60.832-44.722 91.684-59.108c30.868-14.378 59.877-22.268 84.143-22.86 24.258-.576 42.901 6.149 54.038 19.529m-358.38 238.786c-10.87-20.832-12.678-45.936-5.234-72.774s23.877-54.46 47.626-80.108c23.764-25.639 54.01-48.389 87.714-65.975s69.686-29.347 104.304-34.162c34.634-4.807 66.689-2.452 92.949 6.799 26.259 9.252 45.808 25.114 56.677 45.946M-42.774 473.456c-5.5-27.437-1.09-56.366 12.784-83.869s36.72-52.619 66.252-72.805c29.533-20.186 64.7-34.751 101.972-42.228 37.272-7.476 75.335-7.582 110.367-.33s65.79 21.615 89.187 41.641c23.398 20.026 38.616 45.037 44.115 72.475" opacity=".6"/>
+              <path fill="url(#ef-d)" fill-opacity=".08" stroke="url(#ef-e)" stroke-width=".523" d="M96.084 155.412c33.737 11.315 59.645 37.817 73.285 58.961-119.49.257-216.3 97.099-216.507 216.602-24.307-9.556-42.152-23.158-53.506-39.737-11.408-16.659-16.275-36.341-14.544-57.988 3.464-43.304 33.338-94.477 90.097-144.929 45.362-40.322 87.248-44.287 121.175-32.909Z"/>
+            </g>
+            <path stroke="url(#ef-f)" stroke-width=".523" d="M163.815 289.173c5.145-1.641 18.709-5.589 31.803-8.251"/>
+            <path stroke="url(#ef-g)" stroke-width=".63" d="M163.743 289.032c-18.206 5.187-43.077 15.647-62.293 26.53-2.857-5.626-8.859-19.013-10.005-27.548" opacity=".6"/>
+            <path stroke="url(#ef-h)" stroke-width=".63" d="M131.988 300.584c-22.779 8.879-64.751 33.864-85.917 52.666" opacity=".6"/>
+            <path stroke="url(#ef-i)" stroke-width=".63" d="M163.45 288.852c-2.898-5.107-8.435-18.062-7.4-29.032 1.035-10.971 5.382-16.714 6.676-18.319-18.785-2.95-59.563-4.554-91.751 7.141"/>
+            <path stroke="url(#ef-j)" stroke-width=".63" d="M107 416.714c6.591-10.241 29.106-35.532 39.594-47.111-10.111-8.043-21.594-20.919-26.166-26.424 16.488-13.157 43.654-29.649 55.176-36.25-3.036-3.629-9.579-12.312-11.967-17.624"/>
+            <path stroke="url(#ef-k)" stroke-width=".63" d="M208.664 423.039c7.109-12.953 20.755-54.004 27.116-72.756-28.112-11.66-48.13-29.228-60.184-43.417"/>
+            <path stroke="url(#ef-l)" stroke-width=".63" d="M285.525 394.502c-25.576-1.417-50.611-10.222-59.931-14.446 2.452-6.734 7.929-22.109 10.217-29.736"/>
+            <path stroke="url(#ef-m)" stroke-width=".582" d="M163.741 225.905v62.79"/>
+            <ellipse cx="163.449" cy="288.951" fill="#171717" rx="3" ry="2.987" transform="rotate(-90 163.449 288.951)"/>
+            <ellipse cx="285.522" cy="394.501" fill="#171717" rx="3" ry="2.987" transform="rotate(-90 285.522 394.501)"/>
+            <ellipse cx="46.072" cy="353.25" fill="#171717" rx="3" ry="2.987" transform="rotate(-90 46.072 353.25)"/>
+          </g>
+          <defs>
+            <linearGradient id="ef-b" x1="130.011" x2="290.2" y1="159.677" y2="369.686" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="ef-f" x1="161.952" x2="200.942" y1="287.31" y2="282.386" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="ef-g" x1="176.291" x2="146.084" y1="291.992" y2="317.019" gradientUnits="userSpaceOnUse"><stop stop-color="#171717"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="ef-h" x1="142.094" x2="49.005" y1="298.08" y2="374.208" gradientUnits="userSpaceOnUse"><stop stop-color="#171717"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="ef-i" x1="163.45" x2="151.98" y1="286.878" y2="260.371" gradientUnits="userSpaceOnUse"><stop stop-color="#171717"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="ef-j" x1="163.939" x2="120.03" y1="317.43" y2="406.478" gradientUnits="userSpaceOnUse"><stop stop-color="#171717"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="ef-k" x1="211.598" x2="210.244" y1="358.54" y2="423.039" gradientUnits="userSpaceOnUse"><stop stop-color="#171717"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="ef-l" x1="252.624" x2="289.44" y1="386.02" y2="398.696" gradientUnits="userSpaceOnUse"><stop stop-color="#171717"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <linearGradient id="ef-m" x1="163.45" x2="163.45" y1="266.262" y2="288.695" gradientUnits="userSpaceOnUse"><stop stop-color="#171717"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <radialGradient id="ef-d" cx="0" cy="0" r="1" gradientTransform="rotate(227.429 99.037 139.361)scale(103.192 103.372)" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#d9d9d9" stop-opacity="0"/></radialGradient>
+            <radialGradient id="ef-e" cx="0" cy="0" r="1" gradientTransform="rotate(246.038 108.464 128.218)scale(61.4062 126.439)" gradientUnits="userSpaceOnUse"><stop stop-color="#d9d9d9"/><stop offset="1" stop-color="#d9d9d9" stop-opacity="0"/></radialGradient>
+            <clipPath id="ef-a"><path fill="#fff" d="M0 0h330v430H0z"/></clipPath>
+          </defs>
+        </svg>
+      </div>
+      <div class="ef-terminal">
+        <span class="p">$</span>
+        <span>supabase functions </span><span class="s">serve</span><span class="cursor-blink"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ STORAGE ══════════ -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="21 8 21 21 3 21 3 8"/>
+        <rect x="1" y="3" width="22" height="5"/>
+        <line x1="10" y1="12" x2="14" y2="12"/>
+      </svg>
+      <div class="card-title">Storage</div>
+      <p class="card-desc">Store, organize, and serve <strong>large files</strong>, from videos to images.</p>
+    </div>
+    <div class="card-visual storage-visual">
+      <!-- Two identical tracks for seamless loop -->
+      <div class="storage-track" id="st1">
+        <!-- 10 columns × 3 icons = 30 icons per track, duplicated for loop -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ REALTIME ══════════ -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+        <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+        <line x1="12" y1="20" x2="12.01" y2="20"/>
+      </svg>
+      <div class="card-title">Realtime</div>
+      <p class="card-desc">Build multiplayer experiences with real-time data synchronization.</p>
+    </div>
+    <div class="card-visual" style="min-height:200px;">
+      <div class="rt-visual">
+        <!-- Grid background -->
+        <svg class="rt-bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 430" preserveAspectRatio="xMidYMid slice">
+          <g clip-path="url(#rt-a)">
+            <path stroke="#f3f3f3" stroke-width=".5" d="M-16.542-10.547v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453.001 457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453m14-457.453v457.453M440.615-.25H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14.001H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838m457.453 14H-16.838"/>
+          </g>
+          <defs>
+            <clipPath id="rt-a"><path fill="#fff" d="M0 0h330v430H0z"/></clipPath>
+          </defs>
+        </svg>
+        <!-- User 1 cursor -->
+        <div class="rt-cursor" style="top:55%;left:28%;">
+          <svg width="26" height="32" viewBox="0 0 30 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.58385 1.69742C2.57836 0.865603 1.05859 1.58076 1.05859 2.88572V35.6296C1.05859 37.1049 2.93111 37.7381 3.8265 36.5656L12.5863 25.0943C12.6889 24.96 12.8483 24.8812 13.0173 24.8812H27.3245C28.7697 24.8812 29.4211 23.0719 28.3076 22.1507L3.58385 1.69742Z" fill="#fff" stroke="#ccc" stroke-linejoin="round"/>
+          </svg>
+          <div class="rt-bubble">
+            <div class="rt-dot"></div>
+            <div class="rt-dot"></div>
+            <div class="rt-dot"></div>
+          </div>
+        </div>
+        <!-- User 2 cursor -->
+        <div class="rt-cursor" style="top:72%;left:60%;transform:scale(0.8);">
+          <svg width="20" height="26" viewBox="0 0 30 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.58385 1.69742C2.57836 0.865603 1.05859 1.58076 1.05859 2.88572V35.6296C1.05859 37.1049 2.93111 37.7381 3.8265 36.5656L12.5863 25.0943C12.6889 24.96 12.8483 24.8812 13.0173 24.8812H27.3245C28.7697 24.8812 29.4211 23.0719 28.3076 22.1507L3.58385 1.69742Z" fill="#fff" stroke="#ccc" stroke-linejoin="round"/>
+          </svg>
+          <div class="rt-bubble" style="opacity:0.7;">
+            <div class="rt-dot"></div>
+            <div class="rt-dot"></div>
+            <div class="rt-dot"></div>
+          </div>
+        </div>
+        <div class="rt-overlay"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ VECTOR ══════════ -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+        <polyline points="2 17 12 22 22 17"/>
+        <polyline points="2 12 12 17 22 12"/>
+      </svg>
+      <div class="card-title">Vector</div>
+      <p class="card-desc">Integrate your favorite ML-models to <strong>store, index and search vector embeddings</strong>.</p>
+    </div>
+    <div class="card-visual vc-visual">
+      <svg xmlns="http://www.w3.org/2000/svg" width="390" height="430" fill="none" viewBox="0 0 390 430" style="display:block;width:100%;height:100%;max-height:260px;">
+        <g clip-path="url(#vc-a)">
+          <path stroke="#ededed" stroke-width=".502" d="M279.173 650.277V275.195M117.441 650.277V275.195M198.313 696.482V321.401"/>
+          <path fill="#fcfcfc" stroke="#ededed" stroke-width="1.237" d="m-227.715 468.123 423.727-248.666 423.273 250.909z" opacity=".8"/>
+          <circle cx="301.631" cy="222.602" r="1.507" fill="#b2b2b2"/>
+          <ellipse cx="326.643" cy="108.326" fill="#525252" rx="2.511" ry="2.495"/>
+          <circle cx="350.85" cy="222.602" r="2.511" fill="#b2b2b2"/>
+          <ellipse cx="89.687" cy="176.412" fill="#13c575" rx="1.507" ry="1.584"/>
+          <circle cx="251.621" cy="92.292" r="1.004" fill="#525252"/>
+          <circle cx="221.696" cy="103.573" r="2.009" fill="#ededed"/>
+          <ellipse cx="217.068" cy="249.2" fill="#13c575" rx="1.004" ry=".984"/>
+          <circle cx="51.145" cy="187.789" r="4.018" fill="#e2e2e2"/>
+          <circle cx="326.102" cy="238.157" r="2.213" fill="#ededed"/>
+          <circle cx="93.202" cy="215.212" r="2.009" fill="#ededed"/>
+          <circle cx="298.62" cy="213.562" r="1.507" fill="#ededed"/>
+          <circle cx="332.81" cy="267.771" r="2.511" fill="#e2e2e2"/>
+          <circle cx="213.235" cy="199.429" r="1.465" fill="#13c575"/>
+          <circle cx="221.273" cy="266.826" r="4.52" fill="#b2b2b2"/>
+          <circle cx="290.08" cy="367.749" r="1.004" fill="#13c575"/>
+          <circle cx="137.699" cy="139.772" r="1.507" fill="#e2e2e2"/>
+          <circle cx="84.163" cy="325.56" r="1.004" fill="#ededed"/>
+          <circle cx="229.31" cy="64.901" r=".503" fill="#b2b2b2"/>
+          <ellipse cx="93.663" cy="309.991" fill="#13c575" rx="2.553" ry="2.511"/>
+          <circle cx="228.305" cy="108.093" r="2.511" fill="#525252"/>
+          <circle cx="29.922" cy="256.252" r="1.004" fill="#e2e2e2"/>
+          <circle cx="140.212" cy="96.602" r="1.004" fill="#13c575"/>
+          <ellipse cx="262.959" cy="36.271" fill="#13c575" rx="1.004" ry="1.006"/>
+          <path fill="#fff" fill-opacity=".03" d="m195.998 125.21 80.457 46.453v95.372l-80.467 46.162-80.871-46.802v-94.984z"/>
+          <path stroke="#707070" stroke-width="1.004" d="m276.455 171.663-80.457-46.453-80.881 46.201m161.338.252v95.372l-80.467 46.162m80.467-141.534-63.615 36.56-17.164 9.954m.312 95.02-80.871-46.802v-94.984m80.871 141.786-.312-95.02m-80.559-46.766 80.559 46.766"/>
+          <path stroke="#707070" stroke-dasharray="0.5 2.01" stroke-width="1.004" d="m205.479 166.713 79.448 71.444M216.45 151.371l44.35-34.74"/>
+          <circle cx="205.482" cy="166.712" r="2.511" fill="#13c575"/>
+          <circle cx="289.076" cy="240.369" r="4.146" fill="#13c575"/>
+          <circle cx="140.212" cy="242.004" r="2.511" fill="#13c575"/>
+          <circle cx="216.001" cy="151.754" r="2.192" fill="#13c575" transform="rotate(18.032 216.001 151.754)"/>
+          <circle cx="260.8" cy="116.631" r="2.511" fill="#13c575" transform="rotate(18.032 260.8 116.631)"/>
+          <path stroke="#707070" stroke-dasharray="0.5 2.01" stroke-width="1.004" d="m94.41 309.076 81.54-66.068"/>
+          <circle cx="175.95" cy="243.009" r="3.516" fill="#13c575"/>
+        </g>
+        <defs>
+          <clipPath id="vc-a"><path fill="#fff" d="M0 0h390v430H0z"/></clipPath>
+        </defs>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ══════════ DATA APIs ══════════ -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+        <line x1="8" y1="21" x2="16" y2="21"/>
+        <line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+      <div class="card-title">Data APIs</div>
+      <p class="card-desc">Instant ready-to-use <strong>Restful APIs</strong>.</p>
+    </div>
+    <div class="card-visual" style="min-height:220px;">
+      <div class="da-visual">
+        <!-- Lines background -->
+        <svg class="da-lines" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 430" preserveAspectRatio="xMidYMid slice">
+          <path stroke="#b2b2b2" stroke-dasharray="1 4" stroke-linecap="round" stroke-linejoin="round" d="M3 393h325.486M3 350h325.486M3 307h325.486M3 264h325.486M3 221h325.486M3 178h325.486"/>
+        </svg>
+        <!-- Routes overlay -->
+        <svg class="da-routes" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 430" preserveAspectRatio="xMidYMid slice">
+          <g clip-path="url(#da-a)">
+            <rect width="94" height="31" x="23.5" y="162.5" fill="#fff" rx="5.5"/><rect width="94" height="31" x="23.5" y="162.5" stroke="#dfdfdf" rx="5.5"/>
+            <path stroke="#b2b2b2" stroke-linecap="round" stroke-linejoin="round" d="M37 172h-2.667A1.33 1.33 0 0 0 33 173.333V176m4-4h6.667A1.33 1.33 0 0 1 45 173.333V176m-8-4v12m-4-8v6.667A1.333 1.333 0 0 0 34.333 184H37m-4-8h12m0 0v6.667A1.333 1.333 0 0 1 43.667 184H37"/>
+            <path fill="#707070" d="M58.384 177.592c-.912 0-1.752.672-1.752 2.016 0 1.32.828 2.028 1.764 2.028 1.08 0 1.476-.732 1.608-1.188l.996.432c-.276.828-1.104 1.8-2.604 1.8-1.68 0-2.916-1.32-2.916-3.072 0-1.8 1.26-3.06 2.904-3.06 1.536 0 2.328.96 2.568 1.836l-1.02.432c-.144-.564-.564-1.224-1.548-1.224m6.353 4.08c.96 0 1.8-.72 1.8-2.064 0-1.332-.84-2.052-1.8-2.052s-1.8.72-1.8 2.052c0 1.344.84 2.064 1.8 2.064m0-5.124c1.728 0 2.952 1.308 2.952 3.06 0 1.764-1.224 3.072-2.952 3.072s-2.952-1.308-2.952-3.072c0-1.752 1.224-3.06 2.952-3.06"/>
+            <rect width="113" height="31" x="140.5" y="162.5" fill="#f3f3f3" rx="15.5"/><rect width="113" height="31" x="140.5" y="162.5" stroke="#d4d4d4" rx="15.5"/>
+            <path fill="#707070" d="M156.84 181.732c0-.468.36-.84.828-.84s.84.372.84.84a.825.825 0 0 1-.84.828.815.815 0 0 1-.828-.828m3.352 0c0-.468.36-.84.828-.84s.84.372.84.84a.825.825 0 0 1-.84.828.815.815 0 0 1-.828-.828m3.351 0c0-.468.36-.84.828-.84s.84.372.84.84a.825.825 0 0 1-.84.828.815.815 0 0 1-.828-.828"/>
+            <path fill="#171717" d="M190.384 177.592c-.912 0-1.752.672-1.752 2.016 0 1.32.828 2.028 1.764 2.028 1.08 0 1.476-.732 1.608-1.188l.996.432c-.276.828-1.104 1.8-2.604 1.8-1.68 0-2.916-1.32-2.916-3.072 0-1.8 1.26-3.06 2.904-3.06 1.536 0 2.328.96 2.568 1.836l-1.02.432c-.144-.564-.564-1.224-1.548-1.224m6.353 4.08c.96 0 1.8-.72 1.8-2.064 0-1.332-.84-2.052-1.8-2.052s-1.8.72-1.8 2.052c0 1.344.84 2.064 1.8 2.064m0-5.124c1.728 0 2.952 1.308 2.952 3.06 0 1.764-1.224 3.072-2.952 3.072s-2.952-1.308-2.952-3.072c0-1.752 1.224-3.06 2.952-3.06"/>
+
+            <rect width="100" height="31" x="23.5" y="205.5" fill="#fff" rx="5.5"/><rect width="100" height="31" x="23.5" y="205.5" stroke="#dfdfdf" rx="5.5"/>
+            <path stroke="#b2b2b2" stroke-linecap="round" stroke-linejoin="round" d="M37 215h-2.667A1.33 1.33 0 0 0 33 216.333V219m4-4h6.667A1.33 1.33 0 0 1 45 216.333V219m-8-4v12m-4-8v6.667A1.333 1.333 0 0 0 34.333 227H37m-4-8h12m0 0v6.667A1.333 1.333 0 0 1 43.667 227H37"/>
+            <path fill="#707070" d="M58.384 220.592c-.912 0-1.752.672-1.752 2.016 0 1.32.828 2.028 1.764 2.028 1.08 0 1.476-.732 1.608-1.188l.996.432c-.276.828-1.104 1.8-2.604 1.8-1.68 0-2.916-1.32-2.916-3.072 0-1.8 1.26-3.06 2.904-3.06 1.536 0 2.328.96 2.568 1.836l-1.02.432c-.144-.564-.564-1.224-1.548-1.224m6.353 4.08c.96 0 1.8-.72 1.8-2.064 0-1.332-.84-2.052-1.8-2.052s-1.8.72-1.8 2.052c0 1.344.84 2.064 1.8 2.064m0-5.124c1.728 0 2.952 1.308 2.952 3.06 0 1.764-1.224 3.072-2.952 3.072s-2.952-1.308-2.952-3.072c0-1.752 1.224-3.06 2.952-3.06"/>
+            <rect width="119" height="31" x="146.5" y="205.5" fill="#f3f3f3" rx="15.5"/><rect width="119" height="31" x="146.5" y="205.5" stroke="#d4d4d4" rx="15.5"/>
+            <path fill="#171717" d="M196.384 220.592c-.912 0-1.752.672-1.752 2.016 0 1.32.828 2.028 1.764 2.028 1.08 0 1.476-.732 1.608-1.188l.996.432c-.276.828-1.104 1.8-2.604 1.8-1.68 0-2.916-1.32-2.916-3.072 0-1.8 1.26-3.06 2.904-3.06 1.536 0 2.328.96 2.568 1.836l-1.02.432c-.144-.564-.564-1.224-1.548-1.224m6.353 4.08c.96 0 1.8-.72 1.8-2.064 0-1.332-.84-2.052-1.8-2.052s-1.8.72-1.8 2.052c0 1.344.84 2.064 1.8 2.064m0-5.124c1.728 0 2.952 1.308 2.952 3.06 0 1.764-1.224 3.072-2.952 3.072s-2.952-1.308-2.952-3.072c0-1.752 1.224-3.06 2.952-3.06"/>
+
+            <rect width="72" height="31" x="23.5" y="248.5" fill="#fff" rx="5.5"/><rect width="72" height="31" x="23.5" y="248.5" stroke="#dfdfdf" rx="5.5"/>
+            <path stroke="#b2b2b2" stroke-linecap="round" stroke-linejoin="round" d="M37 258h-2.667A1.33 1.33 0 0 0 33 259.333V262m4-4h6.667A1.33 1.33 0 0 1 45 259.333V262m-8-4v12m-4-8v6.667A1.333 1.333 0 0 0 34.333 270H37m-4-8h12m0 0v6.667A1.333 1.333 0 0 1 43.667 270H37"/>
+            <rect width="91" height="31" x="118.5" y="248.5" fill="#f3f3f3" rx="15.5"/><rect width="91" height="31" x="118.5" y="248.5" stroke="#d4d4d4" rx="15.5"/>
+
+            <rect width="76" height="31" x="23.5" y="291.5" fill="#fff" rx="5.5"/><rect width="76" height="31" x="23.5" y="291.5" stroke="#dfdfdf" rx="5.5"/>
+            <path stroke="#b2b2b2" stroke-linecap="round" stroke-linejoin="round" d="M37 301h-2.667A1.33 1.33 0 0 0 33 302.333V305m4-4h6.667A1.33 1.33 0 0 1 45 302.333V305m-8-4v12m-4-8v6.667A1.333 1.333 0 0 0 34.333 313H37m-4-8h12m0 0v6.667A1.333 1.333 0 0 1 43.667 313H37"/>
+            <rect width="95" height="31" x="122.5" y="291.5" fill="#f3f3f3" rx="15.5"/><rect width="95" height="31" x="122.5" y="291.5" stroke="#d4d4d4" rx="15.5"/>
+
+            <rect width="123" height="31" x="23.5" y="334.5" fill="#fff" rx="5.5"/><rect width="123" height="31" x="23.5" y="334.5" stroke="#dfdfdf" rx="5.5"/>
+            <path stroke="#b2b2b2" stroke-linecap="round" stroke-linejoin="round" d="M37 344h-2.667A1.33 1.33 0 0 0 33 345.333V348m4-4h6.667A1.33 1.33 0 0 1 45 345.333V348m-8-4v12m-4-8v6.667A1.333 1.333 0 0 0 34.333 356H37m-4-8h12m0 0v6.667A1.333 1.333 0 0 1 43.667 356H37"/>
+            <rect width="142" height="31" x="169.5" y="334.5" fill="#f3f3f3" rx="15.5"/><rect width="142" height="31" x="169.5" y="334.5" stroke="#d4d4d4" rx="15.5"/>
+          </g>
+          <defs>
+            <clipPath id="da-a"><path fill="#fff" d="M0 0h330v430H0z"/></clipPath>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Storage: build marquee columns ──
+(function() {
+  const imgIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
+  const fileIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
+  const vidIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>`;
+  const icons = [imgIcon, fileIcon, vidIcon];
+
+  function buildTrack() {
+    let html = '';
+    for (let col = 0; col < 10; col++) {
+      html += '<div class="st-col">';
+      for (let i = 0; i < 3; i++) {
+        html += `<div class="st-box">${icons[i]}</div>`;
+      }
+      html += '</div>';
+    }
+    return html;
+  }
+
+  const track = document.getElementById('st1');
+  // Double the track for seamless loop
+  const inner = buildTrack() + buildTrack();
+  track.innerHTML = inner;
+})();
+
+// ── Realtime: cursor follows mouse ──
+(function() {
+  const card = document.querySelector('.card:has(.rt-visual)');
+  const c1 = document.querySelector('.rt-cursor:first-of-type');
+  // (Just using CSS animation for the demo — no JS needed for static look)
+})();
+</script>
+</body>
+</html>

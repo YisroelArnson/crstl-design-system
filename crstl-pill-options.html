@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crstl Pill Options</title>
+  <link rel="stylesheet" href="crstl-design-system.css" />
+  <script src="crstl-brand-toggle.js" defer></script>
+  <style>
+    :root {
+      --preview-muted-line: hsl(var(--border-secondary));
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .preview-shell {
+      width: min(100% - 48px, var(--content-width));
+      margin-inline: auto;
+      padding-block: var(--space-12);
+    }
+
+    .preview-header {
+      display: grid;
+      gap: var(--space-3);
+      max-width: 760px;
+      margin-bottom: var(--space-10);
+    }
+
+    .preview-kicker {
+      font: var(--weight-medium) var(--text-sm);
+      letter-spacing: var(--tracking-sm);
+      color: hsl(var(--text-secondary));
+      margin: 0;
+    }
+
+    .preview-header h1 {
+      font: var(--weight-bold) var(--title-3);
+      letter-spacing: var(--tracking-title-3);
+      margin: 0;
+    }
+
+    .preview-header p {
+      font: var(--text-base);
+      letter-spacing: var(--tracking-base);
+      color: hsl(var(--text-secondary));
+      margin: 0;
+      max-width: 62ch;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-4);
+      align-items: stretch;
+    }
+
+    .option-panel {
+      display: grid;
+      align-content: start;
+      gap: var(--space-5);
+      padding: var(--space-6);
+      border: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      border-radius: var(--radius-lg);
+      background: hsl(var(--bg-surface));
+      box-shadow: var(--shadow-sm);
+    }
+
+    .option-panel h2 {
+      font: var(--weight-semibold) var(--title-1);
+      letter-spacing: var(--tracking-title-1);
+      margin: 0;
+    }
+
+    .option-panel p {
+      font: var(--text-sm);
+      letter-spacing: var(--tracking-sm);
+      color: hsl(var(--text-secondary));
+      margin: 0;
+    }
+
+    .option-stage {
+      display: flex;
+      min-height: 96px;
+      align-items: center;
+      border-block: var(--borderwidth-sm) solid var(--preview-muted-line);
+    }
+
+    .crstl-pill {
+      --pill-height: 32px;
+      --pill-pad: 0 14px;
+      --pill-font: var(--text-sm);
+      --pill-gap: var(--space-2);
+      --pill-bg: hsl(var(--bg-surface));
+      --pill-border: hsl(var(--border-secondary));
+      --pill-color: hsl(var(--text-secondary));
+      --pill-hover-bg: hsl(var(--bg-hover));
+      --pill-hover-border: hsl(var(--border-default));
+      --pill-hover-color: hsl(var(--text-primary));
+      --pill-dot: hsl(var(--aqua));
+
+      display: inline-flex;
+      align-items: center;
+      gap: var(--pill-gap);
+      min-height: var(--pill-height);
+      max-width: 100%;
+      padding: var(--pill-pad);
+      color: var(--pill-color);
+      background: var(--pill-bg);
+      border: var(--borderwidth-sm) solid var(--pill-border);
+      border-radius: var(--radius-pill);
+      box-shadow: var(--pill-shadow, none);
+      font: var(--weight-medium) var(--pill-font);
+      text-decoration: none;
+      white-space: normal;
+      transition: var(--transition-interactive);
+    }
+
+    .crstl-pill:hover {
+      color: var(--pill-hover-color);
+      background: var(--pill-hover-bg);
+      border-color: var(--pill-hover-border);
+      box-shadow: var(--pill-hover-shadow, var(--pill-shadow, none));
+    }
+
+    .crstl-pill:focus-visible {
+      outline: var(--focus-ring-width) solid hsl(var(--focus-ring));
+      outline-offset: var(--focus-ring-offset);
+      box-shadow: 0 0 0 var(--focus-ring-offset) hsl(var(--bg-base));
+    }
+
+    .crstl-pill__dot {
+      flex: none;
+      width: 7px;
+      height: 7px;
+      border-radius: var(--radius-circle);
+      background: var(--pill-dot);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--pill-dot) 16%, transparent);
+    }
+
+    .crstl-pill__icon {
+      flex: none;
+      width: 14px;
+      height: 14px;
+      color: hsl(var(--text-tertiary));
+      transition: transform var(--speed-feedback) var(--ease-standard),
+                  color var(--speed-feedback) var(--ease-standard);
+    }
+
+    .crstl-pill:hover .crstl-pill__icon {
+      color: currentColor;
+      transform: translateX(1px);
+    }
+
+    .crstl-pill__spark {
+      flex: none;
+      width: 14px;
+      height: 14px;
+      color: hsl(var(--accent));
+    }
+
+    .crstl-pill--tint {
+      --pill-bg: hsl(var(--accent-tint));
+      --pill-border: hsl(var(--accent) / 0.22);
+      --pill-color: hsl(var(--text-primary));
+      --pill-hover-bg: hsl(var(--accent-tint));
+      --pill-hover-border: hsl(var(--accent) / 0.42);
+      --pill-hover-color: hsl(var(--accent));
+      --pill-dot: hsl(var(--accent));
+    }
+
+    .crstl-pill--badge {
+      --pill-height: 28px;
+      --pill-pad: 0 var(--space-3);
+      --pill-font: var(--text-xs);
+      --pill-bg: hsl(var(--bg-surface));
+      --pill-border: hsl(var(--border-default));
+      --pill-color: hsl(var(--text-secondary));
+      --pill-hover-bg: hsl(var(--bg-surface));
+      --pill-hover-border: hsl(var(--border-strong));
+      --pill-hover-color: hsl(var(--text-primary));
+    }
+
+    .crstl-pill--gray {
+      --pill-bg: hsl(var(--bg-muted));
+      --pill-border: hsl(var(--border-secondary));
+      --pill-color: hsl(var(--text-primary));
+      --pill-hover-bg: hsl(var(--bg-hover));
+      --pill-hover-border: hsl(var(--border-default));
+      --pill-hover-color: hsl(var(--text-primary));
+    }
+
+    .crstl-pill--surface-shadow {
+      --pill-border: hsl(var(--border-muted));
+      --pill-shadow:
+        0 1px 2px hsl(0 0% 0% / 0.04),
+        0 8px 18px hsl(0 0% 0% / 0.05);
+      --pill-hover-border: hsl(var(--border-default));
+      --pill-hover-shadow:
+        0 1px 2px hsl(0 0% 0% / 0.05),
+        0 10px 24px hsl(0 0% 0% / 0.07);
+    }
+
+    .crstl-pill--gray-shadow {
+      --pill-bg: hsl(var(--bg-muted));
+      --pill-border: hsl(var(--border-secondary));
+      --pill-color: hsl(var(--text-primary));
+      --pill-hover-bg: hsl(var(--bg-hover));
+      --pill-hover-border: hsl(var(--border-default));
+      --pill-shadow:
+        0 1px 2px hsl(0 0% 0% / 0.04),
+        0 7px 16px hsl(0 0% 0% / 0.045);
+      --pill-hover-shadow:
+        0 1px 2px hsl(0 0% 0% / 0.05),
+        0 10px 22px hsl(0 0% 0% / 0.065);
+    }
+
+    .crstl-pill--gray-accent {
+      --pill-bg: hsl(var(--bg-muted));
+      --pill-border: hsl(var(--border-secondary));
+      --pill-color: hsl(var(--text-primary));
+      --pill-hover-bg: hsl(var(--bg-hover));
+      --pill-hover-border: hsl(var(--accent) / 0.32);
+      --pill-hover-color: hsl(var(--text-primary));
+      --pill-dot: hsl(var(--accent));
+      --pill-shadow:
+        inset 0 0 0 1px hsl(var(--accent) / 0.04),
+        0 1px 2px hsl(0 0% 0% / 0.035);
+    }
+
+    .icon-comparison {
+      margin-top: var(--space-8);
+      padding-top: var(--space-8);
+      border-top: var(--borderwidth-sm) solid hsl(var(--border-muted));
+    }
+
+    .icon-comparison h2 {
+      font: var(--weight-semibold) var(--title-1);
+      letter-spacing: var(--tracking-title-1);
+      margin: 0 0 var(--space-2);
+    }
+
+    .icon-comparison > p {
+      font: var(--text-sm);
+      letter-spacing: var(--tracking-sm);
+      color: hsl(var(--text-secondary));
+      max-width: 64ch;
+      margin: 0 0 var(--space-5);
+    }
+
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+
+    .icon-panel {
+      display: grid;
+      gap: var(--space-3);
+      padding: var(--space-5);
+      border: var(--borderwidth-sm) solid hsl(var(--border-muted));
+      border-radius: var(--radius-lg);
+      background: hsl(var(--bg-surface));
+    }
+
+    .icon-panel h3 {
+      font: var(--weight-semibold) var(--text-sm);
+      letter-spacing: var(--tracking-sm);
+      margin: 0;
+    }
+
+    .icon-panel p {
+      font: var(--text-xs);
+      color: hsl(var(--text-tertiary));
+      margin: 0;
+    }
+
+    .hero-comparison {
+      margin-top: var(--space-12);
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: var(--space-10);
+      align-items: center;
+      padding-block: var(--space-10);
+      border-top: var(--borderwidth-sm) solid hsl(var(--border-muted));
+    }
+
+    .hero-stack {
+      display: grid;
+      gap: var(--space-4);
+      align-content: start;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: var(--space-5);
+    }
+
+    .hero-copy h2 {
+      font: var(--weight-bold) var(--title-4);
+      letter-spacing: var(--tracking-title-4);
+      margin: 0;
+    }
+
+    .hero-copy h2 span {
+      color: hsl(var(--accent));
+    }
+
+    .hero-copy p {
+      font: var(--text-lg);
+      letter-spacing: var(--tracking-lg);
+      color: hsl(var(--text-secondary));
+      max-width: 34ch;
+      margin: 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-2);
+    }
+
+    .stack-label {
+      font: var(--weight-medium) var(--text-xs);
+      color: hsl(var(--text-tertiary));
+      text-transform: uppercase;
+    }
+
+    [data-theme="dark"].dark-strip {
+      margin-top: var(--space-12);
+      padding: var(--space-8);
+      border-radius: var(--radius-lg);
+      background: hsl(var(--bg-base));
+      color: hsl(var(--text-primary));
+    }
+
+    .dark-strip h2 {
+      font: var(--weight-semibold) var(--title-1);
+      margin: 0 0 var(--space-5);
+    }
+
+    .dark-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    @media (max-width: 900px) {
+      .option-grid,
+      .icon-grid,
+      .hero-comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="preview-shell">
+    <header class="preview-header">
+      <p class="preview-kicker">Announcement pill prototypes</p>
+      <h1>Edison pill options</h1>
+      <p>These are local prototypes for a clickable announcement pill. They import the current design-system tokens but do not add anything to the system file yet.</p>
+    </header>
+
+    <section class="option-grid" aria-label="Pill style options">
+      <article class="option-panel">
+        <div>
+          <h2>Option A</h2>
+          <p>Quiet announcement. Clickable affordance, but below the CTA hierarchy.</p>
+        </div>
+        <div class="option-stage">
+          <a href="crstl-edison-pipeline.html" class="crstl-pill">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+          </a>
+        </div>
+      </article>
+
+      <article class="option-panel">
+        <div>
+          <h2>Option B</h2>
+          <p>Cobalt tint. More product-forward and promotional.</p>
+        </div>
+        <div class="option-stage">
+          <a href="crstl-edison-pipeline.html" class="crstl-pill crstl-pill--tint">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+          </a>
+        </div>
+      </article>
+
+      <article class="option-panel">
+        <div>
+          <h2>Option C</h2>
+          <p>Ultra-quiet badge link. Closest to the previous announcement treatment.</p>
+        </div>
+        <div class="option-stage">
+          <a href="crstl-edison-pipeline.html" class="crstl-pill crstl-pill--badge">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+          </a>
+        </div>
+      </article>
+    </section>
+
+    <section class="icon-comparison" aria-label="Clickable icon options">
+      <h2>Clickable icon options</h2>
+      <p>These keep Option A's quiet announcement style, then vary the icon language. The trailing icon is the main click cue.</p>
+
+      <div class="icon-grid">
+        <article class="icon-panel">
+          <h3>Chevron</h3>
+          <a href="crstl-edison-pipeline.html" class="crstl-pill">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+            <svg class="crstl-pill__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+          <p>Quietest clear affordance. Reads as navigable without feeling like a CTA button.</p>
+        </article>
+
+        <article class="icon-panel">
+          <h3>Arrow</h3>
+          <a href="crstl-edison-pipeline.html" class="crstl-pill">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+            <svg class="crstl-pill__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <p>Most clickable, but starts to move back toward button territory.</p>
+        </article>
+
+        <article class="icon-panel">
+          <h3>Arrow up-right</h3>
+          <a href="crstl-edison-pipeline.html" class="crstl-pill">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+            <svg class="crstl-pill__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </a>
+          <p>Good if it opens a deeper Edison story, but can imply leaving the current flow.</p>
+        </article>
+
+        <article class="icon-panel">
+          <h3>Spark plus chevron</h3>
+          <a href="crstl-edison-pipeline.html" class="crstl-pill">
+            <svg class="crstl-pill__spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 6 14h6l-1 8 7-12h-6l1-8Z"/></svg>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+            <svg class="crstl-pill__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+          <p>More branded and agent-like. Slightly busier, but still announcement-first.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="icon-comparison refinement-comparison" aria-label="Option A arrow up right refinements">
+      <h2>Option A + arrow up-right refinements</h2>
+      <p>These keep the arrow up-right affordance and compare softer gray fills and shadows. The goal is more presence without turning it back into a CTA.</p>
+
+      <div class="icon-grid">
+        <article class="icon-panel">
+          <h3>Baseline</h3>
+          <a href="crstl-edison-pipeline.html" class="crstl-pill">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+            <svg class="crstl-pill__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </a>
+          <p>Original quiet surface with the icon you liked.</p>
+        </article>
+
+        <article class="icon-panel">
+          <h3>Gray fill</h3>
+          <a href="crstl-edison-pipeline.html" class="crstl-pill crstl-pill--gray">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+            <svg class="crstl-pill__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </a>
+          <p>Slightly more grounded than white, still very quiet.</p>
+        </article>
+
+        <article class="icon-panel">
+          <h3>Surface + soft shadow</h3>
+          <a href="crstl-edison-pipeline.html" class="crstl-pill crstl-pill--surface-shadow">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+            <svg class="crstl-pill__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </a>
+          <p>More clickable by elevation, but still uses a white surface.</p>
+        </article>
+
+        <article class="icon-panel">
+          <h3>Gray fill + soft shadow</h3>
+          <a href="crstl-edison-pipeline.html" class="crstl-pill crstl-pill--gray-shadow">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+            <svg class="crstl-pill__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </a>
+          <p>Most balanced if you want it to feel intentionally clickable.</p>
+        </article>
+
+        <article class="icon-panel">
+          <h3>Gray fill + accent signal</h3>
+          <a href="crstl-edison-pipeline.html" class="crstl-pill crstl-pill--gray-accent">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+            <svg class="crstl-pill__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </a>
+          <p>A little more brand presence, mostly through the dot and hover border.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="hero-comparison" aria-label="Hero context comparison">
+      <div class="hero-copy">
+        <div class="hero-stack">
+          <span class="stack-label">A in hero context</span>
+          <a href="crstl-edison-pipeline.html" class="crstl-pill">
+            <span class="crstl-pill__dot" aria-hidden="true"></span>
+            Meet Edison &mdash; Your Always-On Buyer Compliance Agent
+          </a>
+        </div>
+        <h2>The <span>agentic B2B commerce</span> network for Shopify Plus</h2>
+        <p>Connecting buyers, suppliers, and logistics providers across EDI and API.</p>
+        <div class="hero-actions">
+          <a href="#" class="crstl-button crstl-button--primary crstl-button--lg on-accent">Book a demo</a>
+          <a href="#" class="crstl-button crstl-button--secondary crstl-button--lg">Explore the platform</a>
+        </div>
+      </div>
+
+      <div class="hero-stack">
+        <span class="stack-label">Same placement, alternate styles</span>
+        <a href="crstl-edison-pipeline.html" class="crstl-pill">
+          <span class="crstl-pill__dot" aria-hidden="true"></span>
+          Option A &mdash; Quiet announcement
+        </a>
+        <a href="crstl-edison-pipeline.html" class="crstl-pill crstl-pill--tint">
+          <span class="crstl-pill__dot" aria-hidden="true"></span>
+          Option B &mdash; Cobalt tint
+        </a>
+        <a href="crstl-edison-pipeline.html" class="crstl-pill crstl-pill--badge">
+          <span class="crstl-pill__dot" aria-hidden="true"></span>
+          Option C &mdash; Ultra-quiet badge
+        </a>
+      </div>
+    </section>
+
+    <section class="dark-strip" data-theme="dark" aria-label="Dark theme pill check">
+      <h2>Dark theme check</h2>
+      <div class="dark-row">
+        <a href="crstl-edison-pipeline.html" class="crstl-pill">
+          <span class="crstl-pill__dot" aria-hidden="true"></span>
+          Option A
+        </a>
+        <a href="crstl-edison-pipeline.html" class="crstl-pill crstl-pill--tint">
+          <span class="crstl-pill__dot" aria-hidden="true"></span>
+          Option B
+        </a>
+        <a href="crstl-edison-pipeline.html" class="crstl-pill crstl-pill--badge">
+          <span class="crstl-pill__dot" aria-hidden="true"></span>
+          Option C
+        </a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

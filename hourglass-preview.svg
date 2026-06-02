@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 232 116" fill="none">
+  <style>
+    .preview-bg{fill:#fcfcfc}
+    .label{font:500 8px Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:0;fill:hsl(var(--text-tertiary))}
+    .light{--bg-base:0 0% 98.8%;--bg-surface:0 0% 100%;--bg-raised:0 0% 98.8%;--text-primary:0 0% 9%;--text-tertiary:0 0% 43.5%;--border-muted:0 0% 90.5%;--border-secondary:0 0% 88.6%;--border-default:0 0% 85.9%;--accent:225 100% 59%;--accent-tint:222 100% 96%}
+    .dark{--bg-base:0 0% 7.1%;--bg-surface:0 0% 9%;--bg-raised:0 0% 11%;--text-primary:0 0% 92.9%;--text-tertiary:0 0% 53.7%;--border-muted:0 0% 18%;--border-secondary:0 0% 20.4%;--border-default:0 0% 24.3%;--accent:225 100% 65%;--accent-tint:225 45% 22%}
+    .panel{fill:hsl(var(--bg-base));stroke:hsl(var(--border-muted));stroke-width:1}
+    .surface{fill:hsl(var(--bg-surface));stroke:hsl(var(--border-muted));stroke-width:1}
+    .surface-alt{fill:hsl(var(--bg-raised));stroke:hsl(var(--border-secondary));stroke-width:1}
+    .muted-line{fill:none;stroke:hsl(var(--border-default));stroke-width:1.5}
+    .strong-line{fill:none;stroke:hsl(var(--text-primary));stroke-width:1.5}
+    .accent-line{fill:none;stroke:hsl(var(--accent));stroke-width:1.5}
+    .accent-fill{fill:hsl(var(--accent));stroke:none}
+    .accent-tint{fill:hsl(var(--accent-tint));stroke:hsl(var(--accent) / .28);stroke-width:1}
+    .hairline{fill:none;stroke:hsl(var(--border-muted));stroke-width:1}
+  </style>
+  <rect class="preview-bg" width="232" height="116"/>
+
+  <g class="light" transform="translate(8 8)">
+    <rect class="panel" x=".5" y=".5" width="99" height="99" rx="8" vector-effect="non-scaling-stroke"/>
+    <text class="label" x="50" y="110" text-anchor="middle">Light</text>
+    <g transform="translate(2 2)">
+      <path class="surface" vector-effect="non-scaling-stroke" d="M25 12.5h46L83.5 25v46L71 83.5H25L12.5 71V25L25 12.5Z"/>
+      <g opacity=".72">
+        <rect class="surface-alt" vector-effect="non-scaling-stroke" x="60.5" y="24.5" width="15" height="20" rx="3"/>
+        <path class="hairline" vector-effect="non-scaling-stroke" d="M64.5 31.5h7.5M64.5 36h5.5"/>
+        <rect class="surface-alt" vector-effect="non-scaling-stroke" x="20.5" y="51.5" width="17" height="19" rx="3"/>
+        <path class="hairline" vector-effect="non-scaling-stroke" d="M24.5 58.5h8.5M24.5 63h6.5"/>
+      </g>
+      <rect class="surface-alt" vector-effect="non-scaling-stroke" x="32.5" y="20.5" width="31" height="6" rx="2"/>
+      <rect class="surface-alt" vector-effect="non-scaling-stroke" x="32.5" y="69.5" width="31" height="6" rx="2"/>
+      <path class="strong-line" vector-effect="non-scaling-stroke" d="M37 26.5c0 9.5 4.8 15.4 11 21.5-6.2 6.1-11 12-11 21.5"/>
+      <path class="strong-line" vector-effect="non-scaling-stroke" d="M59 26.5c0 9.5-4.8 15.4-11 21.5 6.2 6.1 11 12 11 21.5"/>
+      <path class="muted-line" vector-effect="non-scaling-stroke" d="M39.5 30h17M39.5 66h17"/>
+      <path class="hairline" vector-effect="non-scaling-stroke" d="M43 42.5h10M43 53.5h10"/>
+      <path class="accent-tint" vector-effect="non-scaling-stroke" d="M41.5 65.5c2.4-2.7 10.6-2.7 13 0h-13Z"/>
+      <path class="accent-line" vector-effect="non-scaling-stroke" d="M48 44.5v9"/>
+      <circle class="accent-fill" vector-effect="non-scaling-stroke" cx="48" cy="40.5" r="1.25"/>
+      <circle class="accent-fill" vector-effect="non-scaling-stroke" cx="48" cy="57.5" r="1.25"/>
+    </g>
+  </g>
+
+  <g class="dark" transform="translate(124 8)">
+    <rect class="panel" x=".5" y=".5" width="99" height="99" rx="8" vector-effect="non-scaling-stroke"/>
+    <text class="label" x="50" y="110" text-anchor="middle">Dark</text>
+    <g transform="translate(2 2)">
+      <path class="surface" vector-effect="non-scaling-stroke" d="M25 12.5h46L83.5 25v46L71 83.5H25L12.5 71V25L25 12.5Z"/>
+      <g opacity=".72">
+        <rect class="surface-alt" vector-effect="non-scaling-stroke" x="60.5" y="24.5" width="15" height="20" rx="3"/>
+        <path class="hairline" vector-effect="non-scaling-stroke" d="M64.5 31.5h7.5M64.5 36h5.5"/>
+        <rect class="surface-alt" vector-effect="non-scaling-stroke" x="20.5" y="51.5" width="17" height="19" rx="3"/>
+        <path class="hairline" vector-effect="non-scaling-stroke" d="M24.5 58.5h8.5M24.5 63h6.5"/>
+      </g>
+      <rect class="surface-alt" vector-effect="non-scaling-stroke" x="32.5" y="20.5" width="31" height="6" rx="2"/>
+      <rect class="surface-alt" vector-effect="non-scaling-stroke" x="32.5" y="69.5" width="31" height="6" rx="2"/>
+      <path class="strong-line" vector-effect="non-scaling-stroke" d="M37 26.5c0 9.5 4.8 15.4 11 21.5-6.2 6.1-11 12-11 21.5"/>
+      <path class="strong-line" vector-effect="non-scaling-stroke" d="M59 26.5c0 9.5-4.8 15.4-11 21.5 6.2 6.1 11 12 11 21.5"/>
+      <path class="muted-line" vector-effect="non-scaling-stroke" d="M39.5 30h17M39.5 66h17"/>
+      <path class="hairline" vector-effect="non-scaling-stroke" d="M43 42.5h10M43 53.5h10"/>
+      <path class="accent-tint" vector-effect="non-scaling-stroke" d="M41.5 65.5c2.4-2.7 10.6-2.7 13 0h-13Z"/>
+      <path class="accent-line" vector-effect="non-scaling-stroke" d="M48 44.5v9"/>
+      <circle class="accent-fill" vector-effect="non-scaling-stroke" cx="48" cy="40.5" r="1.25"/>
+      <circle class="accent-fill" vector-effect="non-scaling-stroke" cx="48" cy="57.5" r="1.25"/>
+    </g>
+  </g>
+</svg>

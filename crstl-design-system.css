@@ -1,0 +1,695 @@
+/* ============================================================================
+   CRSTL DESIGN SYSTEM — v2
+   Token-driven stylesheet for crstl.ai. Light theme default; dark fully specified.
+
+   Architecture: PRIMITIVES → SEMANTICS → COMPONENT tokens (reference downward only).
+   Colors are stored as HSL CHANNELS, consumed as:  hsl(var(--token) / <alpha>)
+   Corners are mildly rounded via a small, closed radius ladder (Supabase model).
+
+   This is the DESIGN-SYSTEM layer. Visual-system utilities (data-viz, effect kit,
+   .crstl-status / .crstl-field, hero/illustration styles) belong in a separate sheet.
+   ========================================================================== */
+
+
+/* ============================================================================
+   1 · PRIMITIVES  — raw values live ONLY here (HSL channels)
+   ========================================================================== */
+   :root {
+    /* — NEUTRAL RAMPS (Supabase / Radix model) — two mirrored 12-step scales,
+       fully hueless (0 0% L). Each step has a designated JOB (see §2 roles).
+       Light is used in light theme, dark in dark theme; step 100↔1200 mirror. */
+  
+    /* light ramp (light theme) */
+    --gray-light-100:  0 0% 98.8%;  /* app background            */
+    --gray-light-200:  0 0% 97.3%;  /* subtle background         */
+    --gray-light-300:  0 0% 95.3%;  /* UI element background     */
+    --gray-light-400:  0 0% 92.9%;  /* hovered UI background     */
+    --gray-light-500:  0 0% 91%;    /* active/selected UI bg     */
+    --gray-light-600:  0 0% 88.6%;  /* subtle borders/separators */
+    --gray-light-700:  0 0% 85.9%;  /* UI element border         */
+    --gray-light-800:  0 0% 78%;    /* hovered UI border         */
+    --gray-light-900:  0 0% 56.1%;  /* solid backgrounds         */
+    --gray-light-1000: 0 0% 52.2%;  /* hovered solid backgrounds */
+    --gray-light-1100: 0 0% 43.5%;  /* low-contrast text         */
+    --gray-light-1150: 0 0% 32.2%;  /* mid-grey secondary text   */
+    --gray-light-1200: 0 0% 9%;     /* high-contrast text        */
+  
+    /* dark ramp (dark theme) — mirror of the above */
+    --gray-dark-100:   0 0% 8.6%;   /* app background            */
+    --gray-dark-200:   0 0% 11%;    /* subtle background         */
+    --gray-dark-300:   0 0% 13.7%;  /* UI element background     */
+    --gray-dark-400:   0 0% 15.7%;  /* hovered UI background     */
+    --gray-dark-500:   0 0% 18%;    /* active/selected UI bg     */
+    --gray-dark-600:   0 0% 20.4%;  /* subtle borders/separators */
+    --gray-dark-700:   0 0% 24.3%;  /* UI element border         */
+    --gray-dark-800:   0 0% 31.4%;  /* hovered UI border         */
+    --gray-dark-900:   0 0% 43.9%;  /* solid backgrounds         */
+    --gray-dark-1000:  0 0% 49.4%;  /* hovered solid backgrounds */
+    --gray-dark-1100:  0 0% 62.7%;  /* low-contrast text         */
+    --gray-dark-1150:  0 0% 70.6%;  /* mid-grey secondary text   */
+    --gray-dark-1200:  0 0% 92.9%;  /* high-contrast text        */
+
+    /* — pure white — beyond the ramp (ramp tops out at 98.8%); theme-agnostic.
+       Powers white card faces, overlays/popovers, and text on accent fills. */
+    --white: 0 0% 100%;
+
+    /* — brand — */
+    --brand:       237.3 82.9% 58.6%; /* Crstl primary #3E46ED */
+    --brand-hover: 239.3 70.9% 52.6%; /* light theme = darken */
+    --brand-tint:  234.3 82.9% 96%;   /* selected rows, subtle accent fills */
+    --brand-ink:   237.8 52.9% 20%;   /* deep companion ink #181A4E */
+    --brand-dark:       237.3 82.9% 64.6%;
+    --brand-dark-hover: 238 88% 72%;
+    --brand-dark-tint:  237.8 45% 22%;
+  
+    /* — accent highlight (USE SPARINGLY) — a bright aqua for rare emphasis only
+       (e.g. a live/realtime pulse, a single highlighted data point, a glow).
+       Cobalt remains THE signal; this is a once-per-view spark, never chrome. */
+    --aqua: 172 91% 64%;            /* #51F7E2 */
+  
+    /* — status (AA-verified on white) + tint backgrounds (light) — */
+    --status-success:     150 70% 31%;   --success-tint:     150 60% 96%;
+    --status-warning:      38 100% 32%;  --warning-tint:      38 90% 96%;
+    --status-destructive:   6 65% 49%;   --destructive-tint:   6 55% 96%;
+    --status-info:        225 100% 59%;  --info-tint:        225 90% 96%;
+  
+    /* — category primitives (data-viz legend; used sparingly) — */
+    --cat-teal:    174 68% 33%;
+    --cat-violet:  252 90% 64%;
+    --cat-amber:    36 80% 40%;
+    --cat-green:   150 55% 38%;
+    --cat-magenta: 317 60% 52%;
+  }
+
+  :root[data-brand-palette="cobalt"] {
+    --brand:       225 100% 59%;   /* Crstl Cobalt #2E5BFF - the one signal */
+    --brand-hover: 227 88% 53%;    /* light theme = darken */
+    --brand-tint:  222 100% 96%;   /* selected rows, subtle accent fills */
+    --brand-ink:   0 0% 9%;        /* neutral near-black ink; cobalt is the only chroma */
+    --brand-dark:       225 100% 65%; /* #4D79FF - AA on neutral base */
+    --brand-dark-hover: 222 100% 74%;
+    --brand-dark-tint:  225 45% 22%;
+  }
+  
+  
+  /* ============================================================================
+     2 · SEMANTICS — LIGHT (default)  — roles reference primitives
+     ========================================================================== */
+  :root {
+    color-scheme: light;
+  
+    /* ---- Supabase semantic ROLES (light theme → reference the LIGHT ramp) ---- */
+  
+    /* backgrounds */
+    --background-default:             var(--gray-light-100);   /* page bg (98.8%, #FCFCFC) */
+    --background-alternative-default: 0 0% 99.2%;              /* alt/recessed sections    */
+    --background-muted:               var(--gray-light-200);   /* muted panels (97.3%)     */
+    --background-control:             var(--gray-light-300);   /* inputs/controls (95.3%)  */
+    --background-overlay-default:     var(--white);             /* popovers/menus (white)   */
+    --background-overlay-hover:       var(--gray-light-200);   /* overlay hover            */
+    --background-selection:           var(--gray-light-400);   /* text/row selection       */
+    --background-hover:               var(--gray-light-400);   /* hovered UI background     */
+  
+    /* surface elevation ramp (raised surfaces; in light, more raised = greyer) */
+    --background-surface-75:  var(--white);           /* base card = white   */
+    --background-surface-100: var(--gray-light-100);  /* 98.8%               */
+    --background-surface-200: var(--gray-light-300);  /* 95.3%               */
+    --background-surface-300: var(--gray-light-400);  /* 92.9%               */
+    --background-surface-400: var(--gray-light-600);  /* most raised (88.6%) */
+  
+    /* foreground (text) — default → light → lighter hierarchy + muted + contrast */
+    --foreground-default:  var(--gray-light-1200);  /* primary text (9%)       */
+    --foreground-light:    var(--gray-light-1150);  /* secondary text (32.2%)  */
+    --foreground-lighter:  var(--gray-light-1100);  /* tertiary/hint (43.5%)   */
+    --foreground-muted:    0 0% 30.2%;              /* disabled/placeholder *  */
+    --foreground-contrast: 0 0% 8.6%;               /* text on light fills     */
+  
+    /* borders — ramp of intensity: muted → secondary → default → strong → stronger */
+    --border-muted:     var(--gray-light-500);   /* barely-there separators (91%) */
+    --border-secondary: var(--gray-light-600);   /* 88.6%                    */
+    --border-default:   var(--gray-light-700);   /* standard border (85.9%)  */
+    --border-strong:    var(--gray-light-800);   /* emphasized (78%)         */
+    --border-stronger:  var(--gray-light-900);   /* highest contrast (56.1%) */
+  
+    /* accent — cobalt is the ONE chromatic role */
+    --accent:       var(--brand);
+    --accent-hover: var(--brand-hover);
+    --accent-tint:  var(--brand-tint);
+    --focus-ring:   var(--brand);
+  
+    /* ---- Crstl component-facing aliases → Supabase roles (so components/showcase
+           keep working unchanged; declared once, they follow the theme automatically) ---- */
+    --bg-base:        var(--background-default);
+    --bg-subtle:      var(--background-alternative-default);
+    --bg-muted:       var(--background-muted);
+    --bg-surface:     var(--background-surface-75);
+    --bg-hover:       var(--background-hover);
+    --bg-selected:    var(--background-selection);
+    --text-primary:   var(--foreground-default);
+    --text-secondary: var(--foreground-light);
+    --text-tertiary:  var(--foreground-lighter);
+    --text-disabled:  var(--foreground-muted);
+    --text-on-accent: var(--white); /* white text on cobalt (both themes) — NOT foreground-contrast */
+  
+    /* elevation — neutral, never blue (light theme). Cards lean on the border;
+       the shadow is a faint neutral lift (Supabase-style). */
+    --shadow-sm: 0 1px 2px  hsl(0 0% 0% / 0.05);
+    --shadow-md: 0 4px 12px hsl(0 0% 0% / 0.07);
+    --shadow-lg: 0 12px 32px hsl(0 0% 0% / 0.10);
+    /* floating-layer shadow: edge catch-light + cast shadow for dropdowns/modals */
+    --shadow-float:
+      0 0 0 1px hsl(0 0% 0% / 0.06),
+      0 4px 12px hsl(0 0% 0% / 0.06),
+      0 16px 40px hsl(0 0% 0% / 0.09);
+
+    /* ---- three-level depth hierarchy (what Linear calls canvas/base/raised) ----
+       Canvas  = structural chrome (nav, sidebar) — slightly recessed from page.
+       Raised  = cards/panels sitting on the page surface.
+       Overlay = floating elements (dropdowns, tooltips, popovers). */
+    --bg-canvas:  var(--background-muted);            /* 96.9% — nav chrome  */
+    --bg-raised:  var(--background-surface-100);      /* 98.8% — elevated card */
+    --bg-overlay: var(--background-overlay-default);  /* 100%  — floating panel */
+
+    /* ---- named metadata tone (timestamps, counts, secondary labels) ---- */
+    --text-meta: var(--foreground-lighter);            /* 43.5% — below tertiary */
+
+    /* ---- card surface + border paired alias ---- */
+    --card-bg:     var(--background-surface-75);  /* card face */
+    --card-border: var(--border-muted);           /* card edge catch-light */
+  }
+  
+  
+  /* ============================================================================
+     2e · SEMANTICS — DARK  — every semantic re-pointed, contrast-verified
+     ========================================================================== */
+  [data-theme="dark"] {
+    color-scheme: dark;
+  
+    /* ---- Supabase semantic ROLES (dark theme → reference the DARK ramp) ----
+       Aliases (--bg-*, --text-*) are NOT re-declared: they reference these roles,
+       so they follow the theme automatically. */
+  
+    /* backgrounds (Supabase dark semantic values) */
+    --background-default:             0 0% 7.1%;             /* page bg (#121212)        */
+    --background-alternative-default: 0 0% 5.9%;             /* alt/recessed sections    */
+    --background-muted:               var(--gray-dark-300);  /* muted panels (13.7%)     */
+    --background-control:             var(--gray-dark-300);  /* inputs/controls (13.7%)  */
+    --background-overlay-default:     var(--gray-dark-300);  /* popovers/menus (13.7%)   */
+    --background-overlay-hover:       0 0% 18%;              /* overlay hover            */
+    --background-selection:           0 0% 19.2%;            /* text/row selection       */
+    --background-hover:               var(--gray-dark-400);  /* hovered UI bg (15.7%)    */
+  
+    /* surface elevation ramp (in dark, more raised = lighter) */
+    --background-surface-75:  0 0% 9%;                /* base card               */
+    --background-surface-100: var(--gray-dark-200);   /* 11%                     */
+    --background-surface-200: var(--gray-dark-300);   /* 13.7%                   */
+    --background-surface-300: var(--gray-dark-400);   /* 15.7%                   */
+    --background-surface-400: var(--gray-dark-500);   /* most raised (18%)       */
+  
+    /* foreground (text) */
+    --foreground-default:  var(--gray-dark-1200);  /* primary (92.9%) → near-white */
+    --foreground-light:    var(--gray-dark-1150);  /* secondary (70.6%)            */
+    --foreground-lighter:  0 0% 53.7%;             /* tertiary/hint                */
+    --foreground-muted:    0 0% 69.8%;             /* disabled/placeholder *       */
+    --foreground-contrast: 0 0% 98.4%;             /* text on colored fills        */
+  
+    /* borders — same intensity ramp, dark steps */
+    --border-muted:     var(--gray-dark-500);   /* barely-there (18%)       */
+    --border-secondary: var(--gray-dark-600);   /* 20.4%                    */
+    --border-default:   var(--gray-dark-700);   /* standard (24.3%)         */
+    --border-strong:    var(--gray-dark-800);   /* emphasized (31.4%)       */
+    --border-stronger:  var(--gray-dark-900);   /* highest (43.9%)          */
+  
+    /* accent — brand palette lightened for dark */
+    --accent:       var(--brand-dark);
+    --accent-hover: var(--brand-dark-hover);
+    --accent-tint:  var(--brand-dark-tint);
+    --focus-ring:   var(--brand-dark);
+  
+    /* bg-selected wants the cobalt tint (accent), so override the alias here */
+    --bg-selected:  var(--brand-dark-tint);
+  
+    /* status — lightened for dark; tints become dark fills */
+    --status-success:     150 55% 52%;  --success-tint:     150 35% 16%;
+    --status-warning:      40 90% 58%;  --warning-tint:      40 45% 16%;
+    --status-destructive:   6 85% 64%;  --destructive-tint:   6 45% 18%;
+    --status-info:        225 100% 65%; --info-tint:        225 45% 22%;
+  
+    /* category (lightened for dark viz) */
+    --cat-teal:    174 60% 55%;
+    --cat-violet:  252 90% 72%;
+    --cat-amber:    40 85% 60%;
+    --cat-green:   150 55% 55%;
+    --cat-magenta: 317 70% 66%;
+  
+    /* elevation — neutral; subtle contact line + real shadows for floating layers */
+    --shadow-sm: 0 0 0 1px hsl(0 0% 0% / 0.5);
+    --shadow-md: 0 8px 24px hsl(0 0% 0% / 0.55);
+    --shadow-lg: 0 16px 40px hsl(0 0% 0% / 0.6);
+    /* floating-layer: edge catch-light survives any dark surface */
+    --shadow-float:
+      0 0 0 1px hsl(0 0% 100% / 0.08),
+      0 8px 16px hsl(0 0% 0% / 0.40),
+      0 24px 56px hsl(0 0% 0% / 0.64);
+
+    /* three-level depth (dark: canvas = darkest; raised/overlay = lighter) */
+    --bg-canvas:  var(--background-alternative-default); /* 5.9% — nav chrome, darkest */
+    --bg-raised:  var(--background-surface-100);         /* 11%  — cards above page    */
+    --bg-overlay: var(--background-surface-200);         /* 13.7% — floating panels    */
+
+    /* metadata tone */
+    --text-meta: var(--foreground-lighter);
+
+    /* card pairing */
+    --card-bg:     var(--background-surface-75);
+    --card-border: var(--border-muted);
+
+    /* code chip — brighter step in dark for legibility */
+    --code-chip-bg:     var(--background-surface-300);
+    --code-chip-border: var(--border-default);
+  }
+  
+  
+  /* ============================================================================
+     3 · TYPOGRAPHY
+     Composite `font` shorthand tokens (size/line-height + family); tracking is
+     separate (it can't live in the `font` shorthand). Tighten tracking as size grows.
+     ========================================================================== */
+  :root {
+    --font-display: "Geist", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono:    "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  
+    --weight-normal:   400;
+    --weight-medium:   500;
+    --weight-semibold: 600;
+    --weight-bold:     680;
+  
+    /* body / UI scale */
+    --text-xs:   0.75rem/1.5  var(--font-body);   --tracking-xs:   0;
+    --text-sm:   0.875rem/1.5 var(--font-body);   --tracking-sm:   -0.006em;
+    --text-base: 1rem/1.55    var(--font-body);   --tracking-base: -0.009em;
+    --text-lg:   1.125rem/1.55 var(--font-body);  --tracking-lg:   -0.011em;
+  
+    /* display scale (line-height + tracking tighten with size) */
+    --title-1: 1.5rem/1.3   var(--font-display);  --tracking-title-1: -0.015em;
+    --title-2: 1.875rem/1.25 var(--font-display); --tracking-title-2: -0.018em;
+    --title-3: 2.25rem/1.15 var(--font-display);  --tracking-title-3: -0.02em;
+    --title-4: clamp(2.5rem, 2.5rem + 2vw, 3.5rem)/1.08 var(--font-display);
+    --tracking-title-4: -0.022em;
+    --title-5: clamp(3rem, 3rem + 3vw, 4.5rem)/1.0 var(--font-display);
+    --tracking-title-5: -0.024em;
+  }
+  
+  /* optional type utility classes (bundle font + tracking + sensible weight) */
+  .crstl-text-xs   { font: var(--text-xs);   letter-spacing: var(--tracking-xs); }
+  .crstl-text-sm   { font: var(--text-sm);   letter-spacing: var(--tracking-sm); }
+  .crstl-text-base { font: var(--text-base); letter-spacing: var(--tracking-base); }
+  .crstl-text-lg   { font: var(--text-lg);   letter-spacing: var(--tracking-lg); }
+  .crstl-title-1 { font: var(--weight-semibold) var(--title-1); letter-spacing: var(--tracking-title-1); }
+  .crstl-title-2 { font: var(--weight-semibold) var(--title-2); letter-spacing: var(--tracking-title-2); }
+  .crstl-title-3 { font: var(--weight-semibold) var(--title-3); letter-spacing: var(--tracking-title-3); }
+  .crstl-title-4 { font: var(--weight-bold) var(--title-4); letter-spacing: var(--tracking-title-4); }
+  .crstl-title-5 { font: var(--weight-bold) var(--title-5); letter-spacing: var(--tracking-title-5); }
+  .crstl-mono { font-family: var(--font-mono); }   /* EDI codes, numbers, timestamps */
+  
+  
+  /* ============================================================================
+     4 · SPACING, SIZES & LAYOUT  (one unified numeric scale)
+     ========================================================================== */
+  :root {
+    --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+    --space-5: 20px;  --space-6: 24px;  --space-8: 32px;  --space-10: 40px;
+    --space-12: 48px; --space-16: 64px; --space-20: 80px;
+    /* aliases only (never introduce a third name) */
+    --space-sm: var(--space-2); --space-md: var(--space-4); --space-lg: var(--space-8);
+  
+    /* component sizes (decided once) */
+    --size-icon-sm: 16px;    --size-icon-md: 20px;    --size-icon-lg: 24px;
+    --size-avatar-sm: 24px;  --size-avatar-md: 32px;  --size-avatar-lg: 40px;
+    --size-control-sm: 32px; --size-control-md: 36px; --size-control-lg: 40px;
+    --size-row: 48px;        --size-row-lg: 56px;     --size-row-dense: 40px;
+    --size-row-xs: 32px;     /* ultra-dense: activity feeds, log lines        */
+    --size-nav: 64px;        --size-header: 48px;
+    --size-status-dot:  8px; /* inline presence/state dot                     */
+    --size-status-icon: 14px;/* small icon in dense rows (priority, type)     */
+  
+    /* layout */
+    --content-width: 1120px; --content-width-xl: 1280px;
+    --page-padding-inline: max(env(safe-area-inset-left), 24px);
+    --page-padding-block: var(--space-20);
+    --grid-columns: 12;
+  }
+  
+  
+  /* ============================================================================
+     5 · CORNERS — RADIUS LADDER (Supabase model)
+     A small, closed, rem-based ladder. The UI is MILDLY rounded — 6–8px on most
+     buttons and cards: friendly, not bubbly. Pick a step from the ladder; never
+     type an arbitrary radius. rem-based so it scales with the root font-size.
+     ========================================================================== */
+  :root {
+    --radius-xs: 0.125rem;  /* 2px  — chips, tags, tiny insets             */
+    --radius-sm: 0.25rem;   /* 4px  — inputs, small controls               */
+    --radius-md: 0.375rem;  /* 6px  — buttons, default control corner      */
+    --radius-lg: 0.5rem;    /* 8px  — cards, panels                        */
+    --radius-xl: 0.75rem;   /* 12px — modals, large raised surfaces        */
+    /* practical extremes (kept outside the tight ladder) */
+    --radius-pill:   9999px; /* fully rounded — pills, toggles, segmented  */
+    --radius-circle: 50%;    /* circular graphics — avatars, spinner, orb  */
+  }
+  
+  
+  /* ============================================================================
+     6 · MOTION  (named speeds/easing; targeted transitions, never `all`)
+     ========================================================================== */
+  :root {
+    --speed-instant:    0s;
+    --speed-feedback:   120ms;
+    --speed-transition: 240ms;
+    --speed-default:    var(--speed-feedback);
+  
+    --ease-standard: cubic-bezier(0.2, 0, 0.2, 1);
+    --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-decisive: cubic-bezier(0.87, 0, 0.13, 1);
+  
+    /* reusable targeted-transition pattern (name properties, never `all`) */
+    --transition-interactive:
+      background-color var(--speed-feedback) var(--ease-standard),
+      border-color     var(--speed-feedback) var(--ease-standard),
+      box-shadow       var(--speed-feedback) var(--ease-standard),
+      transform        var(--speed-feedback) var(--ease-standard);
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  
+  
+  /* ============================================================================
+     7 · SYSTEMATIZED DETAILS  (borders, blur, focus, z-index, code tokens)
+     ========================================================================== */
+  :root {
+    --border-hairline: 1px;
+    --borderwidth-sm: 1px; --borderwidth-md: 2px; --borderwidth-lg: 4px;
+    --blur-sm: 4px; --blur-md: 12px; --blur-lg: 20px;
+
+    /* soft visual fades — transparent center dissolving into the real page */
+    --fade-soft-inner: 62%;
+    --fade-soft-outer: 96%;
+    --fade-soft-color: hsl(var(--bg-base));
+    --fade-soft-radial-mask: radial-gradient(circle at 50% 50%, #000 0%, #000 var(--fade-soft-inner), transparent var(--fade-soft-outer));
+    --fade-soft-radial-overlay: radial-gradient(circle at 50% 50%, transparent 0%, transparent var(--fade-soft-inner), var(--fade-soft-color) var(--fade-soft-outer));
+  
+    --focus-ring-width:  2px;
+    --focus-ring-offset: 2px;
+  
+    /* z-index — designed, named scale (deliberate gaps) */
+    --layer-base: 0;          --layer-sticky: 100;
+    --layer-header: 200;      --layer-dropdown: 600;
+    --layer-dialog: 700;      --layer-toast: 900;
+    --layer-context-menu: 1200; --layer-tooltip: 1300;
+  
+    /* code / EDI document syntax tokens */
+    --token-keyword: hsl(var(--brand));
+    --token-string:  hsl(var(--status-success));
+    --token-number:  hsl(var(--status-warning));
+    --token-comment: hsl(var(--text-tertiary));
+
+    /* nav active indicator — left-bar accent line (Linear-style) */
+    --nav-indicator-width: 2px;
+    --nav-indicator-color: var(--accent);
+
+    /* inline code chip — for EDI codes, document IDs, identifiers */
+    --code-chip-bg:     var(--background-surface-200);  /* slightly raised vs card  */
+    --code-chip-border: var(--border-secondary);
+    --code-chip-radius: var(--radius-sm);               /* 4px — tight, not a pill  */
+    --code-chip-font:   var(--font-mono);
+    --code-chip-pad:    1px 5px;
+  }
+  
+  /* two-tone focus ring — survives ANY surface (gap halo + inverts on accent) */
+  .crstl-focus-visible:focus-visible {
+    outline: var(--focus-ring-width) solid hsl(var(--focus-ring));
+    outline-offset: var(--focus-ring-offset);
+    box-shadow: 0 0 0 var(--focus-ring-offset) hsl(var(--bg-base)); /* gap halo */
+  }
+  .on-accent:focus-visible,
+  [data-theme="dark"] .crstl-focus-visible:focus-visible {
+    outline-color: hsl(var(--bg-surface));
+  }
+  
+  
+  /* ============================================================================
+     8 · ELEVATION UTILITY  (light: border + shadow · dark: border + lighter level)
+     ========================================================================== */
+  .crstl-surface {
+    background: hsl(var(--bg-surface));
+    border: var(--borderwidth-sm) solid hsl(var(--border-muted));
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-lg); /* 8px — card/panel corner */
+  }
+  
+  
+  /* ============================================================================
+     9 · COMPONENT RECIPE — BUTTON
+     Coordinated size bundles; content-agnostic feedback; tokens only; mild rounding.
+     ========================================================================== */
+  :root {
+    --btn-sm: 32px; --btn-sm-font: var(--text-sm);   --btn-sm-pad: 0 12px;
+    --btn-md: 40px; --btn-md-font: var(--text-sm);   --btn-md-pad: 0 16px;
+    --btn-lg: 48px; --btn-lg-font: var(--text-base); --btn-lg-pad: 0 24px;
+  }
+  
+  .crstl-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    height: var(--btn-md);
+    padding: var(--btn-md-pad);
+    font: var(--weight-medium) var(--btn-md-font);
+    border-radius: var(--radius-md);          /* 6px */
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-interactive); /* targeted, never `all` */
+  }
+  .crstl-button:focus-visible {
+    outline: var(--focus-ring-width) solid hsl(var(--focus-ring));
+    outline-offset: var(--focus-ring-offset);
+    box-shadow: 0 0 0 var(--focus-ring-offset) hsl(var(--bg-base));
+  }
+  
+  /* sizes */
+  .crstl-button--sm { height: var(--btn-sm); padding: var(--btn-sm-pad); font: var(--weight-medium) var(--btn-sm-font); }
+  .crstl-button--lg { height: var(--btn-lg); padding: var(--btn-lg-pad); font: var(--weight-medium) var(--btn-lg-font); }
+  
+  /* primary = the cobalt signal (add .on-accent so the focus ring inverts) */
+  .crstl-button--primary {
+    background: hsl(var(--accent));
+    color: hsl(var(--text-on-accent));
+    box-shadow: var(--shadow-sm);
+  }
+  .crstl-button--primary:hover  {
+    background: hsl(var(--accent-hover));
+    color: hsl(var(--text-on-accent));
+  }
+  .crstl-button--primary:active { transform: scale(0.99); }
+  .crstl-button--primary.on-accent:focus-visible { outline-color: hsl(var(--bg-surface)); }
+  
+  /* secondary = quiet, bordered */
+  .crstl-button--secondary {
+    background: hsl(var(--bg-surface));
+    color: hsl(var(--text-primary));
+    border: var(--borderwidth-sm) solid hsl(var(--border-default));
+  }
+  .crstl-button--secondary:hover  {
+    background: hsl(var(--bg-hover));
+    color: hsl(var(--text-primary));
+  }
+  .crstl-button--secondary:active { transform: scale(0.99); }
+  
+  
+  /* ============================================================================
+     10 · COMPONENT RECIPE — PILL
+     Clickable announcement treatment; lower hierarchy than a button.
+     ========================================================================== */
+  :root {
+    --pill-height: 32px; --pill-font: var(--text-sm); --pill-pad: 0 14px;
+    --pill-gap: var(--space-2); --pill-icon: 14px; --pill-dot: 7px;
+
+    --pill-bg: var(--bg-muted);
+    --pill-border: var(--border-secondary);
+    --pill-color: var(--text-primary);
+    --pill-dot-color: var(--aqua);
+    --pill-hover-bg: var(--bg-hover);
+    --pill-hover-border: var(--border-default);
+    --pill-hover-color: var(--text-primary);
+    --pill-icon-color: var(--text-tertiary);
+    --pill-shadow:
+      0 1px 2px hsl(0 0% 0% / 0.04),
+      0 7px 16px hsl(0 0% 0% / 0.045);
+    --pill-hover-shadow:
+      0 1px 2px hsl(0 0% 0% / 0.05),
+      0 10px 22px hsl(0 0% 0% / 0.065);
+  }
+
+  .crstl-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--pill-gap);
+    min-height: var(--pill-height);
+    max-width: 100%;
+    padding: var(--pill-pad);
+    background: hsl(var(--pill-bg));
+    color: hsl(var(--pill-color));
+    border: var(--borderwidth-sm) solid hsl(var(--pill-border));
+    border-radius: var(--radius-pill);
+    box-shadow: var(--pill-shadow);
+    font: var(--weight-medium) var(--pill-font);
+    text-decoration: none;
+    white-space: normal;
+    cursor: pointer;
+    transition: var(--transition-interactive);
+  }
+  .crstl-pill:hover {
+    background: hsl(var(--pill-hover-bg));
+    color: hsl(var(--pill-hover-color));
+    border-color: hsl(var(--pill-hover-border));
+    box-shadow: var(--pill-hover-shadow);
+  }
+  .crstl-pill:focus-visible {
+    outline: var(--focus-ring-width) solid hsl(var(--focus-ring));
+    outline-offset: var(--focus-ring-offset);
+    box-shadow:
+      0 0 0 var(--focus-ring-offset) hsl(var(--bg-base)),
+      var(--pill-shadow);
+  }
+  .crstl-pill__dot {
+    flex: none;
+    width: var(--pill-dot);
+    height: var(--pill-dot);
+    border-radius: var(--radius-circle);
+    background: hsl(var(--pill-dot-color));
+    box-shadow: 0 0 0 3px hsl(var(--pill-dot-color) / 0.16);
+  }
+  .crstl-pill__icon {
+    flex: none;
+    width: var(--pill-icon);
+    height: var(--pill-icon);
+    color: hsl(var(--pill-icon-color));
+    transition:
+      color var(--speed-feedback) var(--ease-standard),
+      transform var(--speed-feedback) var(--ease-standard);
+  }
+  .crstl-pill:hover .crstl-pill__icon {
+    color: currentColor;
+    transform: translate(1px, -1px);
+  }
+
+
+  /* ============================================================================
+     11 · COMPONENT RECIPE — CODE CHIP
+     Inline monospace identifier treatment: EDI codes, document IDs, SKUs, PRs.
+     Tighter than a pill — 4px radius, snug padding, 13px mono text.
+     ========================================================================== */
+  .crstl-code-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--code-chip-pad);
+    background: hsl(var(--code-chip-bg));
+    border: var(--borderwidth-sm) solid hsl(var(--code-chip-border));
+    border-radius: var(--code-chip-radius);
+    font-family: var(--code-chip-font);
+    font-size: 0.8125rem;        /* 13px — slightly below text-sm */
+    font-weight: var(--weight-medium);
+    line-height: 1.4;
+    color: hsl(var(--text-primary));
+    white-space: nowrap;
+    letter-spacing: 0;
+    vertical-align: middle;
+    transition:
+      background-color var(--speed-feedback) var(--ease-standard),
+      border-color     var(--speed-feedback) var(--ease-standard);
+  }
+
+
+  /* ============================================================================
+     12 · COMPONENT RECIPE — STATUS DOT
+     8px pulsing or static colored circle. Use for presence, pipeline state,
+     connection health. Pair with a --status-* primitive for color.
+     ========================================================================== */
+  .crstl-status-dot {
+    display: inline-block;
+    flex: none;
+    width: var(--size-status-dot);
+    height: var(--size-status-dot);
+    border-radius: var(--radius-circle);
+    background: currentColor;
+    vertical-align: middle;
+  }
+  .crstl-status-dot--pulse {
+    animation: statusPulse 2.4s var(--ease-standard) infinite;
+  }
+  @keyframes statusPulse {
+    0%, 100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+    60%       { box-shadow: 0 0 0 4px transparent; opacity: 0.8; }
+  }
+
+  /* color variants — apply via color utility so the glow inherits */
+  .crstl-status-dot--success     { color: hsl(var(--status-success));     }
+  .crstl-status-dot--warning     { color: hsl(var(--status-warning));     }
+  .crstl-status-dot--destructive { color: hsl(var(--status-destructive)); }
+  .crstl-status-dot--accent      { color: hsl(var(--accent));             }
+
+
+  /* ============================================================================
+     13 · COMPONENT RECIPE — DENSE ROW
+     32px ultra-compact row for activity feeds, log lines, EDI ledger entries.
+     ========================================================================== */
+  .crstl-row-dense {
+    display: grid;
+    grid-template-columns: var(--size-status-icon) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--size-row-xs);  /* 32px */
+    padding: 0 var(--space-4);
+    font: var(--text-sm);
+    color: hsl(var(--text-secondary));
+    border-bottom: var(--borderwidth-sm) solid hsl(var(--border-muted));
+  }
+  .crstl-row-dense:last-child { border-bottom: none; }
+  .crstl-row-dense__icon {
+    width: var(--size-status-icon);
+    height: var(--size-status-icon);
+    color: hsl(var(--text-tertiary));
+    flex: none;
+  }
+  .crstl-row-dense__meta {
+    color: hsl(var(--text-meta));
+    font: var(--weight-medium) var(--text-xs);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+
+
+  /* ============================================================================
+     OPTIONAL BASE  (minimal; delete if integrating into an existing reset)
+     ========================================================================== */
+  *, *::before, *::after { box-sizing: border-box; }
+  
+  body {
+    margin: 0;
+    background: hsl(var(--bg-base));
+    color: hsl(var(--text-primary));
+    font: var(--text-base);
+    letter-spacing: var(--tracking-base);
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  a { color: hsl(var(--accent)); text-decoration: none; }
+  a:hover { color: hsl(var(--accent-hover)); }
+  code, kbd, samp { font-family: var(--font-mono); }
