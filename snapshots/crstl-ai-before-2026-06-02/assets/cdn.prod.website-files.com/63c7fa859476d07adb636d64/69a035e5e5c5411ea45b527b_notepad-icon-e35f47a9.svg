@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
+  <!-- Shadow -->
+  <rect x="13" y="15" rx="3" ry="3" width="76" height="98" fill="#bbb"/>
+  <!-- Pad body -->
+  <rect x="10" y="12" rx="3" ry="3" width="76" height="98" fill="#ffffff" stroke="#ddd" stroke-width="1.5"/>
+  <!-- Clipboard top bar -->
+  <rect x="10" y="12" rx="3" ry="3" width="76" height="16" fill="#4A90D9"/>
+  <!-- Clip -->
+  <rect x="36" y="6" rx="4" ry="4" width="28" height="16" fill="#888" stroke="#666" stroke-width="1"/>
+  <rect x="40" y="10" rx="2" ry="2" width="20" height="7" fill="#aaa"/>
+  <!-- Check boxes + lines -->
+  <!-- Row 1 -->
+  <rect x="18" y="38" width="8" height="8" rx="1" fill="none" stroke="#4A90D9" stroke-width="1.5"/>
+  <polyline points="19.5,42 21.5,44.5 25,39.5" fill="none" stroke="#4A90D9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="30" y1="42" x2="78" y2="42" stroke="#ddd" stroke-width="1.5"/>
+  <!-- Row 2 -->
+  <rect x="18" y="52" width="8" height="8" rx="1" fill="none" stroke="#4A90D9" stroke-width="1.5"/>
+  <polyline points="19.5,56 21.5,58.5 25,53.5" fill="none" stroke="#4A90D9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="30" y1="56" x2="78" y2="56" stroke="#ddd" stroke-width="1.5"/>
+  <!-- Row 3 (unchecked) -->
+  <rect x="18" y="66" width="8" height="8" rx="1" fill="none" stroke="#ccc" stroke-width="1.5"/>
+  <line x1="30" y1="70" x2="78" y2="70" stroke="#ddd" stroke-width="1.5"/>
+  <!-- Row 4 (unchecked) -->
+  <rect x="18" y="80" width="8" height="8" rx="1" fill="none" stroke="#ccc" stroke-width="1.5"/>
+  <line x1="30" y1="84" x2="78" y2="84" stroke="#ddd" stroke-width="1.5"/>
+  <!-- Row 5 (unchecked) -->
+  <rect x="18" y="94" width="8" height="8" rx="1" fill="none" stroke="#ccc" stroke-width="1.5"/>
+  <line x1="30" y1="98" x2="78" y2="98" stroke="#ddd" stroke-width="1.5"/>
+</svg>
